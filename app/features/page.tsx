@@ -65,6 +65,11 @@ export default function Page() {
             <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Low</td>
           </tr>
           <tr>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Code Integration</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Manual</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Automatic</td>
+          </tr>
+          <tr>
             <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Collaboration Features</td>
             <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Limited</td>
             <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Advanced</td>
@@ -73,11 +78,6 @@ export default function Page() {
             <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Customization Options</td>
             <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Limited</td>
             <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Extensive</td>
-          </tr>
-          <tr>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Integration with Development Tools</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Limited</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Seamless</td>
           </tr>
         </tbody>
       </table>
