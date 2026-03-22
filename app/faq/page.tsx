@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { AiOutlineArrowRight } from 'react-icons/ai';
 import Link from 'next/link';
+import Head from 'next/head';
 
 export default function FaqPage() {
   const [activeQuestion, setActiveQuestion] = useState(null);
@@ -46,34 +47,45 @@ export default function FaqPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-4 md:p-6 lg:p-8">
-      <h1 className="text-3xl font-bold mb-4">Frequently Asked Questions</h1>
-      {questions.map((question) => (
-        <div key={question.id} className="mb-4">
-          <button
-            className="flex justify-between w-full text-left p-4 bg-gray-100 dark:bg-gray-800 rounded-lg"
-            onClick={() => handleToggle(question.id)}
-          >
-            <span className="text-lg font-medium">{question.question}</span>
-            <AiOutlineArrowRight
-              className={`text-lg transition-transform ${
-                activeQuestion === question.id ? 'rotate-90' : ''
-              }`}
-            />
-          </button>
-          {activeQuestion === question.id && (
-            <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg mt-2">
-              <p className="text-lg">{question.answer}</p>
-            </div>
-          )}
-        </div>
-      ))}
-      <Link
-        href="/docs"
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mt-4"
-      >
-        Learn More
-      </Link>
+    <div>
+      <Head>
+        <title>AutoGenerate API Documentation - Frequently Asked Questions</title>
+        <meta name="description" content="Get answers to frequently asked questions about AutoGenerate API Documentation, including features, customization, and collaboration." />
+        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, FAQ, frequently asked questions" />
+        <meta property="og:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
+        <meta property="og:description" content="Get answers to frequently asked questions about AutoGenerate API Documentation, including features, customization, and collaboration." />
+        <meta property="og:url" content={`${router.asPath}`} />
+        <meta property="og:type" content="website" />
+      </Head>
+      <div className="max-w-5xl mx-auto p-4 md:p-6 lg:p-8">
+        <h1 className="text-3xl font-bold mb-4">Frequently Asked Questions</h1>
+        {questions.map((question) => (
+          <div key={question.id} className="mb-4">
+            <button
+              className="flex justify-between w-full text-left p-4 bg-gray-100 dark:bg-gray-800 rounded-lg"
+              onClick={() => handleToggle(question.id)}
+            >
+              <span className="text-lg font-medium">{question.question}</span>
+              <AiOutlineArrowRight
+                className={`text-lg transition-transform ${
+                  activeQuestion === question.id ? 'rotate-90' : ''
+                }`}
+              />
+            </button>
+            {activeQuestion === question.id && (
+              <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg mt-2">
+                <p className="text-lg">{question.answer}</p>
+              </div>
+            )}
+          </div>
+        ))}
+        <Link
+          href="/docs"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mt-4"
+        >
+          Learn More
+        </Link>
+      </div>
     </div>
   );
 }

@@ -6,11 +6,14 @@ import { AiOutlineArrowRight } from 'react-icons/ai';
 
 export default function CtaPage() {
   const [email, setEmail] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setIsSubmitting(true);
     localStorage.setItem('email', email);
     alert('Thank you for your interest!');
+    setIsSubmitting(false);
   };
 
   return (
@@ -27,9 +30,10 @@ export default function CtaPage() {
         />
         <button
           type="submit"
-          className="px-8 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          disabled={isSubmitting}
+          className={`px-8 py-2 ${isSubmitting ? 'bg-blue-300' : 'bg-blue-500'} text-white rounded-lg hover:${isSubmitting ? '' : 'bg-blue-700'} focus:outline-none focus:ring-2 focus:ring-blue-500`}
         >
-          Get Started <AiOutlineArrowRight className="ml-2" />
+          {isSubmitting ? 'Submitting...' : 'Get Started'} <AiOutlineArrowRight className="ml-2" />
         </button>
       </form>
       <p className="text-lg text-gray-500 mt-8">

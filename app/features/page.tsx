@@ -45,6 +45,12 @@ export default function Page() {
         </div>
       </div>
       <Link href="/docs" className="text-lg font-bold mb-4">Learn More</Link>
+      <div className="bg-orange-100 dark:bg-orange-900 p-4 rounded shadow mb-4">
+        <h2 className="text-lg font-bold mb-2">Get Started Today!</h2>
+        <p className="text-sm mb-2">Sign up for a free trial or paid plan to experience the full power of our API documentation generator.</p>
+        <Link href="/signup" className="bg-orange-500 dark:bg-orange-700 hover:bg-orange-700 dark:hover:bg-orange-500 text-white font-bold py-2 px-4 rounded">Sign Up for Free Trial</Link>
+        <Link href="/pricing" className="bg-orange-500 dark:bg-orange-700 hover:bg-orange-700 dark:hover:bg-orange-500 text-white font-bold py-2 px-4 rounded ml-2">View Paid Plans</Link>
+      </div>
     </div>
   );
 }
