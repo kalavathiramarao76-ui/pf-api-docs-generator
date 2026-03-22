@@ -49,47 +49,35 @@ export default function Page() {
         <thead className="bg-gray-100 dark:bg-gray-800">
           <tr>
             <th className="px-4 py-2 text-lg font-bold">Feature</th>
-            <th className="px-4 py-2 text-lg font-bold">Free Plan</th>
-            <th className="px-4 py-2 text-lg font-bold">Pro Plan</th>
-            <th className="px-4 py-2 text-lg font-bold">Enterprise Plan</th>
+            <th className="px-4 py-2 text-lg font-bold">Manual API Documentation</th>
+            <th className="px-4 py-2 text-lg font-bold">AutoGenerate API Documentation</th>
           </tr>
         </thead>
         <tbody>
-          <tr className="border-b border-gray-200 dark:border-gray-700">
-            <td className="px-4 py-2 text-lg">Dashboard</td>
-            <td className="px-4 py-2 text-lg">Yes</td>
-            <td className="px-4 py-2 text-lg">Yes</td>
-            <td className="px-4 py-2 text-lg">Yes</td>
+          <tr>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Time Consumption</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">High</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Low</td>
           </tr>
-          <tr className="border-b border-gray-200 dark:border-gray-700">
-            <td className="px-4 py-2 text-lg">API Docs</td>
-            <td className="px-4 py-2 text-lg">Limited</td>
-            <td className="px-4 py-2 text-lg">Full</td>
-            <td className="px-4 py-2 text-lg">Full</td>
+          <tr>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Error Rate</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">High</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Low</td>
           </tr>
-          <tr className="border-b border-gray-200 dark:border-gray-700">
-            <td className="px-4 py-2 text-lg">Settings</td>
-            <td className="px-4 py-2 text-lg">Basic</td>
-            <td className="px-4 py-2 text-lg">Advanced</td>
-            <td className="px-4 py-2 text-lg">Advanced</td>
+          <tr>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Collaboration Features</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Limited</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Advanced</td>
           </tr>
-          <tr className="border-b border-gray-200 dark:border-gray-700">
-            <td className="px-4 py-2 text-lg">Code Integration</td>
-            <td className="px-4 py-2 text-lg">No</td>
-            <td className="px-4 py-2 text-lg">Yes</td>
-            <td className="px-4 py-2 text-lg">Yes</td>
+          <tr>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Customization Options</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Limited</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Extensive</td>
           </tr>
-          <tr className="border-b border-gray-200 dark:border-gray-700">
-            <td className="px-4 py-2 text-lg">Collaboration</td>
-            <td className="px-4 py-2 text-lg">No</td>
-            <td className="px-4 py-2 text-lg">Yes</td>
-            <td className="px-4 py-2 text-lg">Yes</td>
-          </tr>
-          <tr className="border-b border-gray-200 dark:border-gray-700">
-            <td className="px-4 py-2 text-lg">Change Tracking</td>
-            <td className="px-4 py-2 text-lg">No</td>
-            <td className="px-4 py-2 text-lg">Yes</td>
-            <td className="px-4 py-2 text-lg">Yes</td>
+          <tr>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Integration with Development Tools</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Limited</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Seamless</td>
           </tr>
         </tbody>
       </table>
