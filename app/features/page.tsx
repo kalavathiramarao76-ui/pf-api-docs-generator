@@ -65,11 +65,6 @@ export default function Page() {
             <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Low</td>
           </tr>
           <tr>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Code Integration</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Manual</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Automatic</td>
-          </tr>
-          <tr>
             <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Collaboration Features</td>
             <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Limited</td>
             <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Advanced</td>
@@ -79,8 +74,36 @@ export default function Page() {
             <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Limited</td>
             <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Extensive</td>
           </tr>
+          <tr>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Integration with Development Tools</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Limited</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Seamless</td>
+          </tr>
         </tbody>
       </table>
+      <h2 className="text-2xl font-bold mb-4">Feature Tour</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+        <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
+          <h2 className="text-lg font-bold mb-2">Step 1: Setup</h2>
+          <p className="text-sm">Easy setup and integration with your existing API.</p>
+        </div>
+        <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
+          <h2 className="text-lg font-bold mb-2">Step 2: Configuration</h2>
+          <p className="text-sm">Customize your documentation templates and settings.</p>
+        </div>
+        <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
+          <h2 className="text-lg font-bold mb-2">Step 3: Generation</h2>
+          <p className="text-sm">Automatically generate API documentation with a single click.</p>
+        </div>
+        <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
+          <h2 className="text-lg font-bold mb-2">Step 4: Collaboration</h2>
+          <p className="text-sm">Collaborate with your team and track changes to your API.</p>
+        </div>
+        <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
+          <h2 className="text-lg font-bold mb-2">Step 5: Deployment</h2>
+          <p className="text-sm">Deploy your API documentation to your preferred platform.</p>
+        </div>
+      </div>
     </div>
   );
 }
