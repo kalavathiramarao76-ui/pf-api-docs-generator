@@ -1,5 +1,3 @@
-use client;
-
 import { useState } from 'react';
 import Link from 'next/link';
 import { AiOutlineArrowRight } from 'react-icons/ai';
@@ -8,19 +6,33 @@ export default function CtaPage() {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [emailError, setEmailError] = useState('');
+  const [generalError, setGeneralError] = useState('');
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      return 'Please enter a valid email address';
+    }
+    return '';
+  };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(email)) {
-      setEmailError('Please enter a valid email address');
+    const emailValidationError = validateEmail(email);
+    if (emailValidationError) {
+      setEmailError(emailValidationError);
       return;
     }
     setIsSubmitting(true);
-    localStorage.setItem('email', email);
-    alert('Thank you for your interest!');
-    setIsSubmitting(false);
-    setEmailError('');
+    try {
+      localStorage.setItem('email', email);
+      alert('Thank you for your interest!');
+    } catch (error) {
+      setGeneralError('An error occurred while submitting your email. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+      setEmailError('');
+    }
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,6 +55,7 @@ export default function CtaPage() {
           className={`px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${emailError ? 'border-red-500' : ''}`}
         />
         {emailError && <p className="text-red-500 text-sm mb-4">{emailError}</p>}
+        {generalError && <p className="text-red-500 text-sm mb-4">{generalError}</p>}
         <button
           type="submit"
           disabled={isSubmitting}

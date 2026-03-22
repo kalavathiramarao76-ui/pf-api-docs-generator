@@ -55,35 +55,32 @@ export default function Page() {
         </thead>
         <tbody>
           <tr className="border-b border-gray-200 dark:border-gray-700">
-            <td className="px-4 py-2">Time Savings</td>
-            <td className="px-4 py-2">High</td>
-            <td className="px-4 py-2">Low</td>
+            <td className="px-4 py-2">Time to Generate Documentation</td>
+            <td className="px-4 py-2">Automatic, instant generation</td>
+            <td className="px-4 py-2">Manual, time-consuming process</td>
           </tr>
           <tr className="border-b border-gray-200 dark:border-gray-700">
-            <td className="px-4 py-2">Error Reduction</td>
-            <td className="px-4 py-2">High</td>
-            <td className="px-4 py-2">Low</td>
+            <td className="px-4 py-2">Accuracy of Documentation</td>
+            <td className="px-4 py-2">Highly accurate, generated from code</td>
+            <td className="px-4 py-2">Prone to human error</td>
+          </tr>
+          <tr className="border-b border-gray-200 dark:border-gray-700">
+            <td className="px-4 py-2">Customization Options</td>
+            <td className="px-4 py-2">Customizable templates and settings</td>
+            <td className="px-4 py-2">Limited customization options</td>
           </tr>
           <tr className="border-b border-gray-200 dark:border-gray-700">
             <td className="px-4 py-2">Collaboration Features</td>
-            <td className="px-4 py-2">Yes</td>
-            <td className="px-4 py-2">No</td>
+            <td className="px-4 py-2">Real-time collaboration and commenting</td>
+            <td className="px-4 py-2">Limited collaboration features</td>
           </tr>
           <tr className="border-b border-gray-200 dark:border-gray-700">
-            <td className="px-4 py-2">Customizable Templates</td>
-            <td className="px-4 py-2">Yes</td>
-            <td className="px-4 py-2">No</td>
+            <td className="px-4 py-2">Integration with Development Tools</td>
+            <td className="px-4 py-2">Seamless integration with popular tools</td>
+            <td className="px-4 py-2">Limited integration options</td>
           </tr>
         </tbody>
       </table>
-      <Link href="/docs" className="text-lg font-bold mb-4">Learn More</Link>
-      <div className="bg-orange-100 dark:bg-orange-900 p-4 rounded shadow mb-4 text-center">
-        <h2 className="text-lg font-bold mb-2">Ready to Simplify Your API Documentation?</h2>
-        <p className="text-sm mb-2">Sign up for a free trial or paid plan to experience the full power of our API documentation generator and start saving time and reducing errors today!</p>
-        <div className="flex justify-center gap-4">
-          <Link href="/signup" className="bg-orange-500 dark:bg-orange-700 hover:bg-orange-700 dark:hover:bg-orange-500 text-white font-bold py-2 px-4 rounded">Sign Up</Link>
-        </div>
-      </div>
     </div>
   );
 }
