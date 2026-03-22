@@ -8,6 +8,20 @@ import { RiDashboardLine } from 'react-icons/ri';
 import { TbApi } from 'react-icons/tb';
 
 export default function Page() {
+  const [tutorialStep, setTutorialStep] = useState(1);
+
+  const handleNextStep = () => {
+    if (tutorialStep < 3) {
+      setTutorialStep(tutorialStep + 1);
+    }
+  };
+
+  const handlePrevStep = () => {
+    if (tutorialStep > 1) {
+      setTutorialStep(tutorialStep - 1);
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12">
       <h1 className="text-3xl font-bold mb-4">Features</h1>
@@ -44,6 +58,51 @@ export default function Page() {
           <p className="text-sm">Track changes and updates to your API.</p>
         </div>
       </div>
+      <h2 className="text-2xl font-bold mb-4">Interactive Tutorial</h2>
+      <div className="bg-white dark:bg-gray-800 p-4 rounded shadow mb-8">
+        {tutorialStep === 1 && (
+          <div>
+            <h2 className="text-lg font-bold mb-2">Step 1: Generate API Documentation</h2>
+            <p className="text-sm">Automatic API documentation generation.</p>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={handleNextStep}
+            >
+              Next Step
+            </button>
+          </div>
+        )}
+        {tutorialStep === 2 && (
+          <div>
+            <h2 className="text-lg font-bold mb-2">Step 2: Customize Documentation Templates</h2>
+            <p className="text-sm">Customizable documentation templates.</p>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+              onClick={handlePrevStep}
+            >
+              Previous Step
+            </button>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={handleNextStep}
+            >
+              Next Step
+            </button>
+          </div>
+        )}
+        {tutorialStep === 3 && (
+          <div>
+            <h2 className="text-lg font-bold mb-2">Step 3: Integrate with Development Tools</h2>
+            <p className="text-sm">Integration with popular development tools.</p>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+              onClick={handlePrevStep}
+            >
+              Previous Step
+            </button>
+          </div>
+        )}
+      </div>
       <h2 className="text-2xl font-bold mb-4">Feature Matrix</h2>
       <table className="w-full mb-8 border border-gray-200 dark:border-gray-700">
         <thead className="bg-gray-100 dark:bg-gray-800">
@@ -55,29 +114,34 @@ export default function Page() {
         </thead>
         <tbody>
           <tr>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">API Documentation Generation</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Manual</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Automatic</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Dashboard</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">No</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Yes</td>
+          </tr>
+          <tr>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">API Docs</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">No</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Yes</td>
+          </tr>
+          <tr>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Settings</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">No</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Yes</td>
           </tr>
           <tr>
             <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Code Integration</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Limited</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Seamless</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">No</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Yes</td>
           </tr>
           <tr>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Collaboration Features</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Basic</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Advanced</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Collaboration</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">No</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Yes</td>
           </tr>
           <tr>
             <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Change Tracking</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Manual</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Automated</td>
-          </tr>
-          <tr>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Customizable Templates</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Limited</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Fully Customizable</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">No</td>
+            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Yes</td>
           </tr>
         </tbody>
       </table>

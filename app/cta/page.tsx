@@ -15,6 +15,9 @@ export default function CtaPage() {
     if (!emailRegex.test(email)) {
       return 'Please enter a valid email address';
     }
+    if (email.trim() === '') {
+      return 'Email is required';
+    }
     return '';
   };
 
@@ -31,7 +34,11 @@ export default function CtaPage() {
       setSuccessMessage('Thank you for your interest! We will be in touch soon.');
       setIsSuccess(true);
     } catch (error) {
-      setGeneralError('An error occurred while submitting your email. Please try again.');
+      if (error instanceof Error) {
+        setGeneralError(error.message);
+      } else {
+        setGeneralError('An unknown error occurred');
+      }
     } finally {
       setIsSubmitting(false);
       setEmailError('');
@@ -45,6 +52,15 @@ export default function CtaPage() {
     }
   };
 
+  const handleBlur = () => {
+    const emailValidationError = validateEmail(email);
+    if (emailValidationError) {
+      setEmailError(emailValidationError);
+    } else {
+      setEmailError('');
+    }
+  };
+
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <h1 className="text-3xl font-bold mb-4">Get Started with AutoGenerate API Documentation</h1>
@@ -54,6 +70,7 @@ export default function CtaPage() {
           type="email"
           value={email}
           onChange={handleEmailChange}
+          onBlur={handleBlur}
           placeholder="Enter your email"
           className={`px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${emailError ? 'border-red-500' : ''}`}
         />
@@ -73,28 +90,10 @@ export default function CtaPage() {
               />
               Submitting...
             </div>
-          ) : isSuccess ? (
-            <div className="flex items-center">
-              <svg
-                className="mr-2 h-5 w-5 text-white"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 13l4 4L19 7"
-                />
-              </svg>
-              Success!
-            </div>
           ) : (
             <div className="flex items-center">
-              Get Started
-              <AiOutlineArrowRight className="ml-2" />
+              <AiOutlineArrowRight className="mr-2" />
+              {isSuccess ? 'Submitted' : 'Submit'}
             </div>
           )}
         </button>
