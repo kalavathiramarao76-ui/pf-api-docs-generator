@@ -56,28 +56,34 @@ export default function Page() {
         </thead>
         <tbody>
           <tr className="border-b border-gray-200 dark:border-gray-700">
-            <td className="px-4 py-2">Automatic API Documentation</td>
-            <td className="px-4 py-2">Limited to 100 APIs</td>
-            <td className="px-4 py-2">Unlimited APIs</td>
-            <td className="px-4 py-2">Unlimited APIs, Priority Support</td>
+            <td className="px-4 py-2 text-lg">API Documentation Generation</td>
+            <td className="px-4 py-2 text-lg">Limited</td>
+            <td className="px-4 py-2 text-lg">Unlimited</td>
+            <td className="px-4 py-2 text-lg">Unlimited</td>
           </tr>
           <tr className="border-b border-gray-200 dark:border-gray-700">
-            <td className="px-4 py-2">Customizable Templates</td>
-            <td className="px-4 py-2">Limited to 5 templates</td>
-            <td className="px-4 py-2">Unlimited templates</td>
-            <td className="px-4 py-2">Unlimited templates, Custom branding</td>
+            <td className="px-4 py-2 text-lg">Customizable Templates</td>
+            <td className="px-4 py-2 text-lg">No</td>
+            <td className="px-4 py-2 text-lg">Yes</td>
+            <td className="px-4 py-2 text-lg">Yes</td>
           </tr>
           <tr className="border-b border-gray-200 dark:border-gray-700">
-            <td className="px-4 py-2">Collaboration Features</td>
-            <td className="px-4 py-2">Limited to 2 users</td>
-            <td className="px-4 py-2">Unlimited users</td>
-            <td className="px-4 py-2">Unlimited users, Single sign-on</td>
+            <td className="px-4 py-2 text-lg">Collaboration Features</td>
+            <td className="px-4 py-2 text-lg">No</td>
+            <td className="px-4 py-2 text-lg">Yes</td>
+            <td className="px-4 py-2 text-lg">Yes</td>
           </tr>
           <tr className="border-b border-gray-200 dark:border-gray-700">
-            <td className="px-4 py-2">Change Tracking</td>
-            <td className="px-4 py-2">Limited to 30 days</td>
-            <td className="px-4 py-2">Unlimited history</td>
-            <td className="px-4 py-2">Unlimited history, Customizable alerts</td>
+            <td className="px-4 py-2 text-lg">Change Tracking</td>
+            <td className="px-4 py-2 text-lg">No</td>
+            <td className="px-4 py-2 text-lg">Yes</td>
+            <td className="px-4 py-2 text-lg">Yes</td>
+          </tr>
+          <tr className="border-b border-gray-200 dark:border-gray-700">
+            <td className="px-4 py-2 text-lg">Integration with Development Tools</td>
+            <td className="px-4 py-2 text-lg">Limited</td>
+            <td className="px-4 py-2 text-lg">Unlimited</td>
+            <td className="px-4 py-2 text-lg">Unlimited</td>
           </tr>
         </tbody>
       </table>

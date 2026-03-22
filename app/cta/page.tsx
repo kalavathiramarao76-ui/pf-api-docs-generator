@@ -65,15 +65,15 @@ export default function CtaPage() {
         >
           {isSubmitting ? (
             <div className="flex items-center">
-              Submitting...{' '}
               <svg
-                className="ml-2 animate-spin h-5 w-5 border-4 border-gray-200 border-t-blue-600 rounded-full"
+                className="mr-2 animate-spin h-5 w-5 border-4 border-gray-200 border-t-blue-600 rounded-full"
                 viewBox="0 0 24 24"
               />
+              Submitting...
             </div>
           ) : (
             <div className="flex items-center">
-              Get Started <AiOutlineArrowRight className="ml-2" />
+              Submit <AiOutlineArrowRight className="ml-2" />
             </div>
           )}
         </button>
