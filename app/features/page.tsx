@@ -65,22 +65,46 @@ export default function Page() {
             <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Low</td>
           </tr>
           <tr>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Code Integration</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Manual</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Automated</td>
-          </tr>
-          <tr>
             <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Collaboration Features</td>
             <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Limited</td>
             <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Extensive</td>
           </tr>
-          <tr>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Cost</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">High</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Low</td>
-          </tr>
         </tbody>
       </table>
+      <h2 className="text-2xl font-bold mb-4">Pricing and Plans</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+        <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
+          <h2 className="text-lg font-bold mb-2">Free Trial</h2>
+          <p className="text-sm">14-day free trial with full access to features.</p>
+          <p className="text-sm">No credit card required.</p>
+          <Link href="/signup">
+            <a className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              Start Free Trial
+            </a>
+          </Link>
+        </div>
+        <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
+          <h2 className="text-lg font-bold mb-2">Basic Plan</h2>
+          <p className="text-sm">$9.99/month or $99.99/year.</p>
+          <p className="text-sm">Includes 100 API calls per month.</p>
+          <Link href="/pricing">
+            <a className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              Sign Up
+            </a>
+          </Link>
+        </div>
+        <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
+          <h2 className="text-lg font-bold mb-2">Pro Plan</h2>
+          <p className="text-sm">$29.99/month or $299.99/year.</p>
+          <p className="text-sm">Includes 1000 API calls per month.</p>
+          <p className="text-sm">Priority support and additional features.</p>
+          <Link href="/pricing">
+            <a className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              Sign Up
+            </a>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

@@ -8,6 +8,7 @@ export default function CtaPage() {
   const [emailError, setEmailError] = useState('');
   const [generalError, setGeneralError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -28,6 +29,7 @@ export default function CtaPage() {
     try {
       localStorage.setItem('email', email);
       setSuccessMessage('Thank you for your interest! We will be in touch soon.');
+      setIsSuccess(true);
     } catch (error) {
       setGeneralError('An error occurred while submitting your email. Please try again.');
     } finally {
@@ -60,8 +62,8 @@ export default function CtaPage() {
         {successMessage && <p className="text-green-500 text-sm mb-4">{successMessage}</p>}
         <button
           type="submit"
-          disabled={isSubmitting}
-          className={`px-8 py-2 relative ${isSubmitting ? 'bg-blue-300' : 'bg-blue-500'} text-white rounded-lg hover:${isSubmitting ? '' : 'bg-blue-700'} focus:outline-none focus:ring-2 focus:ring-blue-500`}
+          disabled={isSubmitting || isSuccess}
+          className={`px-8 py-2 relative ${isSubmitting ? 'bg-blue-300' : isSuccess ? 'bg-green-500' : 'bg-blue-500'} text-white rounded-lg hover:${isSubmitting ? '' : isSuccess ? '' : 'bg-blue-700'} focus:outline-none focus:ring-2 focus:ring-blue-500`}
         >
           {isSubmitting ? (
             <div className="flex items-center">
@@ -71,11 +73,26 @@ export default function CtaPage() {
               />
               Submitting...
             </div>
-          ) : (
+          ) : isSuccess ? (
             <div className="flex items-center">
-              Submit
-              <AiOutlineArrowRight className="ml-2" />
+              <svg
+                className="mr-2 h-5 w-5 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M5 13l4 4L19 7"
+                />
+              </svg>
+              Success!
             </div>
+          ) : (
+            'Get Started'
           )}
         </button>
       </form>
