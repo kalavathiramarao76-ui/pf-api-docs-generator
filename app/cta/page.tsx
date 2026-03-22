@@ -7,6 +7,7 @@ export default function CtaPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [emailError, setEmailError] = useState('');
   const [generalError, setGeneralError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -26,7 +27,7 @@ export default function CtaPage() {
     setIsSubmitting(true);
     try {
       localStorage.setItem('email', email);
-      alert('Thank you for your interest!');
+      setSuccessMessage('Thank you for your interest! We will be in touch soon.');
     } catch (error) {
       setGeneralError('An error occurred while submitting your email. Please try again.');
     } finally {
@@ -56,6 +57,7 @@ export default function CtaPage() {
         />
         {emailError && <p className="text-red-500 text-sm mb-4">{emailError}</p>}
         {generalError && <p className="text-red-500 text-sm mb-4">{generalError}</p>}
+        {successMessage && <p className="text-green-500 text-sm mb-4">{successMessage}</p>}
         <button
           type="submit"
           disabled={isSubmitting}
@@ -76,12 +78,6 @@ export default function CtaPage() {
           )}
         </button>
       </form>
-      <p className="text-lg text-gray-500 mt-8">
-        Already have an account?{' '}
-        <Link href="/dashboard" className="text-blue-500 hover:text-blue-700">
-          Log in
-        </Link>
-      </p>
     </div>
   );
 }

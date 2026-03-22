@@ -14,27 +14,27 @@ export default function FaqPage() {
     {
       id: 1,
       question: 'What is AutoGenerate API Documentation?',
-      answer: 'AutoGenerate API Documentation is a tool that automatically generates API documentation from code, saving developers time and reducing errors.',
+      answer: 'AutoGenerate API Documentation is a tool that automatically generates API documentation from code, saving developers time and reducing errors. It supports multiple programming languages and frameworks, including JavaScript, Python, Java, and more, making it a versatile solution for software development and technical writing.',
     },
     {
       id: 2,
-      question: 'What programming languages and frameworks are supported?',
-      answer: 'AutoGenerate API Documentation supports multiple programming languages and frameworks, including JavaScript, Python, Java, and more.',
+      question: 'What programming languages and frameworks are supported by AutoGenerate API Documentation for API documentation generation?',
+      answer: 'AutoGenerate API Documentation supports multiple programming languages and frameworks, including JavaScript, Python, Java, and more, allowing for seamless integration with various software development projects and technical writing initiatives.',
     },
     {
       id: 3,
-      question: 'Can I customize the documentation templates?',
-      answer: 'Yes, AutoGenerate API Documentation allows for easy customization of documentation templates to fit your needs.',
+      question: 'Can I customize the API documentation templates in AutoGenerate API Documentation for my software development project?',
+      answer: 'Yes, AutoGenerate API Documentation allows for easy customization of API documentation templates to fit your specific software development needs, enabling you to create tailored technical documentation that meets your project requirements.',
     },
     {
       id: 4,
-      question: 'What collaboration features are available?',
-      answer: 'AutoGenerate API Documentation includes features for collaboration, such as real-time commenting and @mentions, to help teams work together more efficiently.',
+      question: 'What collaboration features are available in AutoGenerate API Documentation for team-based software development projects?',
+      answer: 'AutoGenerate API Documentation includes features for collaboration, such as real-time commenting and @mentions, to help teams work together more efficiently on software development projects and technical writing initiatives, ensuring that all stakeholders are aligned and informed.',
     },
     {
       id: 5,
-      question: 'How does the change tracking and updates feature work?',
-      answer: 'AutoGenerate API Documentation tracks changes and updates to the API, allowing you to easily see what has changed and when.',
+      question: 'How does the change tracking and updates feature work in AutoGenerate API Documentation for version control and technical documentation?',
+      answer: 'AutoGenerate API Documentation tracks changes and updates to the API, allowing you to easily see what has changed and when, providing a clear audit trail for version control and technical documentation purposes, and enabling you to maintain accurate and up-to-date API documentation.',
     },
   ];
 
@@ -50,25 +50,19 @@ export default function FaqPage() {
     <div>
       <Head>
         <title>AutoGenerate API Documentation - Frequently Asked Questions</title>
-        <meta name="description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering features, customization, collaboration, and more for API documentation, software development, and technical writing." />
-        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, API documentation tool, FAQ, frequently asked questions, software development, technical writing, API documentation generator, automatic API documentation, api docs, documentation generator, technical documentation, developer tools, coding, programming, web development" />
+        <meta name="description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering features, customization, collaboration, and more for API documentation, software development, and technical writing, including support for multiple programming languages and frameworks." />
+        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, API documentation tool, FAQ, frequently asked questions, software development, technical writing, API documentation generator, automatic API documentation, api docs, documentation generator, technical documentation, developer tools, coding, programming, web development, JavaScript, Python, Java, collaboration, customization, change tracking, version control" />
         <meta property="og:title" content="AutoGenerate API Documentation - Unlock the Secrets of API Documentation" />
-        <meta property="og:description" content="Get the inside scoop on AutoGenerate API Documentation with our detailed FAQ section, covering everything from features and customization to collaboration and change tracking for API documentation, software development, and technical writing." />
+        <meta property="og:description" content="Get the inside scoop on AutoGenerate API Documentation with our detailed FAQ section, covering everything from features and customization to collaboration and change tracking for API documentation, software development, and technical writing, including support for multiple programming languages and frameworks." />
         <meta property="og:url" content={`${router.asPath}`} />
         <meta property="og:type" content="website" />
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content="AutoGenerate API Documentation - Your API Documentation Questions Answered" />
-        <meta name="twitter:description" content="Find answers to your burning questions about AutoGenerate API Documentation, including features, customization, and collaboration for API documentation, software development, and technical writing." />
       </Head>
-      <h1>AutoGenerate API Documentation - Frequently Asked Questions</h1>
-      <h2>Get the Most Out of AutoGenerate API Documentation</h2>
-      <p>Below, you'll find answers to some of the most frequently asked questions about AutoGenerate API Documentation, including features, customization, collaboration, and more.</p>
       {questions.map((question) => (
         <div key={question.id}>
-          <h3>{question.question}</h3>
+          <h2>{question.question}</h2>
           <p>{activeQuestion === question.id ? question.answer : ''}</p>
           <button onClick={() => handleToggle(question.id)}>
-            {activeQuestion === question.id ? 'Hide Answer' : 'Show Answer'}
+            {activeQuestion === question.id ? 'Hide' : 'Show'} answer
             <AiOutlineArrowRight />
           </button>
         </div>

@@ -49,35 +49,35 @@ export default function Page() {
         <thead className="bg-gray-100 dark:bg-gray-800">
           <tr>
             <th className="px-4 py-2 text-lg font-bold">Feature</th>
-            <th className="px-4 py-2 text-lg font-bold">AutoGenerate API Documentation</th>
-            <th className="px-4 py-2 text-lg font-bold">Manual API Documentation</th>
+            <th className="px-4 py-2 text-lg font-bold">Free Plan</th>
+            <th className="px-4 py-2 text-lg font-bold">Pro Plan</th>
+            <th className="px-4 py-2 text-lg font-bold">Enterprise Plan</th>
           </tr>
         </thead>
         <tbody>
           <tr className="border-b border-gray-200 dark:border-gray-700">
-            <td className="px-4 py-2">Time to Generate Documentation</td>
-            <td className="px-4 py-2">Automatic, instant generation</td>
-            <td className="px-4 py-2">Manual, time-consuming process</td>
+            <td className="px-4 py-2">Automatic API Documentation</td>
+            <td className="px-4 py-2">Limited to 100 APIs</td>
+            <td className="px-4 py-2">Unlimited APIs</td>
+            <td className="px-4 py-2">Unlimited APIs, Priority Support</td>
           </tr>
           <tr className="border-b border-gray-200 dark:border-gray-700">
-            <td className="px-4 py-2">Accuracy of Documentation</td>
-            <td className="px-4 py-2">Highly accurate, generated from code</td>
-            <td className="px-4 py-2">Prone to human error</td>
-          </tr>
-          <tr className="border-b border-gray-200 dark:border-gray-700">
-            <td className="px-4 py-2">Customization Options</td>
-            <td className="px-4 py-2">Customizable templates and settings</td>
-            <td className="px-4 py-2">Limited customization options</td>
+            <td className="px-4 py-2">Customizable Templates</td>
+            <td className="px-4 py-2">Limited to 5 templates</td>
+            <td className="px-4 py-2">Unlimited templates</td>
+            <td className="px-4 py-2">Unlimited templates, Custom branding</td>
           </tr>
           <tr className="border-b border-gray-200 dark:border-gray-700">
             <td className="px-4 py-2">Collaboration Features</td>
-            <td className="px-4 py-2">Real-time collaboration and commenting</td>
-            <td className="px-4 py-2">Limited collaboration features</td>
+            <td className="px-4 py-2">Limited to 2 users</td>
+            <td className="px-4 py-2">Unlimited users</td>
+            <td className="px-4 py-2">Unlimited users, Single sign-on</td>
           </tr>
           <tr className="border-b border-gray-200 dark:border-gray-700">
-            <td className="px-4 py-2">Integration with Development Tools</td>
-            <td className="px-4 py-2">Seamless integration with popular tools</td>
-            <td className="px-4 py-2">Limited integration options</td>
+            <td className="px-4 py-2">Change Tracking</td>
+            <td className="px-4 py-2">Limited to 30 days</td>
+            <td className="px-4 py-2">Unlimited history</td>
+            <td className="px-4 py-2">Unlimited history, Customizable alerts</td>
           </tr>
         </tbody>
       </table>
