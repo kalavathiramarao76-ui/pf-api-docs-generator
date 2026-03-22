@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-900 text-gray-100;
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold;
+    color: #fff;
+  }
+
+  a {
+    @apply text-blue-500;
+  }
+
+  a:hover {
+    @apply text-blue-700;
+  }
+}
+
+@layer components {
+  .container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .btn {
+    @apply py-2 px-4 bg-blue-500 text-white rounded;
+  }
+
+  .btn:hover {
+    @apply bg-blue-700;
+  }
+}
+
+@layer utilities {
+  .dark-mode {
+    @apply bg-gray-900 text-gray-100;
+  }
+
+  .light-mode {
+    @apply bg-white text-gray-900;
+  }
+}
+
+.dark-mode {
+  --tw-bg-opacity: 1;
+  background-color: #1a1d23;
+  color: #fff;
+}
+
+.light-mode {
+  --tw-bg-opacity: 1;
+  background-color: #fff;
+  color: #1a1d23;
+}
+
+.gradient {
+  background: linear-gradient(90deg, #1a1d23 0%, #2f343a 100%);
+}
+
+.hero {
+  background: linear-gradient(90deg, #1a1d23 0%, #2f343a 100%);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.pricing-table {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.faq {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.footer {
+  background: linear-gradient(90deg, #1a1d23 0%, #2f343a 100%);
+  padding: 20px;
+  color: #fff;
+}
