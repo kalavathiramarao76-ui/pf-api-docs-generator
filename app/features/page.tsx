@@ -44,13 +44,44 @@ export default function Page() {
           <p className="text-sm">Track changes and updates to your API.</p>
         </div>
       </div>
+      <h2 className="text-2xl font-bold mb-4">Comparison Table</h2>
+      <table className="w-full mb-8 border border-gray-200 dark:border-gray-700">
+        <thead className="bg-gray-100 dark:bg-gray-800">
+          <tr>
+            <th className="px-4 py-2 text-lg font-bold">Feature</th>
+            <th className="px-4 py-2 text-lg font-bold">AutoGenerate API Documentation</th>
+            <th className="px-4 py-2 text-lg font-bold">Manual API Documentation</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr className="border-b border-gray-200 dark:border-gray-700">
+            <td className="px-4 py-2">Time Savings</td>
+            <td className="px-4 py-2">High</td>
+            <td className="px-4 py-2">Low</td>
+          </tr>
+          <tr className="border-b border-gray-200 dark:border-gray-700">
+            <td className="px-4 py-2">Error Reduction</td>
+            <td className="px-4 py-2">High</td>
+            <td className="px-4 py-2">Low</td>
+          </tr>
+          <tr className="border-b border-gray-200 dark:border-gray-700">
+            <td className="px-4 py-2">Collaboration Features</td>
+            <td className="px-4 py-2">Yes</td>
+            <td className="px-4 py-2">No</td>
+          </tr>
+          <tr className="border-b border-gray-200 dark:border-gray-700">
+            <td className="px-4 py-2">Customizable Templates</td>
+            <td className="px-4 py-2">Yes</td>
+            <td className="px-4 py-2">No</td>
+          </tr>
+        </tbody>
+      </table>
       <Link href="/docs" className="text-lg font-bold mb-4">Learn More</Link>
       <div className="bg-orange-100 dark:bg-orange-900 p-4 rounded shadow mb-4 text-center">
         <h2 className="text-lg font-bold mb-2">Ready to Simplify Your API Documentation?</h2>
         <p className="text-sm mb-2">Sign up for a free trial or paid plan to experience the full power of our API documentation generator and start saving time and reducing errors today!</p>
         <div className="flex justify-center gap-4">
-          <Link href="/signup" className="bg-orange-500 dark:bg-orange-700 hover:bg-orange-700 dark:hover:bg-orange-500 text-white font-bold py-2 px-4 rounded">Start Free Trial</Link>
-          <Link href="/pricing" className="bg-orange-500 dark:bg-orange-700 hover:bg-orange-700 dark:hover:bg-orange-500 text-white font-bold py-2 px-4 rounded">View Pricing Plans</Link>
+          <Link href="/signup" className="bg-orange-500 dark:bg-orange-700 hover:bg-orange-700 dark:hover:bg-orange-500 text-white font-bold py-2 px-4 rounded">Sign Up</Link>
         </div>
       </div>
     </div>

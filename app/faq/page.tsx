@@ -51,27 +51,30 @@ export default function FaqPage() {
       <Head>
         <title>AutoGenerate API Documentation - Frequently Asked Questions</title>
         <meta name="description" content="Get answers to frequently asked questions about AutoGenerate API Documentation, including features, customization, and collaboration for API documentation, software development, and technical writing." />
-        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, API documentation tool, FAQ, frequently asked questions, software development, technical writing, API documentation generator, automatic API documentation" />
+        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, API documentation tool, FAQ, frequently asked questions, software development, technical writing, API documentation generator, automatic API documentation, api docs, documentation generator, technical documentation, developer tools" />
         <meta property="og:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
         <meta property="og:description" content="Get answers to frequently asked questions about AutoGenerate API Documentation, including features, customization, and collaboration for API documentation, software development, and technical writing." />
         <meta property="og:url" content={`${router.asPath}`} />
         <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
+        <meta name="twitter:description" content="Get answers to frequently asked questions about AutoGenerate API Documentation, including features, customization, and collaboration for API documentation, software development, and technical writing." />
       </Head>
       <div className="max-w-5xl mx-auto p-4 md:p-6 lg:p-8">
         <h1 className="text-3xl font-bold mb-4">Frequently Asked Questions about AutoGenerate API Documentation</h1>
-        <p className="text-lg mb-4">Find answers to common questions about AutoGenerate API Documentation, including its features, benefits, and use cases for API documentation, software development, and technical writing.</p>
+        <p className="text-lg mb-8">Find answers to common questions about AutoGenerate API Documentation, including features, customization, and collaboration.</p>
         {questions.map((question) => (
-          <div key={question.id} className="mb-4">
+          <div key={question.id} className="mb-6">
             <button
-              className="flex justify-between w-full text-left p-4 bg-gray-100 dark:bg-gray-800 rounded-lg"
+              className={`flex justify-between w-full text-lg font-medium ${activeQuestion === question.id ? 'text-blue-600' : 'text-gray-900'}`}
               onClick={() => handleToggle(question.id)}
             >
-              <span className="text-lg font-medium">{question.question}</span>
-              <AiOutlineArrowRight size={24} />
+              <span>{question.question}</span>
+              <AiOutlineArrowRight className={`text-lg ${activeQuestion === question.id ? 'rotate-90' : ''}`} />
             </button>
             {activeQuestion === question.id && (
-              <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg mt-2">
-                <p className="text-lg">{question.answer}</p>
+              <div className="mt-4 text-lg">
+                <p>{question.answer}</p>
               </div>
             )}
           </div>

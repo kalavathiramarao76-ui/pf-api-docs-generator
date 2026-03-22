@@ -7,13 +7,27 @@ import { AiOutlineArrowRight } from 'react-icons/ai';
 export default function CtaPage() {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [emailError, setEmailError] = useState('');
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+      setEmailError('Please enter a valid email address');
+      return;
+    }
     setIsSubmitting(true);
     localStorage.setItem('email', email);
     alert('Thank you for your interest!');
     setIsSubmitting(false);
+    setEmailError('');
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    if (e.target.value !== '') {
+      setEmailError('');
+    }
   };
 
   return (
@@ -24,10 +38,11 @@ export default function CtaPage() {
         <input
           type="email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={handleEmailChange}
           placeholder="Enter your email"
-          className="px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className={`px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${emailError ? 'border-red-500' : ''}`}
         />
+        {emailError && <p className="text-red-500 text-sm mb-4">{emailError}</p>}
         <button
           type="submit"
           disabled={isSubmitting}
