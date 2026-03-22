@@ -51,29 +51,25 @@ export default function FaqPage() {
       <Head>
         <title>AutoGenerate API Documentation - Frequently Asked Questions</title>
         <meta name="description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and version control." />
-        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, API documentation generation, software development, technical writing, collaboration, version control" />
-        <meta property="og:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
-        <meta property="og:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and version control." />
-        <meta property="og:url" content={router.asPath} />
-        <meta property="og:site_name" content="AutoGenerate API Documentation" />
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
-        <meta name="twitter:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and version control." />
+        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, software development, technical writing, FAQ, frequently asked questions" />
       </Head>
+      <h1>AutoGenerate API Documentation FAQ</h1>
+      <h2>Frequently Asked Questions</h2>
       {questions.map((question) => (
         <div key={question.id}>
-          <div onClick={() => handleToggle(question.id)}>
-            <h2>{question.question}</h2>
+          <h3>{question.question}</h3>
+          <p>{question.answer}</p>
+          <button onClick={() => handleToggle(question.id)}>
+            {activeQuestion === question.id ? 'Hide Answer' : 'Show Answer'}
             <AiOutlineArrowRight />
-          </div>
+          </button>
           {activeQuestion === question.id && (
-            <p>{question.answer}</p>
+            <div>
+              <p>{question.answer}</p>
+            </div>
           )}
         </div>
       ))}
-      <Link href="/">
-        <a>Back to Home</a>
-      </Link>
     </div>
   );
 }
