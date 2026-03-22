@@ -56,19 +56,31 @@ export default function Page() {
         </thead>
         <tbody>
           <tr className="border-b border-gray-200 dark:border-gray-700">
-            <td className="px-4 py-2 text-lg">API Documentation Generation</td>
-            <td className="px-4 py-2 text-lg">Limited</td>
-            <td className="px-4 py-2 text-lg">Unlimited</td>
-            <td className="px-4 py-2 text-lg">Unlimited</td>
+            <td className="px-4 py-2 text-lg">Dashboard</td>
+            <td className="px-4 py-2 text-lg">Yes</td>
+            <td className="px-4 py-2 text-lg">Yes</td>
+            <td className="px-4 py-2 text-lg">Yes</td>
           </tr>
           <tr className="border-b border-gray-200 dark:border-gray-700">
-            <td className="px-4 py-2 text-lg">Customizable Templates</td>
+            <td className="px-4 py-2 text-lg">API Docs</td>
+            <td className="px-4 py-2 text-lg">Limited</td>
+            <td className="px-4 py-2 text-lg">Full</td>
+            <td className="px-4 py-2 text-lg">Full</td>
+          </tr>
+          <tr className="border-b border-gray-200 dark:border-gray-700">
+            <td className="px-4 py-2 text-lg">Settings</td>
+            <td className="px-4 py-2 text-lg">Basic</td>
+            <td className="px-4 py-2 text-lg">Advanced</td>
+            <td className="px-4 py-2 text-lg">Advanced</td>
+          </tr>
+          <tr className="border-b border-gray-200 dark:border-gray-700">
+            <td className="px-4 py-2 text-lg">Code Integration</td>
             <td className="px-4 py-2 text-lg">No</td>
             <td className="px-4 py-2 text-lg">Yes</td>
             <td className="px-4 py-2 text-lg">Yes</td>
           </tr>
           <tr className="border-b border-gray-200 dark:border-gray-700">
-            <td className="px-4 py-2 text-lg">Collaboration Features</td>
+            <td className="px-4 py-2 text-lg">Collaboration</td>
             <td className="px-4 py-2 text-lg">No</td>
             <td className="px-4 py-2 text-lg">Yes</td>
             <td className="px-4 py-2 text-lg">Yes</td>
@@ -78,12 +90,6 @@ export default function Page() {
             <td className="px-4 py-2 text-lg">No</td>
             <td className="px-4 py-2 text-lg">Yes</td>
             <td className="px-4 py-2 text-lg">Yes</td>
-          </tr>
-          <tr className="border-b border-gray-200 dark:border-gray-700">
-            <td className="px-4 py-2 text-lg">Integration with Development Tools</td>
-            <td className="px-4 py-2 text-lg">Limited</td>
-            <td className="px-4 py-2 text-lg">Unlimited</td>
-            <td className="px-4 py-2 text-lg">Unlimited</td>
           </tr>
         </tbody>
       </table>

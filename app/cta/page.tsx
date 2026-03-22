@@ -73,7 +73,8 @@ export default function CtaPage() {
             </div>
           ) : (
             <div className="flex items-center">
-              Submit <AiOutlineArrowRight className="ml-2" />
+              Submit
+              <AiOutlineArrowRight className="ml-2" />
             </div>
           )}
         </button>
