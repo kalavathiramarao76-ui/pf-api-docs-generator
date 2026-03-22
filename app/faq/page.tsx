@@ -50,15 +50,16 @@ export default function FaqPage() {
     <div>
       <Head>
         <title>AutoGenerate API Documentation - Frequently Asked Questions</title>
-        <meta name="description" content="Get answers to frequently asked questions about AutoGenerate API Documentation, including features, customization, and collaboration." />
-        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, FAQ, frequently asked questions" />
+        <meta name="description" content="Get answers to frequently asked questions about AutoGenerate API Documentation, including features, customization, and collaboration for API documentation, software development, and technical writing." />
+        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, API documentation tool, FAQ, frequently asked questions, software development, technical writing, API documentation generator, automatic API documentation" />
         <meta property="og:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
-        <meta property="og:description" content="Get answers to frequently asked questions about AutoGenerate API Documentation, including features, customization, and collaboration." />
+        <meta property="og:description" content="Get answers to frequently asked questions about AutoGenerate API Documentation, including features, customization, and collaboration for API documentation, software development, and technical writing." />
         <meta property="og:url" content={`${router.asPath}`} />
         <meta property="og:type" content="website" />
       </Head>
       <div className="max-w-5xl mx-auto p-4 md:p-6 lg:p-8">
-        <h1 className="text-3xl font-bold mb-4">Frequently Asked Questions</h1>
+        <h1 className="text-3xl font-bold mb-4">Frequently Asked Questions about AutoGenerate API Documentation</h1>
+        <p className="text-lg mb-4">Find answers to common questions about AutoGenerate API Documentation, including its features, benefits, and use cases for API documentation, software development, and technical writing.</p>
         {questions.map((question) => (
           <div key={question.id} className="mb-4">
             <button
@@ -66,11 +67,7 @@ export default function FaqPage() {
               onClick={() => handleToggle(question.id)}
             >
               <span className="text-lg font-medium">{question.question}</span>
-              <AiOutlineArrowRight
-                className={`text-lg transition-transform ${
-                  activeQuestion === question.id ? 'rotate-90' : ''
-                }`}
-              />
+              <AiOutlineArrowRight size={24} />
             </button>
             {activeQuestion === question.id && (
               <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg mt-2">
@@ -79,12 +76,6 @@ export default function FaqPage() {
             )}
           </div>
         ))}
-        <Link
-          href="/docs"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mt-4"
-        >
-          Learn More
-        </Link>
       </div>
     </div>
   );
