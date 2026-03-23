@@ -63,38 +63,38 @@ export default function Page() {
         {tutorialStep === 1 && (
           <div>
             <h2 className="text-lg font-bold mb-2">Step 1: Introduction to AutoGenerate API Documentation</h2>
-            <p className="text-sm mb-4">Welcome to the AutoGenerate API Documentation tutorial. This tutorial will guide you through the key features and benefits of our API documentation tool.</p>
+            <p className="text-sm mb-4">Welcome to AutoGenerate API Documentation! This tutorial will guide you through the process of generating API documentation automatically.</p>
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleNextStep}>Next Step</button>
           </div>
         )}
         {tutorialStep === 2 && (
           <div>
-            <h2 className="text-lg font-bold mb-2">Step 2: Generating API Documentation</h2>
-            <p className="text-sm mb-4">Our tool automatically generates API documentation from your code, saving you time and reducing errors. You can customize the documentation templates to fit your needs.</p>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={handlePrevStep}>Previous Step</button>
+            <h2 className="text-lg font-bold mb-2">Step 2: Setting up your API</h2>
+            <p className="text-sm mb-4">To get started, you need to set up your API. This includes defining your API endpoints, methods, and parameters.</p>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handlePrevStep}>Previous Step</button>
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleNextStep}>Next Step</button>
           </div>
         )}
         {tutorialStep === 3 && (
           <div>
-            <h2 className="text-lg font-bold mb-2">Step 3: Integrating with Development Tools</h2>
-            <p className="text-sm mb-4">Our tool integrates with popular development tools, making it easy to incorporate into your existing workflow. You can also use our API to integrate with custom tools.</p>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={handlePrevStep}>Previous Step</button>
+            <h2 className="text-lg font-bold mb-2">Step 3: Configuring Documentation Templates</h2>
+            <p className="text-sm mb-4">Next, you need to configure your documentation templates. This includes choosing a template, customizing the layout, and adding your API information.</p>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handlePrevStep}>Previous Step</button>
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleNextStep}>Next Step</button>
           </div>
         )}
         {tutorialStep === 4 && (
           <div>
-            <h2 className="text-lg font-bold mb-2">Step 4: Collaboration and Change Tracking</h2>
-            <p className="text-sm mb-4">Our tool includes collaboration features for teams, making it easy to work together on API documentation. You can also track changes and updates to your API, ensuring that your documentation is always up-to-date.</p>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={handlePrevStep}>Previous Step</button>
+            <h2 className="text-lg font-bold mb-2">Step 4: Generating API Documentation</h2>
+            <p className="text-sm mb-4">Now that you have set up your API and configured your documentation templates, you can generate your API documentation. This will create a comprehensive and accurate documentation for your API.</p>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handlePrevStep}>Previous Step</button>
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleNextStep}>Next Step</button>
           </div>
         )}
         {tutorialStep === 5 && (
           <div>
-            <h2 className="text-lg font-bold mb-2">Step 5: Conclusion</h2>
-            <p className="text-sm mb-4">Thank you for completing the AutoGenerate API Documentation tutorial. We hope you have a better understanding of the key features and benefits of our tool. If you have any questions or need further assistance, please don't hesitate to contact us.</p>
+            <h2 className="text-lg font-bold mb-2">Step 5: Reviewing and Publishing your API Documentation</h2>
+            <p className="text-sm mb-4">Finally, review your generated API documentation and publish it to your desired platform. You can also customize the documentation further to fit your needs.</p>
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handlePrevStep}>Previous Step</button>
           </div>
         )}

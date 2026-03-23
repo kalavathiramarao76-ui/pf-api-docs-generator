@@ -51,10 +51,10 @@ export default function FaqPage() {
       <Head>
         <title>AutoGenerate API Documentation - Frequently Asked Questions</title>
         <meta name="description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and more." />
-        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, API documentation generation, technical writing, software development, collaboration, customization, version control" />
+        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, API documentation generation, API documentation tools, technical writing, software development, collaboration, version control" />
         <meta property="og:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
         <meta property="og:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and more." />
-        <meta property="og:url" content={router.asPath} />
+        <meta property="og:url" content="https://autogenerate-api-documentation.com/faq" />
         <meta property="og:site_name" content="AutoGenerate API Documentation" />
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
@@ -66,7 +66,7 @@ export default function FaqPage() {
           <li key={question.id}>
             <button onClick={() => handleToggle(question.id)}>
               {question.question}
-              <AiOutlineArrowRight />
+              {activeQuestion === question.id ? <AiOutlineArrowRight /> : <AiOutlineArrowRight style={{ transform: 'rotate(90deg)' }} />}
             </button>
             {activeQuestion === question.id && <p>{question.answer}</p>}
           </li>

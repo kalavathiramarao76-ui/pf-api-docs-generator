@@ -84,14 +84,13 @@ export default function CtaPage() {
         >
           {isSubmitting ? (
             <div className="flex items-center justify-center">
-              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 border-4 border-gray-200 rounded-full border-t-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"></svg>
-              Submitting...
+              <div className="spinner-border animate-spin inline-block w-4 h-4 border-4 rounded-full text-white" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+              <span className="ml-2">Submitting...</span>
             </div>
           ) : (
-            <div className="flex items-center justify-center">
-              {isSuccess ? 'Success' : 'Get Started'}
-              <AiOutlineArrowRight className="ml-2" />
-            </div>
+            <span>{isSuccess ? 'Thank you!' : 'Get Started'}</span>
           )}
         </button>
       </form>
