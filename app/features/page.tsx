@@ -9,6 +9,7 @@ import { TbApi } from 'react-icons/tb';
 export default function Page() {
   const [tutorialStep, setTutorialStep] = useState(1);
   const [sampleProject, setSampleProject] = useState(false);
+  const [trialStarted, setTrialStarted] = useState(false);
 
   const handleNextStep = () => {
     if (tutorialStep < 5) {
@@ -24,6 +25,10 @@ export default function Page() {
 
   const handleSampleProject = () => {
     setSampleProject(!sampleProject);
+  };
+
+  const handleStartTrial = () => {
+    setTrialStarted(true);
   };
 
   return (
@@ -64,48 +69,20 @@ export default function Page() {
       </div>
       <h2 className="text-2xl font-bold mb-4">Guided Tour</h2>
       <div className="bg-white dark:bg-gray-800 p-4 rounded shadow mb-8">
-        {tutorialStep === 1 && (
+        {trialStarted ? (
           <div>
-            <h2 className="text-lg font-bold mb-2">Step 1: Introduction to AutoGenerate API Documentation</h2>
-            <p className="text-sm mb-4">Try out our API documentation generator with a sample project.</p>
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
-              onClick={handleSampleProject}
-            >
-              Try Sample Project
-            </button>
+            <p className="text-lg mb-4">You are currently in a free trial. Explore our features and see how we can help you generate API documentation.</p>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleNextStep}>Continue with Guided Tour</button>
+          </div>
+        ) : (
+          <div>
+            <p className="text-lg mb-4">Want to see how our API documentation generator works? Start a free trial and explore our features.</p>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleStartTrial}>Start Free Trial</button>
           </div>
         )}
-        {tutorialStep > 1 && (
-          <div>
-            <h2 className="text-lg font-bold mb-2">Step {tutorialStep}: API Documentation Generation</h2>
-            {sampleProject && (
-              <div>
-                <p className="text-sm mb-4">You are currently using a sample project.</p>
-                <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
-                  onClick={handleSampleProject}
-                >
-                  Switch to Real Project
-                </button>
-              </div>
-            )}
-          </div>
-        )}
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-4"
-          onClick={handlePrevStep}
-          disabled={tutorialStep === 1}
-        >
-          Previous
-        </button>
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={handleNextStep}
-          disabled={tutorialStep === 5}
-        >
-          Next
-        </button>
+      </div>
+      <div className="bg-white dark:bg-gray-800 p-4 rounded shadow mb-8">
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleSampleProject}>Try Sample Project</button>
       </div>
     </div>
   );
