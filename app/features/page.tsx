@@ -63,38 +63,38 @@ export default function Page() {
         {tutorialStep === 1 && (
           <div>
             <h2 className="text-lg font-bold mb-2">Step 1: Introduction to AutoGenerate API Documentation</h2>
-            <p className="text-sm mb-4">Welcome to AutoGenerate API Documentation! This feature automatically generates API documentation from your code, saving you time and reducing errors.</p>
+            <p className="text-sm mb-4">Welcome to the AutoGenerate API Documentation tutorial. This tutorial will guide you through the process of generating API documentation automatically.</p>
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleNextStep}>Next Step</button>
           </div>
         )}
         {tutorialStep === 2 && (
           <div>
             <h2 className="text-lg font-bold mb-2">Step 2: Setting up AutoGenerate API Documentation</h2>
-            <p className="text-sm mb-4">To get started, simply navigate to the Settings page and enable AutoGenerate API Documentation. You can then customize the documentation templates to fit your needs.</p>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={handlePrevStep}>Previous Step</button>
+            <p className="text-sm mb-4">To get started with AutoGenerate API Documentation, you need to set up your project. This involves installing the required dependencies and configuring your project settings.</p>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handlePrevStep}>Previous Step</button>
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleNextStep}>Next Step</button>
           </div>
         )}
         {tutorialStep === 3 && (
           <div>
             <h2 className="text-lg font-bold mb-2">Step 3: Generating API Documentation</h2>
-            <p className="text-sm mb-4">Once you've enabled AutoGenerate API Documentation, you can generate your API documentation with the click of a button. Simply navigate to the API Docs page and click the "Generate Documentation" button.</p>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={handlePrevStep}>Previous Step</button>
+            <p className="text-sm mb-4">Once you have set up your project, you can generate API documentation automatically. This involves running a command in your terminal to generate the documentation.</p>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handlePrevStep}>Previous Step</button>
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleNextStep}>Next Step</button>
           </div>
         )}
         {tutorialStep === 4 && (
           <div>
             <h2 className="text-lg font-bold mb-2">Step 4: Customizing API Documentation</h2>
-            <p className="text-sm mb-4">You can customize your API documentation by adding custom templates, modifying existing templates, or adding additional information such as code examples or screenshots.</p>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={handlePrevStep}>Previous Step</button>
+            <p className="text-sm mb-4">You can customize the generated API documentation to fit your needs. This involves editing the documentation templates and configuring the settings.</p>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handlePrevStep}>Previous Step</button>
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleNextStep}>Next Step</button>
           </div>
         )}
         {tutorialStep === 5 && (
           <div>
             <h2 className="text-lg font-bold mb-2">Step 5: Conclusion</h2>
-            <p className="text-sm mb-4">Congratulations! You've completed the AutoGenerate API Documentation tutorial. You now have a solid understanding of how to use this feature to generate high-quality API documentation.</p>
+            <p className="text-sm mb-4">Congratulations! You have completed the AutoGenerate API Documentation tutorial. You now know how to generate API documentation automatically and customize it to fit your needs.</p>
             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handlePrevStep}>Previous Step</button>
           </div>
         )}

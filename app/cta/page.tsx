@@ -21,11 +21,18 @@ export default function CtaPage() {
     return '';
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const validateForm = () => {
     const emailValidationError = validateEmail(email);
     if (emailValidationError) {
       setEmailError(emailValidationError);
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!validateForm()) {
       return;
     }
     setIsSubmitting(true);
@@ -80,19 +87,10 @@ export default function CtaPage() {
         <button
           type="submit"
           disabled={isSubmitting || isSuccess}
-          className={`px-8 py-2 relative ${isSubmitting ? 'cursor-not-allowed' : ''} ${isSuccess ? 'bg-gray-300 text-gray-500' : 'bg-blue-500 hover:bg-blue-700 text-white'} rounded-lg`}
+          className={`px-8 py-2 relative ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'}`}
         >
-          {isSubmitting ? (
-            <div className="flex items-center justify-center">
-              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 border-4 border-gray-200 rounded-full border-t-blue-600" viewBox="0 0 24 24" />
-              Submitting...
-            </div>
-          ) : (
-            <div className="flex items-center justify-center">
-              {isSuccess ? 'Submitted' : 'Submit'}
-              {isSuccess ? null : <AiOutlineArrowRight className="ml-2" />}
-            </div>
-          )}
+          {isSubmitting ? 'Submitting...' : 'Get Started'}
+          <AiOutlineArrowRight className="ml-2" />
         </button>
       </form>
     </div>
