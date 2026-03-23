@@ -80,20 +80,17 @@ export default function CtaPage() {
         <button
           type="submit"
           disabled={isSubmitting || isSuccess}
-          className={`px-8 py-2 relative ${isSubmitting ? 'bg-blue-300' : isSuccess ? 'bg-green-500' : 'bg-blue-500'} text-white rounded-lg hover:${isSubmitting ? '' : isSuccess ? '' : 'bg-blue-700'} focus:outline-none focus:ring-2 focus:ring-blue-500`}
+          className={`px-8 py-2 relative ${isSubmitting ? 'cursor-not-allowed' : ''} ${isSuccess ? 'bg-green-500 text-white' : 'bg-blue-500 hover:bg-blue-700 text-white'} rounded-lg`}
         >
           {isSubmitting ? (
-            <div className="flex items-center">
-              <svg
-                className="mr-2 animate-spin h-5 w-5 border-4 border-gray-200 rounded-full border-t-blue-600"
-                viewBox="0 0 24 24"
-              />
+            <div className="flex items-center justify-center">
+              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 border-4 border-gray-200 rounded-full border-t-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"></svg>
               Submitting...
             </div>
           ) : (
-            <div className="flex items-center">
-              <AiOutlineArrowRight className="mr-2" />
-              {isSuccess ? 'Submitted' : 'Submit'}
+            <div className="flex items-center justify-center">
+              {isSuccess ? 'Success' : 'Get Started'}
+              <AiOutlineArrowRight className="ml-2" />
             </div>
           )}
         </button>

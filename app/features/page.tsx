@@ -11,7 +11,7 @@ export default function Page() {
   const [tutorialStep, setTutorialStep] = useState(1);
 
   const handleNextStep = () => {
-    if (tutorialStep < 3) {
+    if (tutorialStep < 5) {
       setTutorialStep(tutorialStep + 1);
     }
   };
@@ -62,89 +62,43 @@ export default function Page() {
       <div className="bg-white dark:bg-gray-800 p-4 rounded shadow mb-8">
         {tutorialStep === 1 && (
           <div>
-            <h2 className="text-lg font-bold mb-2">Step 1: Generate API Documentation</h2>
-            <p className="text-sm">Automatic API documentation generation.</p>
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              onClick={handleNextStep}
-            >
-              Next Step
-            </button>
+            <h2 className="text-lg font-bold mb-2">Step 1: Introduction to AutoGenerate API Documentation</h2>
+            <p className="text-sm mb-4">Welcome to the AutoGenerate API Documentation tutorial. This tutorial will guide you through the key features and benefits of our API documentation tool.</p>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleNextStep}>Next Step</button>
           </div>
         )}
         {tutorialStep === 2 && (
           <div>
-            <h2 className="text-lg font-bold mb-2">Step 2: Customize Documentation Templates</h2>
-            <p className="text-sm">Customizable documentation templates.</p>
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
-              onClick={handlePrevStep}
-            >
-              Previous Step
-            </button>
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              onClick={handleNextStep}
-            >
-              Next Step
-            </button>
+            <h2 className="text-lg font-bold mb-2">Step 2: Generating API Documentation</h2>
+            <p className="text-sm mb-4">Our tool automatically generates API documentation from your code, saving you time and reducing errors. You can customize the documentation templates to fit your needs.</p>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={handlePrevStep}>Previous Step</button>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleNextStep}>Next Step</button>
           </div>
         )}
         {tutorialStep === 3 && (
           <div>
-            <h2 className="text-lg font-bold mb-2">Step 3: Integrate with Development Tools</h2>
-            <p className="text-sm">Integration with popular development tools.</p>
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
-              onClick={handlePrevStep}
-            >
-              Previous Step
-            </button>
+            <h2 className="text-lg font-bold mb-2">Step 3: Integrating with Development Tools</h2>
+            <p className="text-sm mb-4">Our tool integrates with popular development tools, making it easy to incorporate into your existing workflow. You can also use our API to integrate with custom tools.</p>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={handlePrevStep}>Previous Step</button>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleNextStep}>Next Step</button>
+          </div>
+        )}
+        {tutorialStep === 4 && (
+          <div>
+            <h2 className="text-lg font-bold mb-2">Step 4: Collaboration and Change Tracking</h2>
+            <p className="text-sm mb-4">Our tool includes collaboration features for teams, making it easy to work together on API documentation. You can also track changes and updates to your API, ensuring that your documentation is always up-to-date.</p>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={handlePrevStep}>Previous Step</button>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleNextStep}>Next Step</button>
+          </div>
+        )}
+        {tutorialStep === 5 && (
+          <div>
+            <h2 className="text-lg font-bold mb-2">Step 5: Conclusion</h2>
+            <p className="text-sm mb-4">Thank you for completing the AutoGenerate API Documentation tutorial. We hope you have a better understanding of the key features and benefits of our tool. If you have any questions or need further assistance, please don't hesitate to contact us.</p>
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handlePrevStep}>Previous Step</button>
           </div>
         )}
       </div>
-      <h2 className="text-2xl font-bold mb-4">Feature Matrix</h2>
-      <table className="w-full mb-8 border border-gray-200 dark:border-gray-700">
-        <thead className="bg-gray-100 dark:bg-gray-800">
-          <tr>
-            <th className="px-4 py-2 text-lg font-bold">Feature</th>
-            <th className="px-4 py-2 text-lg font-bold">Manual API Documentation</th>
-            <th className="px-4 py-2 text-lg font-bold">AutoGenerate API Documentation</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Dashboard</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">No</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Yes</td>
-          </tr>
-          <tr>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">API Docs</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">No</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Yes</td>
-          </tr>
-          <tr>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Settings</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">No</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Yes</td>
-          </tr>
-          <tr>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Code Integration</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">No</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Yes</td>
-          </tr>
-          <tr>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Collaboration</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">No</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Yes</td>
-          </tr>
-          <tr>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Change Tracking</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">No</td>
-            <td className="px-4 py-2 border border-gray-200 dark:border-gray-700">Yes</td>
-          </tr>
-        </tbody>
-      </table>
     </div>
   );
 }
