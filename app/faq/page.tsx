@@ -54,23 +54,22 @@ export default function FaqPage() {
         <meta name="keywords" content="AutoGenerate API Documentation, API documentation, API documentation generation, technical writing, software development, collaboration, version control" />
         <meta property="og:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
         <meta property="og:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and version control." />
-        <meta property="og:url" content={router.asPath} />
+        <meta property="og:url" content="https://autogenerate-api-documentation.com/faq" />
+        <meta property="og:site_name" content="AutoGenerate API Documentation" />
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
         <meta name="twitter:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and version control." />
       </Head>
-      <h1>Frequently Asked Questions</h1>
-      <ul>
-        {questions.map((question) => (
-          <li key={question.id}>
-            <button onClick={() => handleToggle(question.id)}>
-              {question.question}
-              <AiOutlineArrowRight />
-            </button>
-            {activeQuestion === question.id && <p>{question.answer}</p>}
-          </li>
-        ))}
-      </ul>
+      {questions.map((question) => (
+        <div key={question.id}>
+          <h2>{question.question}</h2>
+          <button onClick={() => handleToggle(question.id)}>
+            <AiOutlineArrowRight />
+          </button>
+          {activeQuestion === question.id && <p>{question.answer}</p>}
+        </div>
+      ))}
+      <Link href="/">Back to Home</Link>
     </div>
   );
 }

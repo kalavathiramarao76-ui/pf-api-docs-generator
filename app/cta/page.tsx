@@ -86,11 +86,10 @@ export default function CtaPage() {
         {successMessage && <p className="text-green-500 text-sm mb-4">{successMessage}</p>}
         <button
           type="submit"
-          disabled={isSubmitting || isSuccess}
-          className={`px-8 py-2 relative ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'}`}
+          disabled={isSubmitting}
+          className={`px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
           {isSubmitting ? 'Submitting...' : 'Get Started'}
-          <AiOutlineArrowRight className="ml-2" />
         </button>
       </form>
     </div>
