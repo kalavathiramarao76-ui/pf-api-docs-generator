@@ -82,7 +82,6 @@ export default function CtaPage() {
           onBlur={handleBlur}
           placeholder="Enter your email"
           className={`px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${formErrors.email ? 'border-red-500' : ''}`}
-          disabled={isSubmitting}
         />
         <button
           type="submit"
@@ -90,7 +89,7 @@ export default function CtaPage() {
           disabled={isSubmitting}
         >
           {isSubmitting ? (
-            <svg className="animate-spin h-5 w-5 mr-3 border-4 border-blue-500 border-t-transparent rounded-full" viewBox="0 0 24 24" />
+            <svg className="animate-spin h-5 w-5 mr-3 border-4 border-gray-200 rounded-full border-t-blue-500" viewBox="0 0 24 24" />
           ) : (
             <AiOutlineArrowRight size={20} />
           )}

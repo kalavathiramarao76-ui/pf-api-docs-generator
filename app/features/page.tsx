@@ -67,23 +67,22 @@ export default function Page() {
           <p className="text-sm">Track changes and updates to your API.</p>
         </div>
       </div>
-      <div className="flex justify-center mb-8">
-        <button
-          className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
-          onClick={handleStartTrial}
-        >
-          Start Your Free Trial Today!
-        </button>
-        <Link href="/pricing">
-          <a className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Purchase Now
-          </a>
-        </Link>
+      <div className="bg-orange-500 text-white p-4 rounded shadow mb-8">
+        <h2 className="text-lg font-bold mb-2">Get Started Today!</h2>
+        <p className="text-sm mb-4">Sign up for a free trial or purchase a plan to start generating API documentation automatically.</p>
+        <div className="flex justify-center">
+          <Link href="/signup">
+            <a className="bg-white text-orange-500 hover:bg-orange-700 hover:text-white px-4 py-2 rounded">
+              Sign up for Free Trial
+            </a>
+          </Link>
+          <Link href="/plans">
+            <a className="bg-white text-orange-500 hover:bg-orange-700 hover:text-white px-4 py-2 rounded ml-4">
+              Purchase a Plan
+            </a>
+          </Link>
+        </div>
       </div>
-      <h2 className="text-2xl font-bold mb-4">Get Started with Our Product</h2>
-      <p className="text-lg mb-8">
-        Sign up for a free trial or purchase our product to experience the power of automatic API documentation generation.
-      </p>
     </div>
   );
 }
