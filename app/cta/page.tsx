@@ -5,8 +5,10 @@ import { AiOutlineArrowRight } from 'react-icons/ai';
 export default function CtaPage() {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [emailError, setEmailError] = useState('');
-  const [generalError, setGeneralError] = useState('');
+  const [formErrors, setFormErrors] = useState({
+    email: '',
+    general: '',
+  });
   const [successMessage, setSuccessMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -24,9 +26,10 @@ export default function CtaPage() {
   const validateForm = () => {
     const emailValidationError = validateEmail(email);
     if (emailValidationError) {
-      setEmailError(emailValidationError);
+      setFormErrors((prevErrors) => ({ ...prevErrors, email: emailValidationError }));
       return false;
     }
+    setFormErrors((prevErrors) => ({ ...prevErrors, email: '' }));
     return true;
   };
 
@@ -42,29 +45,28 @@ export default function CtaPage() {
       setIsSuccess(true);
     } catch (error) {
       if (error instanceof Error) {
-        setGeneralError(error.message);
+        setFormErrors((prevErrors) => ({ ...prevErrors, general: error.message }));
       } else {
-        setGeneralError('An unknown error occurred');
+        setFormErrors((prevErrors) => ({ ...prevErrors, general: 'An unknown error occurred' }));
       }
     } finally {
       setIsSubmitting(false);
-      setEmailError('');
     }
   };
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
     if (e.target.value !== '') {
-      setEmailError('');
+      setFormErrors((prevErrors) => ({ ...prevErrors, email: '' }));
     }
   };
 
   const handleBlur = () => {
     const emailValidationError = validateEmail(email);
     if (emailValidationError) {
-      setEmailError(emailValidationError);
+      setFormErrors((prevErrors) => ({ ...prevErrors, email: emailValidationError }));
     } else {
-      setEmailError('');
+      setFormErrors((prevErrors) => ({ ...prevErrors, email: '' }));
     }
   };
 
@@ -79,22 +81,18 @@ export default function CtaPage() {
           onChange={handleEmailChange}
           onBlur={handleBlur}
           placeholder="Enter your email"
-          className={`px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${emailError ? 'border-red-500' : ''}`}
+          className={`px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${formErrors.email ? 'border-red-500' : ''}`}
         />
-        {emailError && <p className="text-red-500 text-sm mb-4">{emailError}</p>}
-        {generalError && <p className="text-red-500 text-sm mb-4">{generalError}</p>}
+        {formErrors.email && <p className="text-red-500 text-sm mb-4">{formErrors.email}</p>}
+        {formErrors.general && <p className="text-red-500 text-sm mb-4">{formErrors.general}</p>}
         {successMessage && <p className="text-green-500 text-sm mb-4">{successMessage}</p>}
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
-          {isSubmitting ? (
-            <svg className="animate-spin h-5 w-5 mr-3 border-4 border-gray-200 rounded-full border-t-blue-600" viewBox="0 0 24 24" />
-          ) : (
-            <AiOutlineArrowRight size={20} />
-          )}
           {isSubmitting ? 'Submitting...' : 'Get Started'}
+          <AiOutlineArrowRight className="ml-2" />
         </button>
       </form>
     </div>
