@@ -67,79 +67,23 @@ export default function Page() {
           <p className="text-sm">Track changes and updates to your API.</p>
         </div>
       </div>
-      <h2 className="text-lg font-bold mb-4">Try Before You Buy</h2>
-      <p className="text-lg mb-8">
-        Start a free 14-day trial to test our API documentation generator and see how it can benefit your team.
-      </p>
       <div className="flex justify-center mb-8">
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded"
           onClick={handleStartTrial}
         >
-          Start Free Trial
+          Start Your Free Trial Today!
         </button>
+        <Link href="/pricing">
+          <a className="ml-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Purchase Now
+          </a>
+        </Link>
       </div>
-      {trialStarted && (
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-8">
-          <p className="text-lg font-bold mb-2">Free Trial Started</p>
-          <p className="text-lg mb-2">
-            You now have access to our API documentation generator for the next 14 days.
-          </p>
-          <p className="text-lg mb-2">
-            To get started, please follow the tutorial below:
-          </p>
-          <div className="flex justify-center mb-8">
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              onClick={handleNextStep}
-            >
-              Start Tutorial
-            </button>
-          </div>
-          <div className="flex justify-between mb-8">
-            <button
-              className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
-              onClick={handlePrevStep}
-              disabled={tutorialStep === 1}
-            >
-              Previous Step
-            </button>
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              onClick={handleNextStep}
-              disabled={tutorialStep >= 5}
-            >
-              Next Step
-            </button>
-          </div>
-          <p className="text-lg font-bold mb-2">Tutorial Step {tutorialStep}</p>
-          {tutorialStep === 1 && (
-            <p className="text-lg mb-2">
-              Welcome to our API documentation generator tutorial. In this step, we will cover the basics of our tool.
-            </p>
-          )}
-          {tutorialStep === 2 && (
-            <p className="text-lg mb-2">
-              In this step, we will show you how to create a new project and configure the settings.
-            </p>
-          )}
-          {tutorialStep === 3 && (
-            <p className="text-lg mb-2">
-              Now, let's talk about how to integrate our tool with your existing development workflow.
-            </p>
-          )}
-          {tutorialStep === 4 && (
-            <p className="text-lg mb-2">
-              In this step, we will cover the collaboration features and how to invite team members to your project.
-            </p>
-          )}
-          {tutorialStep === 5 && (
-            <p className="text-lg mb-2">
-              Congratulations, you have completed the tutorial! You can now start using our API documentation generator.
-            </p>
-          )}
-        </div>
-      )}
+      <h2 className="text-2xl font-bold mb-4">Get Started with Our Product</h2>
+      <p className="text-lg mb-8">
+        Sign up for a free trial or purchase our product to experience the power of automatic API documentation generation.
+      </p>
     </div>
   );
 }
