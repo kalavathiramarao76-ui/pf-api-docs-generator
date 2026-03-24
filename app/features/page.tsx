@@ -38,6 +38,8 @@ export default function Page() {
   const [freeTrialStarted, setFreeTrialStarted] = useState(false);
   const [freeTrialExpired, setFreeTrialExpired] = useState(false);
   const [trialMode, setTrialMode] = useState(false);
+  const [countdown, setCountdown] = useState(30 * 24 * 60 * 60 * 1000); // 30 days in milliseconds
+  const [timeLeft, setTimeLeft] = useState(null);
 
   useEffect(() => {
     const storedProgress = localStorage.getItem('progress');
@@ -74,15 +76,23 @@ export default function Page() {
   }, [freeTrial, freeTrialDays, freeTrialStarted, freeTrialExpired]);
 
   useEffect(() => {
-    const storedTrialMode = localStorage.getItem('trialMode');
-    if (storedTrialMode) {
-      setTrialMode(storedTrialMode === 'true');
+    if (trialMode) {
+      const intervalId = setInterval(() => {
+        if (countdown > 0) {
+          setCountdown(countdown - 1000);
+          const days = Math.floor(countdown / (24 * 60 * 60 * 1000));
+          const hours = Math.floor((countdown % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+          const minutes = Math.floor((countdown % (60 * 60 * 1000)) / (60 * 1000));
+          const seconds = Math.floor((countdown % (60 * 1000)) / 1000);
+          setTimeLeft(`${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`);
+        } else {
+          setTrialExpired(true);
+          clearInterval(intervalId);
+        }
+      }, 1000);
+      return () => clearInterval(intervalId);
     }
-  }, []);
-
-  useEffect(() => {
-    saveTrialMode();
-  }, [trialMode]);
+  }, [trialMode, countdown]);
 
   const saveProgress = () => {
     const progressData = {
@@ -108,68 +118,22 @@ export default function Page() {
     localStorage.setItem('freeTrial', JSON.stringify(freeTrialData));
   };
 
-  const saveTrialMode = () => {
-    localStorage.setItem('trialMode', trialMode.toString());
-  };
-
-  const startFreeTrial = () => {
-    setFreeTrial(true);
-    setFreeTrialStarted(true);
-    setFreeTrialDays(7);
-    setFreeTrialExpired(false);
+  const startTrial = () => {
     setTrialMode(true);
-    saveFreeTrial();
-    saveTrialMode();
+    setTrialStarted(true);
+    setCountdown(30 * 24 * 60 * 60 * 1000); // 30 days in milliseconds
   };
-
-  const startDemo = () => {
-    setDemoStarted(true);
-    setDemoTime(30);
-    setDemoExpired(false);
-    setTrialMode(true);
-    saveProgress();
-    saveTrialMode();
-  };
-
-  if (trialMode) {
-    if (freeTrialStarted) {
-      const daysLeft = freeTrialDays - Math.floor((new Date().getTime() - new Date(freeTrialStarted).getTime()) / (1000 * 3600 * 24));
-      if (daysLeft <= 0) {
-        setFreeTrialExpired(true);
-        setTrialMode(false);
-        saveFreeTrial();
-        saveTrialMode();
-      }
-    } else if (demoStarted) {
-      const timeLeft = demoTime - Math.floor((new Date().getTime() - new Date(demoStarted).getTime()) / (1000 * 60));
-      if (timeLeft <= 0) {
-        setDemoExpired(true);
-        setTrialMode(false);
-        saveProgress();
-        saveTrialMode();
-      }
-    }
-  }
 
   return (
     <div>
-      {trialMode ? (
+      {trialMode && (
         <div>
-          {freeTrialStarted ? (
-            <p>Free trial started. You have {freeTrialDays} days left.</p>
-          ) : (
-            <p>Demo started. You have {demoTime} minutes left.</p>
-          )}
-          <button onClick={startFreeTrial}>Start Free Trial</button>
-          <button onClick={startDemo}>Start Demo</button>
-        </div>
-      ) : (
-        <div>
-          <p>Welcome to AutoGenerate API Documentation</p>
-          <button onClick={startFreeTrial}>Start Free Trial</button>
-          <button onClick={startDemo}>Start Demo</button>
+          <p>Trial mode: {timeLeft}</p>
+          {trialExpired && <p>Trial has expired. Please upgrade to a paid plan.</p>}
         </div>
       )}
+      <button onClick={startTrial}>Start Trial</button>
+      {/* Rest of the code remains the same */}
     </div>
   );
 }
