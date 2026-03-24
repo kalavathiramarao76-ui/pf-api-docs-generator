@@ -6,8 +6,14 @@ export default function CtaPage() {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formErrors, setFormErrors] = useState({
-    email: '',
-    general: '',
+    email: {
+      message: '',
+      isValid: true,
+    },
+    general: {
+      message: '',
+      isValid: true,
+    },
   });
   const [successMessage, setSuccessMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
@@ -15,22 +21,27 @@ export default function CtaPage() {
   const validateEmail = (email: string) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(email)) {
-      return 'Please enter a valid email address';
+      return {
+        message: 'Please enter a valid email address',
+        isValid: false,
+      };
     }
     if (email.trim() === '') {
-      return 'Email is required';
+      return {
+        message: 'Email is required',
+        isValid: false,
+      };
     }
-    return '';
+    return {
+      message: '',
+      isValid: true,
+    };
   };
 
   const validateForm = () => {
     const emailValidationError = validateEmail(email);
-    if (emailValidationError) {
-      setFormErrors((prevErrors) => ({ ...prevErrors, email: emailValidationError }));
-      return false;
-    }
-    setFormErrors((prevErrors) => ({ ...prevErrors, email: '' }));
-    return true;
+    setFormErrors((prevErrors) => ({ ...prevErrors, email: emailValidationError }));
+    return emailValidationError.isValid;
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -45,9 +56,9 @@ export default function CtaPage() {
       setIsSuccess(true);
     } catch (error) {
       if (error instanceof Error) {
-        setFormErrors((prevErrors) => ({ ...prevErrors, general: error.message }));
+        setFormErrors((prevErrors) => ({ ...prevErrors, general: { message: error.message, isValid: false } }));
       } else {
-        setFormErrors((prevErrors) => ({ ...prevErrors, general: 'An unknown error occurred' }));
+        setFormErrors((prevErrors) => ({ ...prevErrors, general: { message: 'An unknown error occurred', isValid: false } }));
       }
     } finally {
       setIsSubmitting(false);
@@ -56,18 +67,13 @@ export default function CtaPage() {
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
-    if (e.target.value !== '') {
-      setFormErrors((prevErrors) => ({ ...prevErrors, email: '' }));
-    }
+    const emailValidationError = validateEmail(e.target.value);
+    setFormErrors((prevErrors) => ({ ...prevErrors, email: emailValidationError }));
   };
 
   const handleBlur = () => {
     const emailValidationError = validateEmail(email);
-    if (emailValidationError) {
-      setFormErrors((prevErrors) => ({ ...prevErrors, email: emailValidationError }));
-    } else {
-      setFormErrors((prevErrors) => ({ ...prevErrors, email: '' }));
-    }
+    setFormErrors((prevErrors) => ({ ...prevErrors, email: emailValidationError }));
   };
 
   return (
@@ -81,22 +87,17 @@ export default function CtaPage() {
           onChange={handleEmailChange}
           onBlur={handleBlur}
           placeholder="Enter your email"
-          className={`px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${formErrors.email ? 'border-red-500' : ''}`}
+          className={`px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${!formErrors.email.isValid ? 'border-red-500' : ''}`}
         />
-        <button
-          type="submit"
-          className={`px-4 py-2 bg-blue-500 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? (
-            <svg className="animate-spin h-5 w-5 mr-3 border-4 border-gray-200 rounded-full border-t-blue-600" viewBox="0 0 24 24" />
-          ) : (
-            <AiOutlineArrowRight size={20} />
-          )}
-          {isSubmitting ? 'Submitting...' : 'Get Started'}
-        </button>
-        {formErrors.general && <p className="text-red-500 mt-2">{formErrors.general}</p>}
-        {isSuccess && <p className="text-green-500 mt-2">{successMessage}</p>}
+        {!formErrors.email.isValid && (
+          <p className="text-red-500 text-sm mb-4">{formErrors.email.message}</p>
+        )}
+        {!formErrors.general.isValid && (
+          <p className="text-red-500 text-sm mb-4">{formErrors.general.message}</p>
+        )}
+        {isSuccess && (
+          <p className="text-green-500 text-sm mb-4">{successMessage}</p>
+        )}
       </form>
     </div>
   );
