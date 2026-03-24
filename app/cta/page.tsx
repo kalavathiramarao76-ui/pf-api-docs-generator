@@ -85,18 +85,29 @@ export default function CtaPage() {
         />
         <button
           type="submit"
-          className={`px-4 py-2 mb-4 bg-blue-500 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`px-4 py-2 bg-blue-500 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
           disabled={isSubmitting}
         >
           {isSubmitting ? (
-            <svg className="animate-spin h-5 w-5 mr-3 border-4 border-gray-200 rounded-full border-t-blue-500" viewBox="0 0 24 24" />
+            <div className="flex items-center justify-center">
+              <div className="spinner-border animate-spin inline-block w-4 h-4 border-4 rounded-full text-blue-200" role="status">
+                <span className="sr-only">Loading...</span>
+              </div>
+              <span className="ml-2">Submitting...</span>
+            </div>
           ) : (
-            <AiOutlineArrowRight size={20} />
+            <div className="flex items-center justify-center">
+              <span>Get Started</span>
+              <AiOutlineArrowRight className="ml-2" />
+            </div>
           )}
-          {isSubmitting ? 'Submitting...' : 'Get Started'}
         </button>
-        {formErrors.general && <p className="text-red-500 mb-4">{formErrors.general}</p>}
-        {isSuccess && <p className="text-green-500 mb-4">{successMessage}</p>}
+        {formErrors.general && (
+          <p className="text-red-500 mt-2">{formErrors.general}</p>
+        )}
+        {isSuccess && (
+          <p className="text-green-500 mt-2">{successMessage}</p>
+        )}
       </form>
     </div>
   );

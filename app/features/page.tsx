@@ -67,20 +67,40 @@ export default function Page() {
           <p className="text-sm">Track changes and updates to your API.</p>
         </div>
       </div>
-      <div className="bg-orange-500 text-white p-4 rounded shadow mb-8">
-        <h2 className="text-lg font-bold mb-2">Get Started Today!</h2>
-        <p className="text-sm mb-4">Sign up for a free trial or purchase a plan to start generating API documentation automatically.</p>
-        <div className="flex justify-center">
-          <Link href="/signup">
-            <a className="bg-white text-orange-500 hover:bg-orange-700 hover:text-white px-4 py-2 rounded">
-              Sign up for Free Trial
-            </a>
-          </Link>
-          <Link href="/plans">
-            <a className="bg-white text-orange-500 hover:bg-orange-700 hover:text-white px-4 py-2 rounded ml-4">
-              Purchase a Plan
-            </a>
-          </Link>
+      <div className="flex justify-center mb-8">
+        {trialStarted ? (
+          <button className="bg-gray-300 text-gray-600 py-2 px-4 rounded shadow" disabled>
+            Trial Started
+          </button>
+        ) : (
+          <button
+            className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded shadow"
+            onClick={handleStartTrial}
+          >
+            Start Free Trial
+          </button>
+        )}
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+        <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
+          <h2 className="text-lg font-bold mb-2">Trial Features</h2>
+          <ul>
+            <li className="text-sm">Access to all features for 14 days</li>
+            <li className="text-sm">Generate API documentation for up to 5 projects</li>
+            <li className="text-sm">Collaboration features for up to 5 users</li>
+          </ul>
+        </div>
+        <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
+          <h2 className="text-lg font-bold mb-2">What to Expect</h2>
+          <p className="text-sm">
+            During the trial period, you will have access to all features of our API documentation generator. You can generate API documentation for up to 5 projects and collaborate with up to 5 users.
+          </p>
+        </div>
+        <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
+          <h2 className="text-lg font-bold mb-2">Getting Started</h2>
+          <p className="text-sm">
+            To get started with the trial, simply click the "Start Free Trial" button above. You will be guided through the sign-up process and can start using our API documentation generator immediately.
+          </p>
         </div>
       </div>
     </div>
