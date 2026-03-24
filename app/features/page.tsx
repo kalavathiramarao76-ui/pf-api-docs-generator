@@ -18,11 +18,16 @@ export default function Page() {
   const [demoStarted, setDemoStarted] = useState(false);
   const [demoTime, setDemoTime] = useState(30); // 30 minutes demo
   const [demoExpired, setDemoExpired] = useState(false);
+  const [progress, setProgress] = useState(() => {
+    const storedProgress = localStorage.getItem('progress');
+    return storedProgress ? JSON.parse(storedProgress) : {};
+  });
 
   const handleNextStep = () => {
     if (tutorialStep < 5) {
       setTutorialStep(tutorialStep + 1);
       localStorage.setItem('tutorialStep', (tutorialStep + 1).toString());
+      saveProgress();
     }
   };
 
@@ -30,11 +35,13 @@ export default function Page() {
     if (tutorialStep > 1) {
       setTutorialStep(tutorialStep - 1);
       localStorage.setItem('tutorialStep', (tutorialStep - 1).toString());
+      saveProgress();
     }
   };
 
   const handleSampleProject = () => {
     setSampleProject(!sampleProject);
+    saveProgress();
   };
 
   const handleStartTrial = () => {
@@ -42,6 +49,7 @@ export default function Page() {
     const trialEndDate = new Date();
     trialEndDate.setDate(trialEndDate.getDate() + trialDays);
     localStorage.setItem('trialEndDate', trialEndDate.toISOString());
+    saveProgress();
   };
 
   const handleStartDemo = () => {
@@ -49,6 +57,7 @@ export default function Page() {
     const demoEndDate = new Date();
     demoEndDate.setMinutes(demoEndDate.getMinutes() + demoTime);
     localStorage.setItem('demoEndDate', demoEndDate.toISOString());
+    saveProgress();
   };
 
   const checkTrialStatus = () => {
@@ -73,7 +82,38 @@ export default function Page() {
     }
   };
 
+  const saveProgress = () => {
+    const newProgress = {
+      tutorialStep,
+      sampleProject,
+      trialStarted,
+      trialDays,
+      trialExpired,
+      demoStarted,
+      demoTime,
+      demoExpired,
+    };
+    setProgress(newProgress);
+    localStorage.setItem('progress', JSON.stringify(newProgress));
+  };
+
+  const loadProgress = () => {
+    const storedProgress = localStorage.getItem('progress');
+    if (storedProgress) {
+      const progressData = JSON.parse(storedProgress);
+      setTutorialStep(progressData.tutorialStep);
+      setSampleProject(progressData.sampleProject);
+      setTrialStarted(progressData.trialStarted);
+      setTrialDays(progressData.trialDays);
+      setTrialExpired(progressData.trialExpired);
+      setDemoStarted(progressData.demoStarted);
+      setDemoTime(progressData.demoTime);
+      setDemoExpired(progressData.demoExpired);
+    }
+  };
+
   useEffect(() => {
+    loadProgress();
     if (!trialStarted) {
       checkTrialStatus();
     }
@@ -89,69 +129,30 @@ export default function Page() {
         Automatically generates API documentation from code, saving developers time and reducing errors.
       </p>
       {trialStarted && !trialExpired ? (
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-          You are currently in a {trialDays} day free trial. Your trial will expire on {localStorage.getItem('trialEndDate')}.
+        <div className="bg-gray-100 p-4 mb-4">
+          <p>Trial started. You have {trialDays} days left.</p>
         </div>
-      ) : trialExpired ? (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          Your free trial has expired.
-        </div>
-      ) : (
-        <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-4">
-          You can start a {trialDays} day free trial.
-        </div>
-      )}
+      ) : null}
       {demoStarted && !demoExpired ? (
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-          You are currently in a {demoTime} minute demo. Your demo will expire on {localStorage.getItem('demoEndDate')}.
+        <div className="bg-gray-100 p-4 mb-4">
+          <p>Demo started. You have {demoTime} minutes left.</p>
         </div>
-      ) : demoExpired ? (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          Your demo has expired.
-        </div>
-      ) : (
-        <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-4">
-          You can start a {demoTime} minute demo.
-        </div>
-      )}
-      <div className="flex justify-between mb-4">
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={handlePrevStep}
-          disabled={tutorialStep === 1}
-        >
-          Previous Step
-        </button>
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={handleNextStep}
-          disabled={tutorialStep === 5}
-        >
-          Next Step
-        </button>
-      </div>
-      <div className="flex justify-between mb-4">
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={handleSampleProject}
-        >
-          {sampleProject ? 'Hide Sample Project' : 'Show Sample Project'}
-        </button>
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={handleStartTrial}
-          disabled={trialStarted}
-        >
-          Start Trial
-        </button>
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={handleStartDemo}
-          disabled={demoStarted}
-        >
-          Start Demo
-        </button>
-      </div>
+      ) : null}
+      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleNextStep}>
+        Next Step
+      </button>
+      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handlePrevStep}>
+        Previous Step
+      </button>
+      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleSampleProject}>
+        {sampleProject ? 'Hide Sample Project' : 'Show Sample Project'}
+      </button>
+      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleStartTrial}>
+        Start Trial
+      </button>
+      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleStartDemo}>
+        Start Demo
+      </button>
     </div>
   );
 }
