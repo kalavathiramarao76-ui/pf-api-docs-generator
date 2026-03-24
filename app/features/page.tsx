@@ -96,134 +96,21 @@ export default function Page() {
     localStorage.setItem('freeTrial', JSON.stringify(freeTrialData));
   };
 
-  const handleTutorialStep = (step: number) => {
-    setTutorialStep(step);
+  const resumeTutorial = () => {
+    setTutorialStep(progress.tutorialStep);
+    setSampleProject(progress.sampleProject);
+    setTrialStarted(progress.trialStarted);
+    setTrialDays(progress.trialDays);
+    setTrialExpired(progress.trialExpired);
+    setDemoStarted(progress.demoStarted);
+    setDemoTime(progress.demoTime);
+    setDemoExpired(progress.demoExpired);
   };
-
-  const handleSampleProject = () => {
-    setSampleProject(true);
-  };
-
-  const handleTrialStart = () => {
-    setTrialStarted(true);
-  };
-
-  const handleDemoStart = () => {
-    setDemoStarted(true);
-  };
-
-  const handleGuidedTour = () => {
-    setGuidedTour(true);
-  };
-
-  const handleGuidedTourStep = (step: number) => {
-    setGuidedTourStep(step);
-  };
-
-  const handleFreeTrial = () => {
-    setFreeTrial(true);
-  };
-
-  const handleFreeTrialStart = () => {
-    setFreeTrialStarted(true);
-  };
-
-  const tutorialSteps = [
-    {
-      id: 1,
-      title: 'Welcome to AutoGenerate API Documentation',
-      description: 'This is the first step of the tutorial.',
-      callToAction: 'Get Started',
-      action: () => handleTutorialStep(2),
-    },
-    {
-      id: 2,
-      title: 'Create a Sample Project',
-      description: 'Create a sample project to get started with AutoGenerate API Documentation.',
-      callToAction: 'Create Project',
-      action: handleSampleProject,
-    },
-    {
-      id: 3,
-      title: 'Start Your Free Trial',
-      description: 'Start your free trial to experience the full features of AutoGenerate API Documentation.',
-      callToAction: 'Start Trial',
-      action: handleTrialStart,
-    },
-    {
-      id: 4,
-      title: 'Take a Guided Tour',
-      description: 'Take a guided tour to learn more about the features of AutoGenerate API Documentation.',
-      callToAction: 'Take Tour',
-      action: handleGuidedTour,
-    },
-    {
-      id: 5,
-      title: 'Start Your Demo',
-      description: 'Start your demo to experience the features of AutoGenerate API Documentation.',
-      callToAction: 'Start Demo',
-      action: handleDemoStart,
-    },
-  ];
-
-  const guidedTourSteps = [
-    {
-      id: 1,
-      title: 'Introduction to AutoGenerate API Documentation',
-      description: 'This is the introduction to AutoGenerate API Documentation.',
-      callToAction: 'Next',
-      action: () => handleGuidedTourStep(2),
-    },
-    {
-      id: 2,
-      title: 'Creating API Documentation',
-      description: 'Learn how to create API documentation with AutoGenerate API Documentation.',
-      callToAction: 'Next',
-      action: () => handleGuidedTourStep(3),
-    },
-    {
-      id: 3,
-      title: 'Customizing API Documentation',
-      description: 'Learn how to customize API documentation with AutoGenerate API Documentation.',
-      callToAction: 'Next',
-      action: () => handleGuidedTourStep(4),
-    },
-    {
-      id: 4,
-      title: 'Publishing API Documentation',
-      description: 'Learn how to publish API documentation with AutoGenerate API Documentation.',
-      callToAction: 'Finish',
-      action: () => setGuidedTour(false),
-    },
-  ];
 
   return (
     <div>
-      {guidedTour ? (
-        <div>
-          <h1>Guided Tour</h1>
-          {guidedTourSteps.map((step) => (
-            <div key={step.id}>
-              <h2>{step.title}</h2>
-              <p>{step.description}</p>
-              <button onClick={step.action}>{step.callToAction}</button>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div>
-          <h1>AutoGenerate API Documentation</h1>
-          <p>Get started with AutoGenerate API Documentation.</p>
-          {tutorialSteps.map((step) => (
-            <div key={step.id}>
-              <h2>{step.title}</h2>
-              <p>{step.description}</p>
-              <button onClick={step.action}>{step.callToAction}</button>
-            </div>
-          ))}
-          <p>Progress: {tutorialStep}/{tutorialSteps.length}</p>
-        </div>
-      )}
+      <button onClick={resumeTutorial}>Resume Tutorial</button>
+      {/* rest of your code */}
     </div>
   );
 }

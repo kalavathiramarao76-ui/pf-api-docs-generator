@@ -87,17 +87,23 @@ export default function CtaPage() {
           onChange={handleEmailChange}
           onBlur={handleBlur}
           placeholder="Enter your email"
-          className={`px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${!formErrors.email.isValid ? 'border-red-500' : ''}`}
+          className={`px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600 ${formErrors.email.isValid ? '' : 'border-red-500'}`}
         />
-        {!formErrors.email.isValid && (
-          <p className="text-red-500 text-sm mb-4">{formErrors.email.message}</p>
-        )}
-        {!formErrors.general.isValid && (
-          <p className="text-red-500 text-sm mb-4">{formErrors.general.message}</p>
-        )}
-        {isSuccess && (
-          <p className="text-green-500 text-sm mb-4">{successMessage}</p>
-        )}
+        {formErrors.email.message && <p className="text-red-500 text-sm mb-4">{formErrors.email.message}</p>}
+        {formErrors.general.message && <p className="text-red-500 text-sm mb-4">{formErrors.general.message}</p>}
+        {isSuccess && <p className="text-green-500 text-sm mb-4">{successMessage}</p>}
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className={`px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+        >
+          {isSubmitting ? (
+            <svg className="animate-spin h-5 w-5 mr-3 border-4 border-gray-200 rounded-full border-t-gray-600" viewBox="0 0 24 24" />
+          ) : (
+            <AiOutlineArrowRight size={20} />
+          )}
+          {isSubmitting ? 'Submitting...' : 'Get Started'}
+        </button>
       </form>
     </div>
   );
