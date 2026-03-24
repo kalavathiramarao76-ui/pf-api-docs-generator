@@ -31,6 +31,8 @@ export default function Page() {
       demoExpired: false,
     };
   });
+  const [guidedTour, setGuidedTour] = useState(false);
+  const [guidedTourStep, setGuidedTourStep] = useState(1);
 
   useEffect(() => {
     const storedProgress = localStorage.getItem('progress');
@@ -85,26 +87,53 @@ export default function Page() {
     const trialEndDate = localStorage.getItem('trialEndDate');
     if (trialEndDate) {
       const today = new Date();
-      const trialEndDateObject = new Date(trialEndDate);
-      if (today > trialEndDateObject) {
+      if (today > new Date(trialEndDate)) {
         setTrialExpired(true);
       }
     }
   };
 
-  const checkDemoStatus = () => {
-    const demoEndDate = localStorage.getItem('demoEndDate');
-    if (demoEndDate) {
-      const today = new Date();
-      const demoEndDateObject = new Date(demoEndDate);
-      if (today > demoEndDateObject) {
-        setDemoExpired(true);
-      }
+  const startGuidedTour = () => {
+    setGuidedTour(true);
+  };
+
+  const handleGuidedTourNextStep = () => {
+    if (guidedTourStep < 5) {
+      setGuidedTourStep(guidedTourStep + 1);
     }
   };
 
+  const handleGuidedTourPrevStep = () => {
+    if (guidedTourStep > 1) {
+      setGuidedTourStep(guidedTourStep - 1);
+    }
+  };
+
+  const guidedTourSteps = [
+    {
+      title: 'Welcome to AutoGenerate API Documentation',
+      description: 'This is the first step of the guided tour.',
+    },
+    {
+      title: 'Getting Started',
+      description: 'This is the second step of the guided tour.',
+    },
+    {
+      title: 'API Documentation',
+      description: 'This is the third step of the guided tour.',
+    },
+    {
+      title: 'Settings',
+      description: 'This is the fourth step of the guided tour.',
+    },
+    {
+      title: 'Conclusion',
+      description: 'This is the last step of the guided tour.',
+    },
+  ];
+
   const saveProgress = () => {
-    const newProgress = {
+    const progressData = {
       tutorialStep,
       sampleProject,
       trialStarted,
@@ -114,12 +143,37 @@ export default function Page() {
       demoTime,
       demoExpired,
     };
-    setProgress(newProgress);
-    localStorage.setItem('progress', JSON.stringify(newProgress));
-    localStorage.setItem('tutorialStep', tutorialStep.toString());
+    localStorage.setItem('progress', JSON.stringify(progressData));
   };
 
   return (
-    // your JSX code here
+    <div>
+      {guidedTour ? (
+        <div>
+          <h2>{guidedTourSteps[guidedTourStep - 1].title}</h2>
+          <p>{guidedTourSteps[guidedTourStep - 1].description}</p>
+          <button onClick={handleGuidedTourPrevStep}>Previous</button>
+          <button onClick={handleGuidedTourNextStep}>Next</button>
+        </div>
+      ) : (
+        <div>
+          <h1>AutoGenerate API Documentation</h1>
+          <button onClick={startGuidedTour}>Start Guided Tour</button>
+          <button onClick={handleNextStep}>Next Step</button>
+          <button onClick={handlePrevStep}>Previous Step</button>
+          <button onClick={handleSampleProject}>Sample Project</button>
+          <button onClick={handleStartTrial}>Start Trial</button>
+          <button onClick={handleStartDemo}>Start Demo</button>
+          <p>Tutorial Step: {tutorialStep}</p>
+          <p>Sample Project: {sampleProject ? 'Yes' : 'No'}</p>
+          <p>Trial Started: {trialStarted ? 'Yes' : 'No'}</p>
+          <p>Trial Days: {trialDays}</p>
+          <p>Trial Expired: {trialExpired ? 'Yes' : 'No'}</p>
+          <p>Demo Started: {demoStarted ? 'Yes' : 'No'}</p>
+          <p>Demo Time: {demoTime} minutes</p>
+          <p>Demo Expired: {demoExpired ? 'Yes' : 'No'}</p>
+        </div>
+      )}
+    </div>
   );
 }
