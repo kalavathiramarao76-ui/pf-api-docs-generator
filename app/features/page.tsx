@@ -76,32 +76,31 @@ export default function Page() {
         <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
           <RiDashboardLine size={24} className="text-gray-500 dark:text-gray-400 mb-2" />
           <h2 className="text-lg font-bold mb-2">Dashboard</h2>
-          <p className="text-sm">Track changes and updates to your API.</p>
+          <p className="text-sm">Track changes and updates</p>
         </div>
         <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
           <TbApi size={24} className="text-gray-500 dark:text-gray-400 mb-2" />
-          <h2 className="text-lg font-bold mb-2">API Docs</h2>
-          <p className="text-sm">Automatic API documentation generation.</p>
-        </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
-          <MdOutlineSettings size={24} className="text-gray-500 dark:text-gray-400 mb-2" />
-          <h2 className="text-lg font-bold mb-2">Settings</h2>
-          <p className="text-sm">Customizable documentation templates.</p>
+          <h2 className="text-lg font-bold mb-2">API Documentation</h2>
+          <p className="text-sm">Automatically generates API documentation from code</p>
         </div>
         <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
           <AiOutlineCode size={24} className="text-gray-500 dark:text-gray-400 mb-2" />
-          <h2 className="text-lg font-bold mb-2">Code Integration</h2>
-          <p className="text-sm">Integration with popular development tools.</p>
-        </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
-          <h2 className="text-lg font-bold mb-2">Collaboration</h2>
-          <p className="text-sm">Collaboration features for teams.</p>
-        </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
-          <h2 className="text-lg font-bold mb-2">Change Tracking</h2>
-          <p className="text-sm">Track changes and updates to your API.</p>
+          <h2 className="text-lg font-bold mb-2">Code Editor</h2>
+          <p className="text-sm">Write and edit code with our built-in editor</p>
         </div>
       </div>
+      <div className="flex justify-center mb-8">
+        <button onClick={handleSampleProject} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          {sampleProject ? 'Stop Sample Project' : 'Try Sample Project'}
+        </button>
+      </div>
+      {sampleProject && (
+        <div className="bg-white dark:bg-gray-800 p-4 rounded shadow mb-8">
+          <h2 className="text-lg font-bold mb-2">Sample Project</h2>
+          <p className="text-sm">This is a sample project to demonstrate the API documentation generator.</p>
+          <p className="text-sm">You can use this project to try out the features of our service.</p>
+        </div>
+      )}
     </div>
   );
 }
