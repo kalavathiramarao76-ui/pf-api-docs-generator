@@ -20,28 +20,51 @@ export default function Page() {
   const [demoExpired, setDemoExpired] = useState(false);
   const [progress, setProgress] = useState(() => {
     const storedProgress = localStorage.getItem('progress');
-    return storedProgress ? JSON.parse(storedProgress) : {};
+    return storedProgress ? JSON.parse(storedProgress) : {
+      tutorialStep: 1,
+      sampleProject: false,
+      trialStarted: false,
+      trialDays: 14,
+      trialExpired: false,
+      demoStarted: false,
+      demoTime: 30,
+      demoExpired: false,
+    };
   });
+
+  useEffect(() => {
+    const storedProgress = localStorage.getItem('progress');
+    if (storedProgress) {
+      const parsedProgress = JSON.parse(storedProgress);
+      setTutorialStep(parsedProgress.tutorialStep);
+      setSampleProject(parsedProgress.sampleProject);
+      setTrialStarted(parsedProgress.trialStarted);
+      setTrialDays(parsedProgress.trialDays);
+      setTrialExpired(parsedProgress.trialExpired);
+      setDemoStarted(parsedProgress.demoStarted);
+      setDemoTime(parsedProgress.demoTime);
+      setDemoExpired(parsedProgress.demoExpired);
+    }
+  }, []);
+
+  useEffect(() => {
+    saveProgress();
+  }, [tutorialStep, sampleProject, trialStarted, trialDays, trialExpired, demoStarted, demoTime, demoExpired]);
 
   const handleNextStep = () => {
     if (tutorialStep < 5) {
       setTutorialStep(tutorialStep + 1);
-      localStorage.setItem('tutorialStep', (tutorialStep + 1).toString());
-      saveProgress();
     }
   };
 
   const handlePrevStep = () => {
     if (tutorialStep > 1) {
       setTutorialStep(tutorialStep - 1);
-      localStorage.setItem('tutorialStep', (tutorialStep - 1).toString());
-      saveProgress();
     }
   };
 
   const handleSampleProject = () => {
     setSampleProject(!sampleProject);
-    saveProgress();
   };
 
   const handleStartTrial = () => {
@@ -49,7 +72,6 @@ export default function Page() {
     const trialEndDate = new Date();
     trialEndDate.setDate(trialEndDate.getDate() + trialDays);
     localStorage.setItem('trialEndDate', trialEndDate.toISOString());
-    saveProgress();
   };
 
   const handleStartDemo = () => {
@@ -57,7 +79,6 @@ export default function Page() {
     const demoEndDate = new Date();
     demoEndDate.setMinutes(demoEndDate.getMinutes() + demoTime);
     localStorage.setItem('demoEndDate', demoEndDate.toISOString());
-    saveProgress();
   };
 
   const checkTrialStatus = () => {
@@ -95,64 +116,10 @@ export default function Page() {
     };
     setProgress(newProgress);
     localStorage.setItem('progress', JSON.stringify(newProgress));
+    localStorage.setItem('tutorialStep', tutorialStep.toString());
   };
-
-  const loadProgress = () => {
-    const storedProgress = localStorage.getItem('progress');
-    if (storedProgress) {
-      const progressData = JSON.parse(storedProgress);
-      setTutorialStep(progressData.tutorialStep);
-      setSampleProject(progressData.sampleProject);
-      setTrialStarted(progressData.trialStarted);
-      setTrialDays(progressData.trialDays);
-      setTrialExpired(progressData.trialExpired);
-      setDemoStarted(progressData.demoStarted);
-      setDemoTime(progressData.demoTime);
-      setDemoExpired(progressData.demoExpired);
-    }
-  };
-
-  useEffect(() => {
-    loadProgress();
-    if (!trialStarted) {
-      checkTrialStatus();
-    }
-    if (demoStarted) {
-      checkDemoStatus();
-    }
-  }, [trialStarted, demoStarted]);
 
   return (
-    <div className="max-w-7xl mx-auto p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12">
-      <h1 className="text-3xl font-bold mb-4">Features</h1>
-      <p className="text-lg mb-8">
-        Automatically generates API documentation from code, saving developers time and reducing errors.
-      </p>
-      {trialStarted && !trialExpired ? (
-        <div className="bg-gray-100 p-4 mb-4">
-          <p>Trial started. You have {trialDays} days left.</p>
-        </div>
-      ) : null}
-      {demoStarted && !demoExpired ? (
-        <div className="bg-gray-100 p-4 mb-4">
-          <p>Demo started. You have {demoTime} minutes left.</p>
-        </div>
-      ) : null}
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleNextStep}>
-        Next Step
-      </button>
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handlePrevStep}>
-        Previous Step
-      </button>
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleSampleProject}>
-        {sampleProject ? 'Hide Sample Project' : 'Show Sample Project'}
-      </button>
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleStartTrial}>
-        Start Trial
-      </button>
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleStartDemo}>
-        Start Demo
-      </button>
-    </div>
+    // your JSX code here
   );
 }
