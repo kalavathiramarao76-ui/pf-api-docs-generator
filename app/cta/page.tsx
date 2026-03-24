@@ -85,28 +85,26 @@ export default function CtaPage() {
         />
         <button
           type="submit"
-          className={`px-4 py-2 bg-blue-500 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
           disabled={isSubmitting}
+          className={`px-4 py-2 mb-4 bg-blue-500 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
           {isSubmitting ? (
             <div className="flex items-center justify-center">
-              <div className="spinner-border animate-spin inline-block w-4 h-4 border-4 rounded-full text-blue-200" role="status">
-                <span className="sr-only">Loading...</span>
-              </div>
-              <span className="ml-2">Submitting...</span>
+              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 border-4 border-gray-200 rounded-full border-t-blue-600" viewBox="0 0 24 24"></svg>
+              Submitting...
             </div>
           ) : (
             <div className="flex items-center justify-center">
-              <span>Get Started</span>
-              <AiOutlineArrowRight className="ml-2" />
+              <AiOutlineArrowRight className="mr-2" />
+              Get Started
             </div>
           )}
         </button>
         {formErrors.general && (
-          <p className="text-red-500 mt-2">{formErrors.general}</p>
+          <p className="text-red-500 text-sm mt-2">{formErrors.general}</p>
         )}
         {isSuccess && (
-          <p className="text-green-500 mt-2">{successMessage}</p>
+          <p className="text-green-500 text-sm mt-2">{successMessage}</p>
         )}
       </form>
     </div>

@@ -10,6 +10,8 @@ export default function Page() {
   const [tutorialStep, setTutorialStep] = useState(1);
   const [sampleProject, setSampleProject] = useState(false);
   const [trialStarted, setTrialStarted] = useState(false);
+  const [trialDays, setTrialDays] = useState(14);
+  const [trialExpired, setTrialExpired] = useState(false);
 
   const handleNextStep = () => {
     if (tutorialStep < 5) {
@@ -29,7 +31,25 @@ export default function Page() {
 
   const handleStartTrial = () => {
     setTrialStarted(true);
+    const trialEndDate = new Date();
+    trialEndDate.setDate(trialEndDate.getDate() + trialDays);
+    localStorage.setItem('trialEndDate', trialEndDate.toISOString());
   };
+
+  const checkTrialStatus = () => {
+    const trialEndDate = localStorage.getItem('trialEndDate');
+    if (trialEndDate) {
+      const today = new Date();
+      const trialEndDateObject = new Date(trialEndDate);
+      if (today > trialEndDateObject) {
+        setTrialExpired(true);
+      }
+    }
+  };
+
+  if (!trialStarted) {
+    checkTrialStatus();
+  }
 
   return (
     <div className="max-w-7xl mx-auto p-4 sm:p-6 md:p-8 lg:p-10 xl:p-12">
@@ -37,6 +57,21 @@ export default function Page() {
       <p className="text-lg mb-8">
         Automatically generates API documentation from code, saving developers time and reducing errors.
       </p>
+      {trialStarted && !trialExpired ? (
+        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+          You are currently in a {trialDays} day free trial. Your trial will expire on {localStorage.getItem('trialEndDate')}.
+        </div>
+      ) : trialExpired ? (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+          Your free trial has expired. Please sign up to continue using our service.
+        </div>
+      ) : (
+        <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-4">
+          <button onClick={handleStartTrial} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Start {trialDays} day free trial
+          </button>
+        </div>
+      )}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
         <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
           <RiDashboardLine size={24} className="text-gray-500 dark:text-gray-400 mb-2" />
@@ -65,42 +100,6 @@ export default function Page() {
         <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
           <h2 className="text-lg font-bold mb-2">Change Tracking</h2>
           <p className="text-sm">Track changes and updates to your API.</p>
-        </div>
-      </div>
-      <div className="flex justify-center mb-8">
-        {trialStarted ? (
-          <button className="bg-gray-300 text-gray-600 py-2 px-4 rounded shadow" disabled>
-            Trial Started
-          </button>
-        ) : (
-          <button
-            className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded shadow"
-            onClick={handleStartTrial}
-          >
-            Start Free Trial
-          </button>
-        )}
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-        <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
-          <h2 className="text-lg font-bold mb-2">Trial Features</h2>
-          <ul>
-            <li className="text-sm">Access to all features for 14 days</li>
-            <li className="text-sm">Generate API documentation for up to 5 projects</li>
-            <li className="text-sm">Collaboration features for up to 5 users</li>
-          </ul>
-        </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
-          <h2 className="text-lg font-bold mb-2">What to Expect</h2>
-          <p className="text-sm">
-            During the trial period, you will have access to all features of our API documentation generator. You can generate API documentation for up to 5 projects and collaborate with up to 5 users.
-          </p>
-        </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
-          <h2 className="text-lg font-bold mb-2">Getting Started</h2>
-          <p className="text-sm">
-            To get started with the trial, simply click the "Start Free Trial" button above. You will be guided through the sign-up process and can start using our API documentation generator immediately.
-          </p>
         </div>
       </div>
     </div>
