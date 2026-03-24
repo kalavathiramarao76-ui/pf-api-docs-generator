@@ -51,20 +51,18 @@ export default function FaqPage() {
       <Head>
         <title>AutoGenerate API Documentation - Frequently Asked Questions</title>
         <meta name="description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and version control." />
-        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, API documentation generation, API documentation tools, technical writing, software development, collaboration, version control" />
+        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, API documentation generation, API documentation tools, software development, technical writing" />
       </Head>
       <h1>AutoGenerate API Documentation - Frequently Asked Questions</h1>
-      <h2>Introduction to AutoGenerate API Documentation</h2>
-      <p>AutoGenerate API Documentation is a powerful tool designed to simplify the process of creating and maintaining API documentation.</p>
+      <p>Get answers to common questions about AutoGenerate API Documentation, including its features, benefits, and usage.</p>
       {questions.map((question) => (
         <div key={question.id}>
-          <h3>{question.question}</h3>
+          <h2>{question.question}</h2>
           <p>{activeQuestion === question.id ? question.answer : <span onClick={() => handleToggle(question.id)}>Click to expand <AiOutlineArrowRight /></span>}</p>
           {activeQuestion === question.id && <p>{question.answer}</p>}
         </div>
       ))}
-      <h2>Getting Started with AutoGenerate API Documentation</h2>
-      <p>Learn how to get started with AutoGenerate API Documentation and start generating high-quality API documentation today.</p>
+      <Link href="/contact">Still have questions? Contact us for more information.</Link>
     </div>
   );
 }
