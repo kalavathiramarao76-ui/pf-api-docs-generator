@@ -87,23 +87,25 @@ export default function CtaPage() {
           onChange={handleEmailChange}
           onBlur={handleBlur}
           placeholder="Enter your email"
-          className={`px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600 ${formErrors.email.isValid ? '' : 'border-red-500'}`}
+          className={`px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${formErrors.email.isValid ? '' : 'border-red-500'}`}
         />
-        {formErrors.email.message && <p className="text-red-500 text-sm mb-4">{formErrors.email.message}</p>}
-        {formErrors.general.message && <p className="text-red-500 text-sm mb-4">{formErrors.general.message}</p>}
-        {isSuccess && <p className="text-green-500 text-sm mb-4">{successMessage}</p>}
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className={`px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
-        >
-          {isSubmitting ? (
-            <svg className="animate-spin h-5 w-5 mr-3 border-4 border-gray-200 rounded-full border-t-gray-600" viewBox="0 0 24 24" />
-          ) : (
-            <AiOutlineArrowRight size={20} />
-          )}
-          {isSubmitting ? 'Submitting...' : 'Get Started'}
-        </button>
+        {formErrors.email.message && <p className="text-red-500 mb-4">{formErrors.email.message}</p>}
+        {isSubmitting ? (
+          <div className="flex items-center justify-center mb-4">
+            <div className="spinner-border animate-spin inline-block w-8 h-8 border-4 rounded-full text-blue-500" role="status">
+              <span className="sr-only">Loading...</span>
+            </div>
+          </div>
+        ) : (
+          <button
+            type="submit"
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            Get Started
+          </button>
+        )}
+        {formErrors.general.message && <p className="text-red-500 mb-4">{formErrors.general.message}</p>}
+        {isSuccess && <p className="text-green-500 mb-4">{successMessage}</p>}
       </form>
     </div>
   );

@@ -74,43 +74,133 @@ export default function Page() {
 
   const saveProgress = () => {
     const progressData = {
-      tutorialStep: tutorialStep,
-      sampleProject: sampleProject,
-      trialStarted: trialStarted,
-      trialDays: trialDays,
-      trialExpired: trialExpired,
-      demoStarted: demoStarted,
-      demoTime: demoTime,
-      demoExpired: demoExpired,
+      tutorialStep,
+      sampleProject,
+      trialStarted,
+      trialDays,
+      trialExpired,
+      demoStarted,
+      demoTime,
+      demoExpired,
     };
     localStorage.setItem('progress', JSON.stringify(progressData));
+    localStorage.setItem('tutorialStep', tutorialStep.toString());
   };
 
   const saveFreeTrial = () => {
     const freeTrialData = {
-      freeTrial: freeTrial,
-      freeTrialDays: freeTrialDays,
-      freeTrialStarted: freeTrialStarted,
-      freeTrialExpired: freeTrialExpired,
+      freeTrial,
+      freeTrialDays,
+      freeTrialStarted,
+      freeTrialExpired,
     };
     localStorage.setItem('freeTrial', JSON.stringify(freeTrialData));
   };
 
-  const resumeTutorial = () => {
-    setTutorialStep(progress.tutorialStep);
-    setSampleProject(progress.sampleProject);
-    setTrialStarted(progress.trialStarted);
-    setTrialDays(progress.trialDays);
-    setTrialExpired(progress.trialExpired);
-    setDemoStarted(progress.demoStarted);
-    setDemoTime(progress.demoTime);
-    setDemoExpired(progress.demoExpired);
+  const handleTutorialStepChange = (newStep: number) => {
+    setTutorialStep(newStep);
+    saveProgress();
+  };
+
+  const handleSampleProjectChange = (newSampleProject: boolean) => {
+    setSampleProject(newSampleProject);
+    saveProgress();
+  };
+
+  const handleTrialStartedChange = (newTrialStarted: boolean) => {
+    setTrialStarted(newTrialStarted);
+    saveProgress();
+  };
+
+  const handleTrialDaysChange = (newTrialDays: number) => {
+    setTrialDays(newTrialDays);
+    saveProgress();
+  };
+
+  const handleTrialExpiredChange = (newTrialExpired: boolean) => {
+    setTrialExpired(newTrialExpired);
+    saveProgress();
+  };
+
+  const handleDemoStartedChange = (newDemoStarted: boolean) => {
+    setDemoStarted(newDemoStarted);
+    saveProgress();
+  };
+
+  const handleDemoTimeChange = (newDemoTime: number) => {
+    setDemoTime(newDemoTime);
+    saveProgress();
+  };
+
+  const handleDemoExpiredChange = (newDemoExpired: boolean) => {
+    setDemoExpired(newDemoExpired);
+    saveProgress();
+  };
+
+  const handleGuidedTourChange = (newGuidedTour: boolean) => {
+    setGuidedTour(newGuidedTour);
+  };
+
+  const handleGuidedTourStepChange = (newGuidedTourStep: number) => {
+    setGuidedTourStep(newGuidedTourStep);
+  };
+
+  const handleFreeTrialChange = (newFreeTrial: boolean) => {
+    setFreeTrial(newFreeTrial);
+    saveFreeTrial();
+  };
+
+  const handleFreeTrialDaysChange = (newFreeTrialDays: number) => {
+    setFreeTrialDays(newFreeTrialDays);
+    saveFreeTrial();
+  };
+
+  const handleFreeTrialStartedChange = (newFreeTrialStarted: boolean) => {
+    setFreeTrialStarted(newFreeTrialStarted);
+    saveFreeTrial();
+  };
+
+  const handleFreeTrialExpiredChange = (newFreeTrialExpired: boolean) => {
+    setFreeTrialExpired(newFreeTrialExpired);
+    saveFreeTrial();
   };
 
   return (
     <div>
-      <button onClick={resumeTutorial}>Resume Tutorial</button>
-      {/* rest of your code */}
+      <h1>AutoGenerate API Documentation</h1>
+      <p>Current Tutorial Step: {tutorialStep}</p>
+      <button onClick={() => handleTutorialStepChange(tutorialStep + 1)}>Next Step</button>
+      <button onClick={() => handleTutorialStepChange(tutorialStep - 1)}>Previous Step</button>
+      <p>Sample Project: {sampleProject ? 'Yes' : 'No'}</p>
+      <button onClick={() => handleSampleProjectChange(!sampleProject)}>Toggle Sample Project</button>
+      <p>Trial Started: {trialStarted ? 'Yes' : 'No'}</p>
+      <button onClick={() => handleTrialStartedChange(!trialStarted)}>Toggle Trial Started</button>
+      <p>Trial Days: {trialDays}</p>
+      <button onClick={() => handleTrialDaysChange(trialDays + 1)}>Increase Trial Days</button>
+      <button onClick={() => handleTrialDaysChange(trialDays - 1)}>Decrease Trial Days</button>
+      <p>Trial Expired: {trialExpired ? 'Yes' : 'No'}</p>
+      <button onClick={() => handleTrialExpiredChange(!trialExpired)}>Toggle Trial Expired</button>
+      <p>Demo Started: {demoStarted ? 'Yes' : 'No'}</p>
+      <button onClick={() => handleDemoStartedChange(!demoStarted)}>Toggle Demo Started</button>
+      <p>Demo Time: {demoTime}</p>
+      <button onClick={() => handleDemoTimeChange(demoTime + 1)}>Increase Demo Time</button>
+      <button onClick={() => handleDemoTimeChange(demoTime - 1)}>Decrease Demo Time</button>
+      <p>Demo Expired: {demoExpired ? 'Yes' : 'No'}</p>
+      <button onClick={() => handleDemoExpiredChange(!demoExpired)}>Toggle Demo Expired</button>
+      <p>Guided Tour: {guidedTour ? 'Yes' : 'No'}</p>
+      <button onClick={() => handleGuidedTourChange(!guidedTour)}>Toggle Guided Tour</button>
+      <p>Guided Tour Step: {guidedTourStep}</p>
+      <button onClick={() => handleGuidedTourStepChange(guidedTourStep + 1)}>Next Guided Tour Step</button>
+      <button onClick={() => handleGuidedTourStepChange(guidedTourStep - 1)}>Previous Guided Tour Step</button>
+      <p>Free Trial: {freeTrial ? 'Yes' : 'No'}</p>
+      <button onClick={() => handleFreeTrialChange(!freeTrial)}>Toggle Free Trial</button>
+      <p>Free Trial Days: {freeTrialDays}</p>
+      <button onClick={() => handleFreeTrialDaysChange(freeTrialDays + 1)}>Increase Free Trial Days</button>
+      <button onClick={() => handleFreeTrialDaysChange(freeTrialDays - 1)}>Decrease Free Trial Days</button>
+      <p>Free Trial Started: {freeTrialStarted ? 'Yes' : 'No'}</p>
+      <button onClick={() => handleFreeTrialStartedChange(!freeTrialStarted)}>Toggle Free Trial Started</button>
+      <p>Free Trial Expired: {freeTrialExpired ? 'Yes' : 'No'}</p>
+      <button onClick={() => handleFreeTrialExpiredChange(!freeTrialExpired)}>Toggle Free Trial Expired</button>
     </div>
   );
 }
