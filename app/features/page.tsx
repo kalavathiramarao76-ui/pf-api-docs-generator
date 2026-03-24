@@ -72,77 +72,6 @@ export default function Page() {
     saveFreeTrial();
   }, [freeTrial, freeTrialDays, freeTrialStarted, freeTrialExpired]);
 
-  const handleNextStep = () => {
-    if (tutorialStep < 5) {
-      setTutorialStep(tutorialStep + 1);
-    }
-  };
-
-  const handlePrevStep = () => {
-    if (tutorialStep > 1) {
-      setTutorialStep(tutorialStep - 1);
-    }
-  };
-
-  const handleSampleProject = () => {
-    setSampleProject(!sampleProject);
-  };
-
-  const handleStartTrial = () => {
-    setTrialStarted(true);
-    const trialEndDate = new Date();
-    trialEndDate.setDate(trialEndDate.getDate() + trialDays);
-    localStorage.setItem('trialEndDate', trialEndDate.toISOString());
-  };
-
-  const handleStartDemo = () => {
-    setDemoStarted(true);
-    const demoEndDate = new Date();
-    demoEndDate.setMinutes(demoEndDate.getMinutes() + demoTime);
-    localStorage.setItem('demoEndDate', demoEndDate.toISOString());
-  };
-
-  const handleStartFreeTrial = () => {
-    setFreeTrial(true);
-    setFreeTrialStarted(true);
-    const freeTrialEndDate = new Date();
-    freeTrialEndDate.setDate(freeTrialEndDate.getDate() + freeTrialDays);
-    localStorage.setItem('freeTrialEndDate', freeTrialEndDate.toISOString());
-  };
-
-  const checkTrialStatus = () => {
-    const trialEndDate = localStorage.getItem('trialEndDate');
-    if (trialEndDate) {
-      const parsedTrialEndDate = new Date(trialEndDate);
-      const currentDate = new Date();
-      if (currentDate > parsedTrialEndDate) {
-        setTrialExpired(true);
-      }
-    }
-  };
-
-  const checkDemoStatus = () => {
-    const demoEndDate = localStorage.getItem('demoEndDate');
-    if (demoEndDate) {
-      const parsedDemoEndDate = new Date(demoEndDate);
-      const currentDate = new Date();
-      if (currentDate > parsedDemoEndDate) {
-        setDemoExpired(true);
-      }
-    }
-  };
-
-  const checkFreeTrialStatus = () => {
-    const freeTrialEndDate = localStorage.getItem('freeTrialEndDate');
-    if (freeTrialEndDate) {
-      const parsedFreeTrialEndDate = new Date(freeTrialEndDate);
-      const currentDate = new Date();
-      if (currentDate > parsedFreeTrialEndDate) {
-        setFreeTrialExpired(true);
-      }
-    }
-  };
-
   const saveProgress = () => {
     const progressData = {
       tutorialStep,
@@ -167,56 +96,42 @@ export default function Page() {
     localStorage.setItem('freeTrial', JSON.stringify(freeTrialData));
   };
 
+  const handleNextStep = () => {
+    if (tutorialStep < 5) {
+      setTutorialStep(tutorialStep + 1);
+    }
+  };
+
+  const handleSaveProgress = () => {
+    saveProgress();
+    alert('Progress saved successfully!');
+  };
+
+  const handleResumeProgress = () => {
+    const storedProgress = localStorage.getItem('progress');
+    if (storedProgress) {
+      const parsedProgress = JSON.parse(storedProgress);
+      setTutorialStep(parsedProgress.tutorialStep);
+      setSampleProject(parsedProgress.sampleProject);
+      setTrialStarted(parsedProgress.trialStarted);
+      setTrialDays(parsedProgress.trialDays);
+      setTrialExpired(parsedProgress.trialExpired);
+      setDemoStarted(parsedProgress.demoStarted);
+      setDemoTime(parsedProgress.demoTime);
+      setDemoExpired(parsedProgress.demoExpired);
+      alert('Progress resumed successfully!');
+    } else {
+      alert('No saved progress found!');
+    }
+  };
+
   return (
     <div>
-      {freeTrialStarted && !freeTrialExpired ? (
-        <div>
-          <h1>Free Trial</h1>
-          <p>You have {freeTrialDays} days left in your free trial.</p>
-          <button onClick={handleStartFreeTrial}>Start Free Trial</button>
-        </div>
-      ) : (
-        <div>
-          <h1>AutoGenerate API Documentation</h1>
-          <p>
-            <Link href="/tutorial">
-              <a>
-                <AiOutlineCode size={24} />
-                Tutorial
-              </a>
-            </Link>
-          </p>
-          <p>
-            <Link href="/settings">
-              <a>
-                <MdOutlineSettings size={24} />
-                Settings
-              </a>
-            </Link>
-          </p>
-          <p>
-            <Link href="/dashboard">
-              <a>
-                <RiDashboardLine size={24} />
-                Dashboard
-              </a>
-            </Link>
-          </p>
-          <p>
-            <Link href="/api">
-              <a>
-                <TbApi size={24} />
-                API
-              </a>
-            </Link>
-          </p>
-          <button onClick={handleNextStep}>Next Step</button>
-          <button onClick={handlePrevStep}>Previous Step</button>
-          <button onClick={handleSampleProject}>Sample Project</button>
-          <button onClick={handleStartTrial}>Start Trial</button>
-          <button onClick={handleStartDemo}>Start Demo</button>
-        </div>
-      )}
+      <h1>AutoGenerate API Documentation</h1>
+      <p>Current Tutorial Step: {tutorialStep}</p>
+      <button onClick={handleNextStep}>Next Step</button>
+      <button onClick={handleSaveProgress}>Save Progress</button>
+      <button onClick={handleResumeProgress}>Resume Progress</button>
     </div>
   );
 }
