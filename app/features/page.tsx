@@ -7,7 +7,10 @@ import { RiDashboardLine } from 'react-icons/ri';
 import { TbApi } from 'react-icons/tb';
 
 export default function Page() {
-  const [tutorialStep, setTutorialStep] = useState(1);
+  const [tutorialStep, setTutorialStep] = useState(() => {
+    const storedTutorialStep = localStorage.getItem('tutorialStep');
+    return storedTutorialStep ? parseInt(storedTutorialStep) : 1;
+  });
   const [sampleProject, setSampleProject] = useState(false);
   const [trialStarted, setTrialStarted] = useState(false);
   const [trialDays, setTrialDays] = useState(14);
@@ -19,12 +22,14 @@ export default function Page() {
   const handleNextStep = () => {
     if (tutorialStep < 5) {
       setTutorialStep(tutorialStep + 1);
+      localStorage.setItem('tutorialStep', (tutorialStep + 1).toString());
     }
   };
 
   const handlePrevStep = () => {
     if (tutorialStep > 1) {
       setTutorialStep(tutorialStep - 1);
+      localStorage.setItem('tutorialStep', (tutorialStep - 1).toString());
     }
   };
 
@@ -89,42 +94,63 @@ export default function Page() {
         </div>
       ) : trialExpired ? (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          Your free trial has expired. Please sign up to continue using our service.
+          Your free trial has expired.
         </div>
-      ) : demoStarted && !demoExpired ? (
+      ) : (
+        <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-4">
+          You can start a {trialDays} day free trial.
+        </div>
+      )}
+      {demoStarted && !demoExpired ? (
         <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
           You are currently in a {demoTime} minute demo. Your demo will expire on {localStorage.getItem('demoEndDate')}.
         </div>
       ) : demoExpired ? (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          Your demo has expired. Please sign up to continue using our service.
+          Your demo has expired.
         </div>
       ) : (
         <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-4">
-          <button onClick={handleStartTrial} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">
-            Start {trialDays} day free trial
-          </button>
-          <button onClick={handleStartDemo} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Start {demoTime} minute demo
-          </button>
+          You can start a {demoTime} minute demo.
         </div>
       )}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-        <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
-          <RiDashboardLine size={24} className="text-gray-500 dark:text-gray-400 mb-2" />
-          <h2 className="text-lg font-bold mb-2">Dashboard</h2>
-          <p className="text-sm">Track changes and updates</p>
-        </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
-          <TbApi size={24} className="text-gray-500 dark:text-gray-400 mb-2" />
-          <h2 className="text-lg font-bold mb-2">API Documentation</h2>
-          <p className="text-sm">Automatically generate API documentation</p>
-        </div>
-        <div className="bg-white dark:bg-gray-800 p-4 rounded shadow">
-          <AiOutlineCode size={24} className="text-gray-500 dark:text-gray-400 mb-2" />
-          <h2 className="text-lg font-bold mb-2">Code Editor</h2>
-          <p className="text-sm">Write and edit code with ease</p>
-        </div>
+      <div className="flex justify-between mb-4">
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={handlePrevStep}
+          disabled={tutorialStep === 1}
+        >
+          Previous Step
+        </button>
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={handleNextStep}
+          disabled={tutorialStep === 5}
+        >
+          Next Step
+        </button>
+      </div>
+      <div className="flex justify-between mb-4">
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={handleSampleProject}
+        >
+          {sampleProject ? 'Hide Sample Project' : 'Show Sample Project'}
+        </button>
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={handleStartTrial}
+          disabled={trialStarted}
+        >
+          Start Trial
+        </button>
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={handleStartDemo}
+          disabled={demoStarted}
+        >
+          Start Demo
+        </button>
       </div>
     </div>
   );
