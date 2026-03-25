@@ -80,14 +80,6 @@ export default function Page() {
     return storedUserId ? storedUserId : generateUUID();
   });
   const [demoMode, setDemoMode] = useState(false);
-  const [demoModeTime, setDemoModeTime] = useState(60 * 60 * 1000); // 1 hour in milliseconds
-  const [demoModeTimeLeft, setDemoModeTimeLeft] = useState(null);
-  const [trialCountdown, setTrialCountdown] = useState(14 * 24 * 60 * 60 * 1000); // 14 days in milliseconds
-  const [trialTimeLeft, setTrialTimeLeft] = useState(null);
-  const [trialModeCountdown, setTrialModeCountdown] = useState(30 * 24 * 60 * 60 * 1000); // 30 days in milliseconds
-  const [trialModeTimeLeft, setTrialModeTimeLeft] = useState(null);
-  const [saveProgress, setSaveProgress] = useState(false);
-  const [resumeProgress, setResumeProgress] = useState(false);
 
   useEffect(() => {
     const storedUserId = localStorage.getItem('userId');
@@ -98,24 +90,20 @@ export default function Page() {
         }
       });
     }
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
-    if (userId) {
-      saveUserProgress(userId, userProgress);
-    }
+    saveUserProgress(userId, userProgress);
+    localStorage.setItem('userProgress', JSON.stringify(userProgress));
   }, [userProgress, userId]);
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      if (userProgress) {
-        saveUserProgress(userId, userProgress);
-      }
-    }, 10000); // Save progress every 10 seconds
-    return () => clearInterval(intervalId);
-  }, [userProgress, userId]);
+    localStorage.setItem('tutorialStep', tutorialStep.toString());
+    localStorage.setItem('progress', JSON.stringify(progress));
+    localStorage.setItem('userId', userId);
+  }, [tutorialStep, progress, userId]);
 
   return (
-    // Your existing JSX code here
+    // your JSX code here
   );
 }
