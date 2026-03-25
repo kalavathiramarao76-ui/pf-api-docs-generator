@@ -61,83 +61,55 @@ export default function Page() {
   const [saveProgress, setSaveProgress] = useState(false);
   const [resumeProgress, setResumeProgress] = useState(false);
 
-  const saveUserProgress = () => {
-    const userProgressData = {
-      tutorialStep,
-      sampleProject,
-      trialStarted,
-      trialDays,
-      trialExpired,
-      demoStarted,
-      demoTime,
-      demoExpired,
-      guidedTour,
-      guidedTourStep,
-      freeTrial,
-      freeTrialDays,
-      freeTrialStarted,
-      freeTrialExpired,
-      trialMode,
-      countdown,
-      timeLeft,
-      userProgress,
-      userId,
-      demoMode,
-      demoModeTime,
-      demoModeTimeLeft,
-      trialCountdown,
-      trialTimeLeft,
-      trialModeCountdown,
-      trialModeTimeLeft,
-    };
-    localStorage.setItem('userProgress', JSON.stringify(userProgressData));
-    setSaveProgress(true);
+  const saveUserProgress = async () => {
+    try {
+      const response = await client.post('/save-progress', {
+        userId: userId,
+        progress: userProgress,
+      });
+      if (response.status === 200) {
+        setSaveProgress(true);
+      } else {
+        console.error('Error saving user progress:', response);
+      }
+    } catch (error) {
+      console.error('Error saving user progress:', error);
+    }
   };
 
-  const resumeUserProgress = () => {
-    const storedUserProgress = localStorage.getItem('userProgress');
-    if (storedUserProgress) {
-      const userProgressData = JSON.parse(storedUserProgress);
-      setTutorialStep(userProgressData.tutorialStep);
-      setSampleProject(userProgressData.sampleProject);
-      setTrialStarted(userProgressData.trialStarted);
-      setTrialDays(userProgressData.trialDays);
-      setTrialExpired(userProgressData.trialExpired);
-      setDemoStarted(userProgressData.demoStarted);
-      setDemoTime(userProgressData.demoTime);
-      setDemoExpired(userProgressData.demoExpired);
-      setGuidedTour(userProgressData.guidedTour);
-      setGuidedTourStep(userProgressData.guidedTourStep);
-      setFreeTrial(userProgressData.freeTrial);
-      setFreeTrialDays(userProgressData.freeTrialDays);
-      setFreeTrialStarted(userProgressData.freeTrialStarted);
-      setFreeTrialExpired(userProgressData.freeTrialExpired);
-      setTrialMode(userProgressData.trialMode);
-      setCountdown(userProgressData.countdown);
-      setTimeLeft(userProgressData.timeLeft);
-      setUserProgress(userProgressData.userProgress);
-      setUserId(userProgressData.userId);
-      setDemoMode(userProgressData.demoMode);
-      setDemoModeTime(userProgressData.demoModeTime);
-      setDemoModeTimeLeft(userProgressData.demoModeTimeLeft);
-      setTrialCountdown(userProgressData.trialCountdown);
-      setTrialTimeLeft(userProgressData.trialTimeLeft);
-      setTrialModeCountdown(userProgressData.trialModeCountdown);
-      setTrialModeTimeLeft(userProgressData.trialModeTimeLeft);
-      setResumeProgress(true);
+  const syncUserProgress = async () => {
+    try {
+      const response = await client.get(`/sync-progress/${userId}`);
+      if (response.status === 200) {
+        const syncedProgress = response.data;
+        setUserProgress(syncedProgress);
+        setResumeProgress(true);
+      } else {
+        console.error('Error syncing user progress:', response);
+      }
+    } catch (error) {
+      console.error('Error syncing user progress:', error);
     }
   };
 
   useEffect(() => {
+    const storedUserProgress = localStorage.getItem('userProgress');
+    if (storedUserProgress) {
+      setUserProgress(JSON.parse(storedUserProgress));
+    }
+  }, []);
+
+  useEffect(() => {
     if (saveProgress) {
       saveUserProgress();
-      setSaveProgress(false);
     }
+  }, [userProgress, saveProgress]);
+
+  useEffect(() => {
     if (resumeProgress) {
-      resumeUserProgress();
-      setResumeProgress(false);
+      syncUserProgress();
     }
-  }, [saveProgress, resumeProgress]);
+  }, [resumeProgress]);
 
   const generateUUID = () => {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -147,10 +119,6 @@ export default function Page() {
   };
 
   return (
-    <div>
-      {/* Your existing JSX code here */}
-      <button onClick={saveUserProgress}>Save Progress</button>
-      <button onClick={resumeUserProgress}>Resume Progress</button>
-    </div>
+    // your JSX code here
   );
 }
