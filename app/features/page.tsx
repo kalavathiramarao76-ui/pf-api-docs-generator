@@ -6,6 +6,34 @@ import { MdOutlineSettings } from 'react-icons/md';
 import { RiDashboardLine } from 'react-icons/ri';
 import { TbApi } from 'react-icons/tb';
 
+const generateUUID = () => {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
+
+const saveUserProgress = async (userId: string, userProgress: any) => {
+  try {
+    const response = await client.post('/save-progress', {
+      userId,
+      userProgress,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const getUserProgress = async (userId: string) => {
+  try {
+    const response = await client.get(`/get-progress/${userId}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export default function Page() {
   const [tutorialStep, setTutorialStep] = useState(() => {
     const storedTutorialStep = localStorage.getItem('tutorialStep');
@@ -60,102 +88,34 @@ export default function Page() {
   const [trialModeTimeLeft, setTrialModeTimeLeft] = useState(null);
   const [saveProgress, setSaveProgress] = useState(false);
   const [resumeProgress, setResumeProgress] = useState(false);
-  const [trialAccess, setTrialAccess] = useState(false);
 
   useEffect(() => {
-    const storedSaveProgress = localStorage.getItem('saveProgress');
-    if (storedSaveProgress) {
-      setSaveProgress(JSON.parse(storedSaveProgress));
+    const storedUserId = localStorage.getItem('userId');
+    if (storedUserId) {
+      getUserProgress(storedUserId).then((data) => {
+        if (data) {
+          setUserProgress(data);
+        }
+      });
     }
   }, []);
 
   useEffect(() => {
-    if (saveProgress) {
-      localStorage.setItem('userProgress', JSON.stringify(userProgress));
-      localStorage.setItem('saveProgress', JSON.stringify(saveProgress));
+    if (userId) {
+      saveUserProgress(userId, userProgress);
     }
-  }, [userProgress, saveProgress]);
+  }, [userProgress, userId]);
 
   useEffect(() => {
-    const storedResumeProgress = localStorage.getItem('resumeProgress');
-    if (storedResumeProgress) {
-      setResumeProgress(JSON.parse(storedResumeProgress));
-    }
-  }, []);
-
-  useEffect(() => {
-    if (resumeProgress) {
-      const storedUserProgress = localStorage.getItem('userProgress');
-      if (storedUserProgress) {
-        setUserProgress(JSON.parse(storedUserProgress));
+    const intervalId = setInterval(() => {
+      if (userProgress) {
+        saveUserProgress(userId, userProgress);
       }
-      localStorage.setItem('resumeProgress', JSON.stringify(resumeProgress));
-    }
-  }, [resumeProgress]);
-
-  const generateUUID = () => {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
-  };
-
-  const saveUserProgress = () => {
-    setSaveProgress(true);
-    const userData = {
-      userId: userId,
-      userProgress: userProgress
-    };
-    client.post('/save-progress', userData)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  const resumeUserProgress = () => {
-    setResumeProgress(true);
-    client.get('/resume-progress', {
-      params: {
-        userId: userId
-      }
-    })
-      .then((response) => {
-        const userData = response.data;
-        setUserProgress(userData.userProgress);
-        console.log(userData);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
-
-  const provideRecommendations = () => {
-    client.post('/provide-recommendations', {
-      userId: userId,
-      userProgress: userProgress
-    })
-      .then((response) => {
-        const recommendations = response.data;
-        setUserProgress({
-          ...userProgress,
-          recommendedSteps: recommendations
-        });
-        console.log(recommendations);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
+    }, 10000); // Save progress every 10 seconds
+    return () => clearInterval(intervalId);
+  }, [userProgress, userId]);
 
   return (
-    <div>
-      {/* Your existing JSX code here */}
-      <button onClick={saveUserProgress}>Save Progress</button>
-      <button onClick={resumeUserProgress}>Resume Progress</button>
-      <button onClick={provideRecommendations}>Get Recommendations</button>
-    </div>
+    // Your existing JSX code here
   );
 }
