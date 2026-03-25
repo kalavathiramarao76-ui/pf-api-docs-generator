@@ -89,18 +89,22 @@ export default function CtaPage() {
           placeholder="Enter your email"
           className={`px-4 py-2 mb-4 border ${formErrors.email.isValid ? 'border-gray-300' : 'border-red-500'}`}
         />
-        {formErrors.email.message && <p className="text-red-500 mb-4">{formErrors.email.message}</p>}
-        {isSubmitting ? (
-          <button type="submit" disabled className="px-4 py-2 bg-gray-300 text-gray-500 cursor-not-allowed">
-            Submitting...
-          </button>
-        ) : (
-          <button type="submit" className="px-4 py-2 bg-blue-500 text-white hover:bg-blue-700">
-            Get Started <AiOutlineArrowRight />
-          </button>
+        {formErrors.email.message && (
+          <p className="text-red-500 text-sm mb-4">{formErrors.email.message}</p>
         )}
-        {formErrors.general.message && <p className="text-red-500 mb-4">{formErrors.general.message}</p>}
-        {isSuccess && <p className="text-green-500 mb-4">{successMessage}</p>}
+        {formErrors.general.message && (
+          <p className="text-red-500 text-sm mb-4">{formErrors.general.message}</p>
+        )}
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className={`px-4 py-2 bg-blue-500 text-white rounded ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`}
+        >
+          {isSubmitting ? 'Submitting...' : 'Get Started'}
+        </button>
+        {isSuccess && (
+          <p className="text-green-500 text-sm mt-4">{successMessage}</p>
+        )}
       </form>
     </div>
   );

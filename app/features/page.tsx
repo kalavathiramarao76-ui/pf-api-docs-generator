@@ -63,78 +63,99 @@ export default function Page() {
   const [trialAccess, setTrialAccess] = useState(false);
 
   useEffect(() => {
-    if (trialStarted) {
-      const intervalId = setInterval(() => {
-        setTrialDays(trialDays - 1);
-        if (trialDays <= 0) {
-          setTrialExpired(true);
-          clearInterval(intervalId);
-        }
-      }, 24 * 60 * 60 * 1000); // 1 day in milliseconds
+    const storedSaveProgress = localStorage.getItem('saveProgress');
+    if (storedSaveProgress) {
+      setSaveProgress(JSON.parse(storedSaveProgress));
     }
-  }, [trialStarted, trialDays]);
+  }, []);
 
   useEffect(() => {
-    if (demoStarted) {
-      const intervalId = setInterval(() => {
-        setDemoTime(demoTime - 1);
-        if (demoTime <= 0) {
-          setDemoExpired(true);
-          clearInterval(intervalId);
-        }
-      }, 60 * 1000); // 1 minute in milliseconds
+    if (saveProgress) {
+      localStorage.setItem('userProgress', JSON.stringify(userProgress));
+      localStorage.setItem('saveProgress', JSON.stringify(saveProgress));
     }
-  }, [demoStarted, demoTime]);
+  }, [userProgress, saveProgress]);
 
-  const startFreeTrial = () => {
-    setFreeTrial(true);
-    setFreeTrialStarted(true);
-    setTrialStarted(true);
-    setTrialDays(14);
-    setTrialExpired(false);
-    setDemoStarted(false);
-    setDemoExpired(false);
-  };
+  useEffect(() => {
+    const storedResumeProgress = localStorage.getItem('resumeProgress');
+    if (storedResumeProgress) {
+      setResumeProgress(JSON.parse(storedResumeProgress));
+    }
+  }, []);
 
-  const startDemo = () => {
-    setDemoStarted(true);
-    setDemoTime(30);
-    setDemoExpired(false);
-    setTrialStarted(false);
-    setTrialExpired(false);
+  useEffect(() => {
+    if (resumeProgress) {
+      const storedUserProgress = localStorage.getItem('userProgress');
+      if (storedUserProgress) {
+        setUserProgress(JSON.parse(storedUserProgress));
+      }
+      localStorage.setItem('resumeProgress', JSON.stringify(resumeProgress));
+    }
+  }, [resumeProgress]);
+
+  const generateUUID = () => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
   };
 
   const saveUserProgress = () => {
-    const userProgressData = {
-      completedSteps: userProgress.completedSteps,
-      recommendedSteps: userProgress.recommendedSteps,
+    setSaveProgress(true);
+    const userData = {
+      userId: userId,
+      userProgress: userProgress
     };
-    localStorage.setItem('userProgress', JSON.stringify(userProgressData));
+    client.post('/save-progress', userData)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const resumeUserProgress = () => {
+    setResumeProgress(true);
+    client.get('/resume-progress', {
+      params: {
+        userId: userId
+      }
+    })
+      .then((response) => {
+        const userData = response.data;
+        setUserProgress(userData.userProgress);
+        console.log(userData);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const provideRecommendations = () => {
+    client.post('/provide-recommendations', {
+      userId: userId,
+      userProgress: userProgress
+    })
+      .then((response) => {
+        const recommendations = response.data;
+        setUserProgress({
+          ...userProgress,
+          recommendedSteps: recommendations
+        });
+        console.log(recommendations);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
     <div>
-      {trialAccess ? (
-        <div>
-          <h1>AutoGenerate API Documentation</h1>
-          <p>Try out our tool for free!</p>
-          <button onClick={startFreeTrial}>Start Free Trial</button>
-          <button onClick={startDemo}>Start Demo</button>
-        </div>
-      ) : (
-        <div>
-          <h1>AutoGenerate API Documentation</h1>
-          <p>Get started with our tool!</p>
-          <button onClick={() => setTrialAccess(true)}>Get Trial Access</button>
-        </div>
-      )}
+      {/* Your existing JSX code here */}
+      <button onClick={saveUserProgress}>Save Progress</button>
+      <button onClick={resumeUserProgress}>Resume Progress</button>
+      <button onClick={provideRecommendations}>Get Recommendations</button>
     </div>
   );
-}
-
-function generateUUID() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
 }
