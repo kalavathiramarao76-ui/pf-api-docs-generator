@@ -60,56 +60,79 @@ export default function Page() {
   const [trialModeTimeLeft, setTrialModeTimeLeft] = useState(null);
   const [saveProgress, setSaveProgress] = useState(false);
   const [resumeProgress, setResumeProgress] = useState(false);
+  const [onboardingSteps, setOnboardingSteps] = useState([
+    {
+      id: 1,
+      title: 'Welcome to our product',
+      description: 'This is the first step of our onboarding process',
+      completed: false,
+    },
+    {
+      id: 2,
+      title: 'Getting started with our API',
+      description: 'This is the second step of our onboarding process',
+      completed: false,
+    },
+    {
+      id: 3,
+      title: 'Configuring your account',
+      description: 'This is the third step of our onboarding process',
+      completed: false,
+    },
+  ]);
+  const [currentOnboardingStep, setCurrentOnboardingStep] = useState(1);
 
   useEffect(() => {
-    const storedProgress = localStorage.getItem('progress');
-    if (storedProgress) {
-      const parsedProgress = JSON.parse(storedProgress);
-      setTutorialStep(parsedProgress.tutorialStep);
-      setSampleProject(parsedProgress.sampleProject);
-      setTrialStarted(parsedProgress.trialStarted);
-      setTrialDays(parsedProgress.trialDays);
-      setTrialExpired(parsedProgress.trialExpired);
-      setDemoStarted(parsedProgress.demoStarted);
-      setDemoTime(parsedProgress.demoTime);
-      setDemoExpired(parsedProgress.demoExpired);
+    const storedOnboardingSteps = localStorage.getItem('onboardingSteps');
+    if (storedOnboardingSteps) {
+      setOnboardingSteps(JSON.parse(storedOnboardingSteps));
     }
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('progress', JSON.stringify({
-      tutorialStep,
-      sampleProject,
-      trialStarted,
-      trialDays,
-      trialExpired,
-      demoStarted,
-      demoTime,
-      demoExpired,
-    }));
-  }, [tutorialStep, sampleProject, trialStarted, trialDays, trialExpired, demoStarted, demoTime, demoExpired]);
+    localStorage.setItem('onboardingSteps', JSON.stringify(onboardingSteps));
+  }, [onboardingSteps]);
 
-  const handleSaveProgress = () => {
-    setSaveProgress(true);
-    localStorage.setItem('userProgress', JSON.stringify(userProgress));
-    alert('Progress saved successfully!');
+  const handleOnboardingStepCompletion = (stepId) => {
+    const updatedOnboardingSteps = onboardingSteps.map((step) => {
+      if (step.id === stepId) {
+        return { ...step, completed: true };
+      }
+      return step;
+    });
+    setOnboardingSteps(updatedOnboardingSteps);
   };
 
-  const handleResumeProgress = () => {
-    setResumeProgress(true);
-    const storedUserProgress = localStorage.getItem('userProgress');
-    if (storedUserProgress) {
-      const parsedUserProgress = JSON.parse(storedUserProgress);
-      setUserProgress(parsedUserProgress);
-      alert('Progress resumed successfully!');
+  const handleNextOnboardingStep = () => {
+    const currentStepIndex = onboardingSteps.findIndex((step) => step.id === currentOnboardingStep);
+    if (currentStepIndex < onboardingSteps.length - 1) {
+      setCurrentOnboardingStep(onboardingSteps[currentStepIndex + 1].id);
+    }
+  };
+
+  const handlePreviousOnboardingStep = () => {
+    const currentStepIndex = onboardingSteps.findIndex((step) => step.id === currentOnboardingStep);
+    if (currentStepIndex > 0) {
+      setCurrentOnboardingStep(onboardingSteps[currentStepIndex - 1].id);
     }
   };
 
   return (
     <div>
-      {/* existing code remains the same */}
-      <button onClick={handleSaveProgress}>Save Progress</button>
-      <button onClick={handleResumeProgress}>Resume Progress</button>
+      {onboardingSteps.map((step) => (
+        <div key={step.id}>
+          <h2>{step.title}</h2>
+          <p>{step.description}</p>
+          {step.completed ? (
+            <button onClick={handleNextOnboardingStep}>Next Step</button>
+          ) : (
+            <button onClick={() => handleOnboardingStepCompletion(step.id)}>Complete Step</button>
+          )}
+        </div>
+      ))}
+      {currentOnboardingStep > 1 && (
+        <button onClick={handlePreviousOnboardingStep}>Previous Step</button>
+      )}
     </div>
   );
 }
