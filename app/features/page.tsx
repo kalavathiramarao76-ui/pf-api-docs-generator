@@ -61,94 +61,66 @@ export default function Page() {
   const [saveProgress, setSaveProgress] = useState(false);
   const [resumeProgress, setResumeProgress] = useState(false);
 
-  const saveUserProgress = () => {
-    const progressData = {
-      tutorialStep,
-      sampleProject,
-      trialStarted,
-      trialDays,
-      trialExpired,
-      demoStarted,
-      demoTime,
-      demoExpired,
-      guidedTour,
-      guidedTourStep,
-      freeTrial,
-      freeTrialDays,
-      freeTrialStarted,
-      freeTrialExpired,
-      trialMode,
-      countdown,
-      timeLeft,
-      userProgress,
-      userId,
-      demoMode,
-      demoModeTime,
-      demoModeTimeLeft,
-      trialCountdown,
-      trialTimeLeft,
-      trialModeCountdown,
-      trialModeTimeLeft,
-    };
-    localStorage.setItem('userProgress', JSON.stringify(progressData));
-    setSaveProgress(true);
+  const saveUserProgress = async () => {
+    try {
+      const response = await client.post('/save-progress', {
+        userId: userId,
+        progress: userProgress,
+      });
+      if (response.status === 200) {
+        setSaveProgress(true);
+      } else {
+        console.error('Error saving user progress:', response);
+      }
+    } catch (error) {
+      console.error('Error saving user progress:', error);
+    }
   };
 
-  const resumeUserProgress = () => {
-    const storedProgress = localStorage.getItem('userProgress');
-    if (storedProgress) {
-      const progressData = JSON.parse(storedProgress);
-      setTutorialStep(progressData.tutorialStep);
-      setSampleProject(progressData.sampleProject);
-      setTrialStarted(progressData.trialStarted);
-      setTrialDays(progressData.trialDays);
-      setTrialExpired(progressData.trialExpired);
-      setDemoStarted(progressData.demoStarted);
-      setDemoTime(progressData.demoTime);
-      setDemoExpired(progressData.demoExpired);
-      setGuidedTour(progressData.guidedTour);
-      setGuidedTourStep(progressData.guidedTourStep);
-      setFreeTrial(progressData.freeTrial);
-      setFreeTrialDays(progressData.freeTrialDays);
-      setFreeTrialStarted(progressData.freeTrialStarted);
-      setFreeTrialExpired(progressData.freeTrialExpired);
-      setTrialMode(progressData.trialMode);
-      setCountdown(progressData.countdown);
-      setTimeLeft(progressData.timeLeft);
-      setUserProgress(progressData.userProgress);
-      setUserId(progressData.userId);
-      setDemoMode(progressData.demoMode);
-      setDemoModeTime(progressData.demoModeTime);
-      setDemoModeTimeLeft(progressData.demoModeTimeLeft);
-      setTrialCountdown(progressData.trialCountdown);
-      setTrialTimeLeft(progressData.trialTimeLeft);
-      setTrialModeCountdown(progressData.trialModeCountdown);
-      setTrialModeTimeLeft(progressData.trialModeTimeLeft);
-      setResumeProgress(true);
+  const syncUserProgress = async () => {
+    try {
+      const response = await client.get(`/sync-progress/${userId}`);
+      if (response.status === 200) {
+        const syncedProgress = response.data;
+        setUserProgress(syncedProgress);
+        setResumeProgress(true);
+      } else {
+        console.error('Error syncing user progress:', response);
+      }
+    } catch (error) {
+      console.error('Error syncing user progress:', error);
     }
   };
 
   useEffect(() => {
-    const storedProgress = localStorage.getItem('userProgress');
-    if (storedProgress) {
-      resumeUserProgress();
+    const storedUserProgress = localStorage.getItem('userProgress');
+    if (storedUserProgress) {
+      setUserProgress(JSON.parse(storedUserProgress));
     }
   }, []);
 
-  return (
-    <div>
-      {/* Your existing JSX code here */}
-      {saveProgress && <p>Progress saved successfully!</p>}
-      {resumeProgress && <p>Progress resumed successfully!</p>}
-      <button onClick={saveUserProgress}>Save Progress</button>
-      <button onClick={resumeUserProgress}>Resume Progress</button>
-    </div>
-  );
-}
+  useEffect(() => {
+    if (saveProgress) {
+      localStorage.setItem('userProgress', JSON.stringify(userProgress));
+      setSaveProgress(false);
+    }
+  }, [userProgress, saveProgress]);
 
-function generateUUID() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
+  useEffect(() => {
+    if (resumeProgress) {
+      localStorage.setItem('userProgress', JSON.stringify(userProgress));
+      setResumeProgress(false);
+    }
+  }, [userProgress, resumeProgress]);
+
+  const generateUUID = () => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  };
+
+  return (
+    // your JSX code here
+  );
 }
