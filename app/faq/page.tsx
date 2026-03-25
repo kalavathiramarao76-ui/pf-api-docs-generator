@@ -51,18 +51,28 @@ export default function FaqPage() {
       <Head>
         <title>AutoGenerate API Documentation - Frequently Asked Questions</title>
         <meta name="description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and version control." />
-        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, API documentation generation, API documentation tools, software development, technical writing" />
+        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, API documentation generation, technical writing, software development, collaboration, version control" />
       </Head>
       <h1>AutoGenerate API Documentation - Frequently Asked Questions</h1>
-      <p>Get answers to common questions about AutoGenerate API Documentation, including its features, benefits, and use cases.</p>
+      <h2>Introduction to AutoGenerate API Documentation</h2>
+      <p>AutoGenerate API Documentation is a tool that automatically generates API documentation from code, saving developers time and reducing errors.</p>
       {questions.map((question) => (
         <div key={question.id}>
-          <h2>{question.question}</h2>
-          <p>{activeQuestion === question.id ? question.answer : <span onClick={() => handleToggle(question.id)}>Click to expand <AiOutlineArrowRight /></span>}</p>
-          {activeQuestion === question.id && <p>{question.answer}</p>}
+          <h3>{question.question}</h3>
+          <p>{question.answer}</p>
+          <button onClick={() => handleToggle(question.id)}>
+            {activeQuestion === question.id ? 'Hide' : 'Show More'}
+            <AiOutlineArrowRight />
+          </button>
+          {activeQuestion === question.id && (
+            <div>
+              <p>{question.answer}</p>
+            </div>
+          )}
         </div>
       ))}
-      <Link href="/">Back to Home</Link>
+      <h2>Getting Started with AutoGenerate API Documentation</h2>
+      <p>Learn how to get started with AutoGenerate API Documentation and start generating high-quality API documentation today.</p>
     </div>
   );
 }

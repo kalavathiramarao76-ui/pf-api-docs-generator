@@ -60,79 +60,88 @@ export default function Page() {
   const [trialModeTimeLeft, setTrialModeTimeLeft] = useState(null);
   const [saveProgress, setSaveProgress] = useState(false);
   const [resumeProgress, setResumeProgress] = useState(false);
-  const [onboardingSteps, setOnboardingSteps] = useState([
-    {
-      id: 1,
-      title: 'Welcome to our product',
-      description: 'This is the first step of our onboarding process',
-      completed: false,
-    },
-    {
-      id: 2,
-      title: 'Getting started with our API',
-      description: 'This is the second step of our onboarding process',
-      completed: false,
-    },
-    {
-      id: 3,
-      title: 'Configuring your account',
-      description: 'This is the third step of our onboarding process',
-      completed: false,
-    },
-  ]);
-  const [currentOnboardingStep, setCurrentOnboardingStep] = useState(1);
+
+  const saveUserProgress = () => {
+    const progressData = {
+      tutorialStep,
+      sampleProject,
+      trialStarted,
+      trialDays,
+      trialExpired,
+      demoStarted,
+      demoTime,
+      demoExpired,
+      guidedTour,
+      guidedTourStep,
+      freeTrial,
+      freeTrialDays,
+      freeTrialStarted,
+      freeTrialExpired,
+      trialMode,
+      countdown,
+      timeLeft,
+      userProgress,
+      userId,
+      demoMode,
+      demoModeTime,
+      demoModeTimeLeft,
+      trialCountdown,
+      trialTimeLeft,
+      trialModeCountdown,
+      trialModeTimeLeft,
+    };
+    localStorage.setItem('userProgress', JSON.stringify(progressData));
+    setSaveProgress(true);
+  };
+
+  const resumeUserProgress = () => {
+    const storedProgress = localStorage.getItem('userProgress');
+    if (storedProgress) {
+      const progressData = JSON.parse(storedProgress);
+      setTutorialStep(progressData.tutorialStep);
+      setSampleProject(progressData.sampleProject);
+      setTrialStarted(progressData.trialStarted);
+      setTrialDays(progressData.trialDays);
+      setTrialExpired(progressData.trialExpired);
+      setDemoStarted(progressData.demoStarted);
+      setDemoTime(progressData.demoTime);
+      setDemoExpired(progressData.demoExpired);
+      setGuidedTour(progressData.guidedTour);
+      setGuidedTourStep(progressData.guidedTourStep);
+      setFreeTrial(progressData.freeTrial);
+      setFreeTrialDays(progressData.freeTrialDays);
+      setFreeTrialStarted(progressData.freeTrialStarted);
+      setFreeTrialExpired(progressData.freeTrialExpired);
+      setTrialMode(progressData.trialMode);
+      setCountdown(progressData.countdown);
+      setTimeLeft(progressData.timeLeft);
+      setUserProgress(progressData.userProgress);
+      setUserId(progressData.userId);
+      setDemoMode(progressData.demoMode);
+      setDemoModeTime(progressData.demoModeTime);
+      setDemoModeTimeLeft(progressData.demoModeTimeLeft);
+      setTrialCountdown(progressData.trialCountdown);
+      setTrialTimeLeft(progressData.trialTimeLeft);
+      setTrialModeCountdown(progressData.trialModeCountdown);
+      setTrialModeTimeLeft(progressData.trialModeTimeLeft);
+      setResumeProgress(true);
+    }
+  };
 
   useEffect(() => {
-    const storedOnboardingSteps = localStorage.getItem('onboardingSteps');
-    if (storedOnboardingSteps) {
-      setOnboardingSteps(JSON.parse(storedOnboardingSteps));
+    const storedProgress = localStorage.getItem('userProgress');
+    if (storedProgress) {
+      resumeUserProgress();
     }
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem('onboardingSteps', JSON.stringify(onboardingSteps));
-  }, [onboardingSteps]);
-
-  const handleOnboardingStepCompletion = (stepId) => {
-    const updatedOnboardingSteps = onboardingSteps.map((step) => {
-      if (step.id === stepId) {
-        return { ...step, completed: true };
-      }
-      return step;
-    });
-    setOnboardingSteps(updatedOnboardingSteps);
-  };
-
-  const handleNextOnboardingStep = () => {
-    const currentStepIndex = onboardingSteps.findIndex((step) => step.id === currentOnboardingStep);
-    if (currentStepIndex < onboardingSteps.length - 1) {
-      setCurrentOnboardingStep(onboardingSteps[currentStepIndex + 1].id);
-    }
-  };
-
-  const handlePreviousOnboardingStep = () => {
-    const currentStepIndex = onboardingSteps.findIndex((step) => step.id === currentOnboardingStep);
-    if (currentStepIndex > 0) {
-      setCurrentOnboardingStep(onboardingSteps[currentStepIndex - 1].id);
-    }
-  };
-
   return (
     <div>
-      {onboardingSteps.map((step) => (
-        <div key={step.id}>
-          <h2>{step.title}</h2>
-          <p>{step.description}</p>
-          {step.completed ? (
-            <button onClick={handleNextOnboardingStep}>Next Step</button>
-          ) : (
-            <button onClick={() => handleOnboardingStepCompletion(step.id)}>Complete Step</button>
-          )}
-        </div>
-      ))}
-      {currentOnboardingStep > 1 && (
-        <button onClick={handlePreviousOnboardingStep}>Previous Step</button>
-      )}
+      {/* Your existing JSX code here */}
+      {saveProgress && <p>Progress saved successfully!</p>}
+      {resumeProgress && <p>Progress resumed successfully!</p>}
+      <button onClick={saveUserProgress}>Save Progress</button>
+      <button onClick={resumeUserProgress}>Resume Progress</button>
     </div>
   );
 }

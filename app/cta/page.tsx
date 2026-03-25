@@ -20,15 +20,15 @@ export default function CtaPage() {
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-    if (!emailRegex.test(email)) {
-      return {
-        message: 'Please enter a valid email address',
-        isValid: false,
-      };
-    }
     if (email.trim() === '') {
       return {
         message: 'Email is required',
+        isValid: false,
+      };
+    }
+    if (!emailRegex.test(email)) {
+      return {
+        message: 'Please enter a valid email address (e.g. example@example.com)',
         isValid: false,
       };
     }
@@ -87,33 +87,23 @@ export default function CtaPage() {
           onChange={handleEmailChange}
           onBlur={handleBlur}
           placeholder="Enter your email"
-          className={`px-4 py-2 mb-4 border border-gray-300 rounded`}
+          className={`px-4 py-2 mb-4 border border-gray-300 rounded ${formErrors.email.isValid ? '' : 'border-red-500'}`}
         />
+        {formErrors.email.message && (
+          <p className="text-red-500 text-sm mb-4">{formErrors.email.message}</p>
+        )}
+        {formErrors.general.message && (
+          <p className="text-red-500 text-sm mb-4">{formErrors.general.message}</p>
+        )}
         <button
           type="submit"
           disabled={isSubmitting}
           className={`px-4 py-2 bg-blue-500 text-white rounded ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
-          {isSubmitting ? (
-            <div className="flex items-center justify-center">
-              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 border-4 border-gray-200 rounded-full border-t-blue-600" viewBox="0 0 24 24" />
-              Submitting...
-            </div>
-          ) : (
-            <div className="flex items-center justify-center">
-              <AiOutlineArrowRight size={20} className="mr-2" />
-              Get Started
-            </div>
-          )}
+          {isSubmitting ? 'Submitting...' : 'Get Started'}
         </button>
-        {formErrors.email.message && (
-          <p className="text-red-500 mt-2">{formErrors.email.message}</p>
-        )}
-        {formErrors.general.message && (
-          <p className="text-red-500 mt-2">{formErrors.general.message}</p>
-        )}
         {isSuccess && (
-          <p className="text-green-500 mt-2">{successMessage}</p>
+          <p className="text-green-500 text-sm mt-4">{successMessage}</p>
         )}
       </form>
     </div>
