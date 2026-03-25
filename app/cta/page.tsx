@@ -87,21 +87,28 @@ export default function CtaPage() {
           onChange={handleEmailChange}
           onBlur={handleBlur}
           placeholder="Enter your email"
-          className={`px-4 py-2 mb-4 border border-gray-300 rounded-${formErrors.email.isValid ? 'md' : 'md focus:ring-red-500 focus:border-red-500'}`}
+          className={`px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+            formErrors.email.isValid ? '' : 'border-red-500'
+          }`}
         />
-        {formErrors.email.message && <p className="text-red-500 mb-4">{formErrors.email.message}</p>}
-        {isSubmitting ? (
-          <button type="submit" disabled className="px-4 py-2 bg-gray-300 text-gray-500 rounded-md cursor-not-allowed">
-            Submitting...
-          </button>
-        ) : (
-          <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-700">
-            <AiOutlineArrowRight className="mr-2" />
-            Get Started
-          </button>
+        {formErrors.email.message && (
+          <p className="text-red-500 text-sm mb-4">{formErrors.email.message}</p>
         )}
-        {formErrors.general.message && <p className="text-red-500 mb-4">{formErrors.general.message}</p>}
-        {isSuccess && <p className="text-green-500 mb-4">{successMessage}</p>}
+        {formErrors.general.message && (
+          <p className="text-red-500 text-sm mb-4">{formErrors.general.message}</p>
+        )}
+        {isSuccess && (
+          <p className="text-green-500 text-sm mb-4">{successMessage}</p>
+        )}
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className={`px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 ${
+            isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
+        >
+          {isSubmitting ? 'Submitting...' : 'Get Started'}
+        </button>
       </form>
     </div>
   );

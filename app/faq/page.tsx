@@ -51,13 +51,14 @@ export default function FaqPage() {
       <Head>
         <title>AutoGenerate API Documentation - Frequently Asked Questions</title>
         <meta name="description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and more." />
-        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, API documentation generation, API documentation tools, technical writing, software development, collaboration, version control" />
+        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, API documentation generation, software development, technical writing, collaboration, customization, version control, technical documentation" />
         <meta property="og:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
         <meta property="og:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and more." />
-        <meta property="og:url" content={router.asPath} />
+        <meta property="og:keywords" content="AutoGenerate API Documentation, API documentation, API documentation generation, software development, technical writing, collaboration, customization, version control, technical documentation" />
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
         <meta name="twitter:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and more." />
+        <meta name="twitter:keywords" content="AutoGenerate API Documentation, API documentation, API documentation generation, software development, technical writing, collaboration, customization, version control, technical documentation" />
       </Head>
       {questions.map((question) => (
         <div key={question.id}>
@@ -67,11 +68,6 @@ export default function FaqPage() {
           )}
         </div>
       ))}
-      <Link href="/docs">
-        <a>
-          Learn more about AutoGenerate API Documentation <AiOutlineArrowRight />
-        </a>
-      </Link>
     </div>
   );
 }

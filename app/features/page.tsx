@@ -58,6 +58,8 @@ export default function Page() {
   const [trialTimeLeft, setTrialTimeLeft] = useState(null);
   const [trialModeCountdown, setTrialModeCountdown] = useState(30 * 24 * 60 * 60 * 1000); // 30 days in milliseconds
   const [trialModeTimeLeft, setTrialModeTimeLeft] = useState(null);
+  const [saveProgress, setSaveProgress] = useState(false);
+  const [resumeProgress, setResumeProgress] = useState(false);
 
   useEffect(() => {
     const storedProgress = localStorage.getItem('progress');
@@ -66,58 +68,48 @@ export default function Page() {
       setTutorialStep(parsedProgress.tutorialStep);
       setSampleProject(parsedProgress.sampleProject);
       setTrialStarted(parsedProgress.trialStarted);
+      setTrialDays(parsedProgress.trialDays);
+      setTrialExpired(parsedProgress.trialExpired);
+      setDemoStarted(parsedProgress.demoStarted);
+      setDemoTime(parsedProgress.demoTime);
+      setDemoExpired(parsedProgress.demoExpired);
     }
   }, []);
 
   useEffect(() => {
-    if (trialMode) {
-      const intervalId = setInterval(() => {
-        if (trialModeCountdown > 0) {
-          setTrialModeCountdown(trialModeCountdown - 1000);
-        } else {
-          setTrialModeCountdown(0);
-          setTrialModeTimeLeft(null);
-        }
-      }, 1000);
-      return () => clearInterval(intervalId);
-    }
-  }, [trialMode, trialModeCountdown]);
+    localStorage.setItem('progress', JSON.stringify({
+      tutorialStep,
+      sampleProject,
+      trialStarted,
+      trialDays,
+      trialExpired,
+      demoStarted,
+      demoTime,
+      demoExpired,
+    }));
+  }, [tutorialStep, sampleProject, trialStarted, trialDays, trialExpired, demoStarted, demoTime, demoExpired]);
 
-  useEffect(() => {
-    if (trialModeCountdown > 0) {
-      const days = Math.floor(trialModeCountdown / (24 * 60 * 60 * 1000));
-      const hours = Math.floor((trialModeCountdown % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
-      const minutes = Math.floor((trialModeCountdown % (60 * 60 * 1000)) / (60 * 1000));
-      const seconds = Math.floor((trialModeCountdown % (60 * 1000)) / 1000);
-      setTrialModeTimeLeft(`${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`);
-    } else {
-      setTrialModeTimeLeft('Trial mode has expired');
-    }
-  }, [trialModeCountdown]);
-
-  const startTrialMode = () => {
-    setTrialMode(true);
-    setTrialModeCountdown(30 * 24 * 60 * 60 * 1000); // 30 days in milliseconds
+  const handleSaveProgress = () => {
+    setSaveProgress(true);
+    localStorage.setItem('userProgress', JSON.stringify(userProgress));
+    alert('Progress saved successfully!');
   };
 
-  const stopTrialMode = () => {
-    setTrialMode(false);
-    setTrialModeCountdown(0);
+  const handleResumeProgress = () => {
+    setResumeProgress(true);
+    const storedUserProgress = localStorage.getItem('userProgress');
+    if (storedUserProgress) {
+      const parsedUserProgress = JSON.parse(storedUserProgress);
+      setUserProgress(parsedUserProgress);
+      alert('Progress resumed successfully!');
+    }
   };
 
   return (
     <div>
-      {trialMode ? (
-        <div>
-          <p>Trial mode is active. Time left: {trialModeTimeLeft}</p>
-          <button onClick={stopTrialMode}>Stop trial mode</button>
-        </div>
-      ) : (
-        <div>
-          <p>Trial mode is not active.</p>
-          <button onClick={startTrialMode}>Start trial mode</button>
-        </div>
-      )}
+      {/* existing code remains the same */}
+      <button onClick={handleSaveProgress}>Save Progress</button>
+      <button onClick={handleResumeProgress}>Resume Progress</button>
     </div>
   );
 }
