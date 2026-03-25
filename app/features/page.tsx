@@ -40,6 +40,13 @@ export default function Page() {
   const [trialMode, setTrialMode] = useState(false);
   const [countdown, setCountdown] = useState(30 * 24 * 60 * 60 * 1000); // 30 days in milliseconds
   const [timeLeft, setTimeLeft] = useState(null);
+  const [userProgress, setUserProgress] = useState(() => {
+    const storedUserProgress = localStorage.getItem('userProgress');
+    return storedUserProgress ? JSON.parse(storedUserProgress) : {
+      completedSteps: [],
+      recommendedSteps: []
+    };
+  });
 
   useEffect(() => {
     const storedProgress = localStorage.getItem('progress');
@@ -72,27 +79,8 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    saveFreeTrial();
-  }, [freeTrial, freeTrialDays, freeTrialStarted, freeTrialExpired]);
-
-  useEffect(() => {
-    if (trialMode) {
-      const intervalId = setInterval(() => {
-        if (countdown > 0) {
-          setCountdown(countdown - 1000);
-          const days = Math.floor(countdown / (24 * 60 * 60 * 1000));
-          const hours = Math.floor((countdown % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
-          const minutes = Math.floor((countdown % (60 * 60 * 1000)) / (60 * 1000));
-          const seconds = Math.floor((countdown % (60 * 1000)) / 1000);
-          setTimeLeft(`${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`);
-        } else {
-          setTrialExpired(true);
-          clearInterval(intervalId);
-        }
-      }, 1000);
-      return () => clearInterval(intervalId);
-    }
-  }, [trialMode, countdown]);
+    saveUserProgress();
+  }, [userProgress]);
 
   const saveProgress = () => {
     const progressData = {
@@ -103,37 +91,65 @@ export default function Page() {
       trialExpired,
       demoStarted,
       demoTime,
-      demoExpired,
+      demoExpired
     };
     localStorage.setItem('progress', JSON.stringify(progressData));
   };
 
-  const saveFreeTrial = () => {
-    const freeTrialData = {
-      freeTrial,
-      freeTrialDays,
-      freeTrialStarted,
-      freeTrialExpired,
+  const saveUserProgress = () => {
+    const userProgressData = {
+      completedSteps: userProgress.completedSteps,
+      recommendedSteps: userProgress.recommendedSteps
     };
-    localStorage.setItem('freeTrial', JSON.stringify(freeTrialData));
+    localStorage.setItem('userProgress', JSON.stringify(userProgressData));
   };
 
-  const startTrial = () => {
-    setTrialMode(true);
-    setTrialStarted(true);
-    setCountdown(30 * 24 * 60 * 60 * 1000); // 30 days in milliseconds
+  const markStepAsCompleted = (step) => {
+    const newCompletedSteps = [...userProgress.completedSteps, step];
+    const newRecommendedSteps = getRecommendedSteps(newCompletedSteps);
+    setUserProgress({
+      completedSteps: newCompletedSteps,
+      recommendedSteps: newRecommendedSteps
+    });
+  };
+
+  const getRecommendedSteps = (completedSteps) => {
+    const allSteps = ['step1', 'step2', 'step3', 'step4', 'step5'];
+    const recommendedSteps = allSteps.filter(step => !completedSteps.includes(step));
+    return recommendedSteps;
   };
 
   return (
     <div>
-      {trialMode && (
-        <div>
-          <p>Trial mode: {timeLeft}</p>
-          {trialExpired && <p>Trial has expired. Please upgrade to a paid plan.</p>}
-        </div>
-      )}
-      <button onClick={startTrial}>Start Trial</button>
-      {/* Rest of the code remains the same */}
+      <h1>AutoGenerate API Documentation</h1>
+      <p>Current Step: {tutorialStep}</p>
+      <button onClick={() => markStepAsCompleted(`step${tutorialStep}`)}>Mark Step as Completed</button>
+      <p>Completed Steps: {userProgress.completedSteps.join(', ')}</p>
+      <p>Recommended Steps: {userProgress.recommendedSteps.join(', ')}</p>
+      <Link href="/api-docs">
+        <a>
+          <TbApi size={24} />
+          API Documentation
+        </a>
+      </Link>
+      <Link href="/dashboard">
+        <a>
+          <RiDashboardLine size={24} />
+          Dashboard
+        </a>
+      </Link>
+      <Link href="/settings">
+        <a>
+          <MdOutlineSettings size={24} />
+          Settings
+        </a>
+      </Link>
+      <Link href="/code">
+        <a>
+          <AiOutlineCode size={24} />
+          Code
+        </a>
+      </Link>
     </div>
   );
 }
