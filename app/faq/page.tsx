@@ -55,24 +55,22 @@ export default function FaqPage() {
         <meta property="og:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
         <meta property="og:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and more." />
         <meta property="og:url" content={router.asPath} />
-        <meta property="og:site_name" content="AutoGenerate API Documentation" />
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
         <meta name="twitter:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and more." />
       </Head>
       {questions.map((question) => (
         <div key={question.id}>
-          <div onClick={() => handleToggle(question.id)}>
-            <h2>{question.question}</h2>
-            <AiOutlineArrowRight />
-          </div>
+          <h2 onClick={() => handleToggle(question.id)}>{question.question}</h2>
           {activeQuestion === question.id && (
             <p>{question.answer}</p>
           )}
         </div>
       ))}
-      <Link href="/">
-        <a>Back to Home</a>
+      <Link href="/docs">
+        <a>
+          Learn more about AutoGenerate API Documentation <AiOutlineArrowRight />
+        </a>
       </Link>
     </div>
   );

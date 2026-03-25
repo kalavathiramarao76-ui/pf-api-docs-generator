@@ -56,6 +56,8 @@ export default function Page() {
   const [demoModeTimeLeft, setDemoModeTimeLeft] = useState(null);
   const [trialCountdown, setTrialCountdown] = useState(14 * 24 * 60 * 60 * 1000); // 14 days in milliseconds
   const [trialTimeLeft, setTrialTimeLeft] = useState(null);
+  const [trialModeCountdown, setTrialModeCountdown] = useState(30 * 24 * 60 * 60 * 1000); // 30 days in milliseconds
+  const [trialModeTimeLeft, setTrialModeTimeLeft] = useState(null);
 
   useEffect(() => {
     const storedProgress = localStorage.getItem('progress');
@@ -64,67 +66,56 @@ export default function Page() {
       setTutorialStep(parsedProgress.tutorialStep);
       setSampleProject(parsedProgress.sampleProject);
       setTrialStarted(parsedProgress.trialStarted);
-      setTrialDays(parsedProgress.trialDays);
-      setTrialExpired(parsedProgress.trialExpired);
-      setDemoStarted(parsedProgress.demoStarted);
-      setDemoTime(parsedProgress.demoTime);
-      setDemoExpired(parsedProgress.demoExpired);
     }
   }, []);
 
   useEffect(() => {
-    if (trialStarted) {
+    if (trialMode) {
       const intervalId = setInterval(() => {
-        if (trialCountdown > 0) {
-          setTrialCountdown(trialCountdown - 1000);
+        if (trialModeCountdown > 0) {
+          setTrialModeCountdown(trialModeCountdown - 1000);
         } else {
-          setTrialExpired(true);
-          clearInterval(intervalId);
+          setTrialModeCountdown(0);
+          setTrialModeTimeLeft(null);
         }
       }, 1000);
       return () => clearInterval(intervalId);
     }
-  }, [trialStarted, trialCountdown]);
+  }, [trialMode, trialModeCountdown]);
 
   useEffect(() => {
-    if (trialCountdown > 0) {
-      const days = Math.floor(trialCountdown / (24 * 60 * 60 * 1000));
-      const hours = Math.floor((trialCountdown % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
-      const minutes = Math.floor((trialCountdown % (60 * 60 * 1000)) / (60 * 1000));
-      const seconds = Math.floor((trialCountdown % (60 * 1000)) / 1000);
-      setTrialTimeLeft(`${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`);
+    if (trialModeCountdown > 0) {
+      const days = Math.floor(trialModeCountdown / (24 * 60 * 60 * 1000));
+      const hours = Math.floor((trialModeCountdown % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+      const minutes = Math.floor((trialModeCountdown % (60 * 60 * 1000)) / (60 * 1000));
+      const seconds = Math.floor((trialModeCountdown % (60 * 1000)) / 1000);
+      setTrialModeTimeLeft(`${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`);
     } else {
-      setTrialTimeLeft('Trial expired');
+      setTrialModeTimeLeft('Trial mode has expired');
     }
-  }, [trialCountdown]);
+  }, [trialModeCountdown]);
 
-  const startTrial = () => {
-    setTrialStarted(true);
-    setTrialCountdown(14 * 24 * 60 * 60 * 1000);
-    localStorage.setItem('trialStarted', 'true');
-    localStorage.setItem('trialCountdown', String(14 * 24 * 60 * 60 * 1000));
+  const startTrialMode = () => {
+    setTrialMode(true);
+    setTrialModeCountdown(30 * 24 * 60 * 60 * 1000); // 30 days in milliseconds
   };
 
-  const upgradeToPaidPlan = () => {
-    // Implement upgrade logic here
+  const stopTrialMode = () => {
+    setTrialMode(false);
+    setTrialModeCountdown(0);
   };
 
   return (
     <div>
-      {trialStarted && !trialExpired ? (
+      {trialMode ? (
         <div>
-          <p>Trial mode: {trialTimeLeft}</p>
-          <button onClick={upgradeToPaidPlan}>Upgrade to paid plan</button>
-        </div>
-      ) : !trialStarted ? (
-        <div>
-          <p>Start your 14-day free trial</p>
-          <button onClick={startTrial}>Start trial</button>
+          <p>Trial mode is active. Time left: {trialModeTimeLeft}</p>
+          <button onClick={stopTrialMode}>Stop trial mode</button>
         </div>
       ) : (
         <div>
-          <p>Trial expired. Please upgrade to a paid plan to continue using the service.</p>
-          <button onClick={upgradeToPaidPlan}>Upgrade to paid plan</button>
+          <p>Trial mode is not active.</p>
+          <button onClick={startTrialMode}>Start trial mode</button>
         </div>
       )}
     </div>
