@@ -54,6 +54,8 @@ export default function Page() {
   const [demoMode, setDemoMode] = useState(false);
   const [demoModeTime, setDemoModeTime] = useState(60 * 60 * 1000); // 1 hour in milliseconds
   const [demoModeTimeLeft, setDemoModeTimeLeft] = useState(null);
+  const [trialCountdown, setTrialCountdown] = useState(14 * 24 * 60 * 60 * 1000); // 14 days in milliseconds
+  const [trialTimeLeft, setTrialTimeLeft] = useState(null);
 
   useEffect(() => {
     const storedProgress = localStorage.getItem('progress');
@@ -71,50 +73,60 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    saveProgress();
-  }, [tutorialStep, sampleProject, trialStarted, trialDays, trialExpired, demoStarted, demoMode]);
-
-  useEffect(() => {
-    if (demoMode) {
+    if (trialStarted) {
       const intervalId = setInterval(() => {
-        if (demoModeTimeLeft > 0) {
-          setDemoModeTimeLeft(demoModeTimeLeft - 1000);
+        if (trialCountdown > 0) {
+          setTrialCountdown(trialCountdown - 1000);
         } else {
-          setDemoMode(false);
-          setDemoModeTimeLeft(null);
+          setTrialExpired(true);
+          clearInterval(intervalId);
         }
       }, 1000);
       return () => clearInterval(intervalId);
     }
-  }, [demoMode, demoModeTimeLeft]);
+  }, [trialStarted, trialCountdown]);
 
-  const startDemoMode = () => {
-    setDemoMode(true);
-    setDemoModeTimeLeft(demoModeTime);
+  useEffect(() => {
+    if (trialCountdown > 0) {
+      const days = Math.floor(trialCountdown / (24 * 60 * 60 * 1000));
+      const hours = Math.floor((trialCountdown % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+      const minutes = Math.floor((trialCountdown % (60 * 60 * 1000)) / (60 * 1000));
+      const seconds = Math.floor((trialCountdown % (60 * 1000)) / 1000);
+      setTrialTimeLeft(`${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`);
+    } else {
+      setTrialTimeLeft('Trial expired');
+    }
+  }, [trialCountdown]);
+
+  const startTrial = () => {
+    setTrialStarted(true);
+    setTrialCountdown(14 * 24 * 60 * 60 * 1000);
+    localStorage.setItem('trialStarted', 'true');
+    localStorage.setItem('trialCountdown', String(14 * 24 * 60 * 60 * 1000));
   };
 
-  const saveProgress = () => {
-    const progressData = {
-      tutorialStep,
-      sampleProject,
-      trialStarted,
-      trialDays,
-      trialExpired,
-      demoStarted,
-      demoTime,
-      demoExpired,
-      demoMode,
-    };
-    localStorage.setItem('progress', JSON.stringify(progressData));
+  const upgradeToPaidPlan = () => {
+    // Implement upgrade logic here
   };
 
   return (
     <div>
-      <button onClick={startDemoMode}>Start Demo Mode</button>
-      {demoMode && (
-        <p>Demo mode is active. Time left: {demoModeTimeLeft / 1000 / 60} minutes</p>
+      {trialStarted && !trialExpired ? (
+        <div>
+          <p>Trial mode: {trialTimeLeft}</p>
+          <button onClick={upgradeToPaidPlan}>Upgrade to paid plan</button>
+        </div>
+      ) : !trialStarted ? (
+        <div>
+          <p>Start your 14-day free trial</p>
+          <button onClick={startTrial}>Start trial</button>
+        </div>
+      ) : (
+        <div>
+          <p>Trial expired. Please upgrade to a paid plan to continue using the service.</p>
+          <button onClick={upgradeToPaidPlan}>Upgrade to paid plan</button>
+        </div>
       )}
-      {/* Rest of your code remains the same */}
     </div>
   );
 }
