@@ -50,29 +50,27 @@ export default function FaqPage() {
     <div>
       <Head>
         <title>AutoGenerate API Documentation - Frequently Asked Questions</title>
-        <meta name="description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and more." />
-        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, API documentation generation, technical writing, software development, collaboration, customization, version control" />
-        <meta property="og:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
-        <meta property="og:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and more." />
-        <meta property="og:url" content="https://autogenerate-api-documentation.com/faq" />
-        <meta property="og:site_name" content="AutoGenerate API Documentation" />
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
-        <meta name="twitter:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and more." />
+        <meta name="description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and version control." />
+        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, software development, technical writing, collaboration, version control" />
       </Head>
-      <h1>Frequently Asked Questions</h1>
-      <ul>
-        {questions.map((question) => (
-          <li key={question.id}>
-            <div>
-              <h2 onClick={() => handleToggle(question.id)}>{question.question}</h2>
-              {activeQuestion === question.id && (
-                <p>{question.answer}</p>
-              )}
-            </div>
-          </li>
-        ))}
-      </ul>
+      <h1>AutoGenerate API Documentation - Frequently Asked Questions</h1>
+      <h2>Introduction to AutoGenerate API Documentation</h2>
+      <p>AutoGenerate API Documentation is a tool that automatically generates API documentation from code, saving developers time and reducing errors.</p>
+      {questions.map((question) => (
+        <div key={question.id}>
+          <h3>{question.question}</h3>
+          <p>{activeQuestion === question.id ? question.answer : ''}</p>
+          <button onClick={() => handleToggle(question.id)}>
+            {activeQuestion === question.id ? 'Hide' : 'Show'} Answer
+            <AiOutlineArrowRight />
+          </button>
+          {activeQuestion === question.id && (
+            <p>{question.answer}</p>
+          )}
+        </div>
+      ))}
+      <h2>Getting Started with AutoGenerate API Documentation</h2>
+      <p>Learn how to get started with AutoGenerate API Documentation and start generating high-quality API documentation for your software development projects.</p>
     </div>
   );
 }

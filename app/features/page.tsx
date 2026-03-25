@@ -60,65 +60,81 @@ export default function Page() {
   const [trialModeTimeLeft, setTrialModeTimeLeft] = useState(null);
   const [saveProgress, setSaveProgress] = useState(false);
   const [resumeProgress, setResumeProgress] = useState(false);
+  const [trialAccess, setTrialAccess] = useState(false);
 
-  const saveUserProgress = async () => {
-    try {
-      const response = await client.post('/save-progress', {
-        userId: userId,
-        progress: userProgress,
-      });
-      if (response.status === 200) {
-        setSaveProgress(true);
-      } else {
-        console.error('Error saving user progress:', response);
-      }
-    } catch (error) {
-      console.error('Error saving user progress:', error);
+  useEffect(() => {
+    if (trialStarted) {
+      const intervalId = setInterval(() => {
+        setTrialDays(trialDays - 1);
+        if (trialDays <= 0) {
+          setTrialExpired(true);
+          clearInterval(intervalId);
+        }
+      }, 24 * 60 * 60 * 1000); // 1 day in milliseconds
     }
+  }, [trialStarted, trialDays]);
+
+  useEffect(() => {
+    if (demoStarted) {
+      const intervalId = setInterval(() => {
+        setDemoTime(demoTime - 1);
+        if (demoTime <= 0) {
+          setDemoExpired(true);
+          clearInterval(intervalId);
+        }
+      }, 60 * 1000); // 1 minute in milliseconds
+    }
+  }, [demoStarted, demoTime]);
+
+  const startFreeTrial = () => {
+    setFreeTrial(true);
+    setFreeTrialStarted(true);
+    setTrialStarted(true);
+    setTrialDays(14);
+    setTrialExpired(false);
+    setDemoStarted(false);
+    setDemoExpired(false);
   };
 
-  const syncUserProgress = async () => {
-    try {
-      const response = await client.get(`/sync-progress/${userId}`);
-      if (response.status === 200) {
-        const syncedProgress = response.data;
-        setUserProgress(syncedProgress);
-        setResumeProgress(true);
-      } else {
-        console.error('Error syncing user progress:', response);
-      }
-    } catch (error) {
-      console.error('Error syncing user progress:', error);
-    }
+  const startDemo = () => {
+    setDemoStarted(true);
+    setDemoTime(30);
+    setDemoExpired(false);
+    setTrialStarted(false);
+    setTrialExpired(false);
   };
 
-  useEffect(() => {
-    const storedUserProgress = localStorage.getItem('userProgress');
-    if (storedUserProgress) {
-      setUserProgress(JSON.parse(storedUserProgress));
-    }
-  }, []);
-
-  useEffect(() => {
-    if (saveProgress) {
-      saveUserProgress();
-    }
-  }, [userProgress, saveProgress]);
-
-  useEffect(() => {
-    if (resumeProgress) {
-      syncUserProgress();
-    }
-  }, [resumeProgress]);
-
-  const generateUUID = () => {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
+  const saveUserProgress = () => {
+    const userProgressData = {
+      completedSteps: userProgress.completedSteps,
+      recommendedSteps: userProgress.recommendedSteps,
+    };
+    localStorage.setItem('userProgress', JSON.stringify(userProgressData));
   };
 
   return (
-    // your JSX code here
+    <div>
+      {trialAccess ? (
+        <div>
+          <h1>AutoGenerate API Documentation</h1>
+          <p>Try out our tool for free!</p>
+          <button onClick={startFreeTrial}>Start Free Trial</button>
+          <button onClick={startDemo}>Start Demo</button>
+        </div>
+      ) : (
+        <div>
+          <h1>AutoGenerate API Documentation</h1>
+          <p>Get started with our tool!</p>
+          <button onClick={() => setTrialAccess(true)}>Get Trial Access</button>
+        </div>
+      )}
+    </div>
   );
+}
+
+function generateUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
 }

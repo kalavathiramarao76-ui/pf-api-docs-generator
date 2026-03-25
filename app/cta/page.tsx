@@ -90,18 +90,15 @@ export default function CtaPage() {
           className={`px-4 py-2 mb-4 border ${formErrors.email.isValid ? 'border-gray-300' : 'border-red-500'}`}
         />
         {formErrors.email.message && <p className="text-red-500 mb-4">{formErrors.email.message}</p>}
-        <button
-          type="submit"
-          className={`px-4 py-2 bg-blue-500 text-white rounded ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? (
-            <svg className="animate-spin h-5 w-5 mr-3 border-4 border-blue-500 border-t-transparent" viewBox="0 0 24 24" />
-          ) : (
-            <AiOutlineArrowRight />
-          )}
-          {isSubmitting ? 'Submitting...' : 'Get Started'}
-        </button>
+        {isSubmitting ? (
+          <button type="submit" disabled className="px-4 py-2 bg-gray-300 text-gray-500 cursor-not-allowed">
+            Submitting...
+          </button>
+        ) : (
+          <button type="submit" className="px-4 py-2 bg-blue-500 text-white hover:bg-blue-700">
+            Get Started <AiOutlineArrowRight />
+          </button>
+        )}
         {formErrors.general.message && <p className="text-red-500 mb-4">{formErrors.general.message}</p>}
         {isSuccess && <p className="text-green-500 mb-4">{successMessage}</p>}
       </form>
