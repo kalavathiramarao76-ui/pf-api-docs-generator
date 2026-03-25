@@ -51,6 +51,9 @@ export default function Page() {
     const storedUserId = localStorage.getItem('userId');
     return storedUserId ? storedUserId : generateUUID();
   });
+  const [demoMode, setDemoMode] = useState(false);
+  const [demoModeTime, setDemoModeTime] = useState(60 * 60 * 1000); // 1 hour in milliseconds
+  const [demoModeTimeLeft, setDemoModeTimeLeft] = useState(null);
 
   useEffect(() => {
     const storedProgress = localStorage.getItem('progress');
@@ -69,28 +72,25 @@ export default function Page() {
 
   useEffect(() => {
     saveProgress();
-  }, [tutorialStep, sampleProject, trialStarted, trialDays, trialExpired, demoStarted, demoTime, demoExpired]);
+  }, [tutorialStep, sampleProject, trialStarted, trialDays, trialExpired, demoStarted, demoMode]);
 
   useEffect(() => {
-    const storedFreeTrial = localStorage.getItem('freeTrial');
-    if (storedFreeTrial) {
-      const parsedFreeTrial = JSON.parse(storedFreeTrial);
-      setFreeTrial(parsedFreeTrial.freeTrial);
-      setFreeTrialDays(parsedFreeTrial.freeTrialDays);
-      setFreeTrialStarted(parsedFreeTrial.freeTrialStarted);
-      setFreeTrialExpired(parsedFreeTrial.freeTrialExpired);
+    if (demoMode) {
+      const intervalId = setInterval(() => {
+        if (demoModeTimeLeft > 0) {
+          setDemoModeTimeLeft(demoModeTimeLeft - 1000);
+        } else {
+          setDemoMode(false);
+          setDemoModeTimeLeft(null);
+        }
+      }, 1000);
+      return () => clearInterval(intervalId);
     }
-  }, []);
+  }, [demoMode, demoModeTimeLeft]);
 
-  useEffect(() => {
-    syncProgressWithServer();
-  }, [userProgress]);
-
-  const generateUUID = () => {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-      return v.toString(16);
-    });
+  const startDemoMode = () => {
+    setDemoMode(true);
+    setDemoModeTimeLeft(demoModeTime);
   };
 
   const saveProgress = () => {
@@ -103,27 +103,25 @@ export default function Page() {
       demoStarted,
       demoTime,
       demoExpired,
+      demoMode,
     };
     localStorage.setItem('progress', JSON.stringify(progressData));
   };
 
-  const syncProgressWithServer = async () => {
-    try {
-      const response = await client.post('/sync-progress', {
-        userId,
-        progress: userProgress,
-      });
-      if (response.status === 200) {
-        console.log('Progress synced with server');
-      } else {
-        console.error('Error syncing progress with server');
-      }
-    } catch (error) {
-      console.error('Error syncing progress with server', error);
-    }
-  };
-
   return (
-    // existing JSX code
+    <div>
+      <button onClick={startDemoMode}>Start Demo Mode</button>
+      {demoMode && (
+        <p>Demo mode is active. Time left: {demoModeTimeLeft / 1000 / 60} minutes</p>
+      )}
+      {/* Rest of your code remains the same */}
+    </div>
   );
+}
+
+function generateUUID() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
 }
