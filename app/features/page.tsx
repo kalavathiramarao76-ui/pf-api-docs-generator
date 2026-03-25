@@ -93,25 +93,16 @@ export default function Page() {
   };
 
   useEffect(() => {
-    const storedUserProgress = localStorage.getItem('userProgress');
-    if (storedUserProgress) {
-      setUserProgress(JSON.parse(storedUserProgress));
+    if (userId) {
+      syncUserProgress();
     }
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
-    if (saveProgress) {
-      localStorage.setItem('userProgress', JSON.stringify(userProgress));
-      setSaveProgress(false);
+    if (userProgress) {
+      saveUserProgress();
     }
-  }, [userProgress, saveProgress]);
-
-  useEffect(() => {
-    if (resumeProgress) {
-      localStorage.setItem('userProgress', JSON.stringify(userProgress));
-      setResumeProgress(false);
-    }
-  }, [userProgress, resumeProgress]);
+  }, [userProgress]);
 
   const generateUUID = () => {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
@@ -121,6 +112,6 @@ export default function Page() {
   };
 
   return (
-    // your JSX code here
+    // Your JSX code here
   );
 }
