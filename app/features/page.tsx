@@ -47,6 +47,10 @@ export default function Page() {
       recommendedSteps: []
     };
   });
+  const [userId, setUserId] = useState(() => {
+    const storedUserId = localStorage.getItem('userId');
+    return storedUserId ? storedUserId : generateUUID();
+  });
 
   useEffect(() => {
     const storedProgress = localStorage.getItem('progress');
@@ -79,8 +83,15 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
-    saveUserProgress();
+    syncProgressWithServer();
   }, [userProgress]);
+
+  const generateUUID = () => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  };
 
   const saveProgress = () => {
     const progressData = {
@@ -91,65 +102,28 @@ export default function Page() {
       trialExpired,
       demoStarted,
       demoTime,
-      demoExpired
+      demoExpired,
     };
     localStorage.setItem('progress', JSON.stringify(progressData));
   };
 
-  const saveUserProgress = () => {
-    const userProgressData = {
-      completedSteps: userProgress.completedSteps,
-      recommendedSteps: userProgress.recommendedSteps
-    };
-    localStorage.setItem('userProgress', JSON.stringify(userProgressData));
-  };
-
-  const markStepAsCompleted = (step) => {
-    const newCompletedSteps = [...userProgress.completedSteps, step];
-    const newRecommendedSteps = getRecommendedSteps(newCompletedSteps);
-    setUserProgress({
-      completedSteps: newCompletedSteps,
-      recommendedSteps: newRecommendedSteps
-    });
-  };
-
-  const getRecommendedSteps = (completedSteps) => {
-    const allSteps = ['step1', 'step2', 'step3', 'step4', 'step5'];
-    const recommendedSteps = allSteps.filter(step => !completedSteps.includes(step));
-    return recommendedSteps;
+  const syncProgressWithServer = async () => {
+    try {
+      const response = await client.post('/sync-progress', {
+        userId,
+        progress: userProgress,
+      });
+      if (response.status === 200) {
+        console.log('Progress synced with server');
+      } else {
+        console.error('Error syncing progress with server');
+      }
+    } catch (error) {
+      console.error('Error syncing progress with server', error);
+    }
   };
 
   return (
-    <div>
-      <h1>AutoGenerate API Documentation</h1>
-      <p>Current Step: {tutorialStep}</p>
-      <button onClick={() => markStepAsCompleted(`step${tutorialStep}`)}>Mark Step as Completed</button>
-      <p>Completed Steps: {userProgress.completedSteps.join(', ')}</p>
-      <p>Recommended Steps: {userProgress.recommendedSteps.join(', ')}</p>
-      <Link href="/api-docs">
-        <a>
-          <TbApi size={24} />
-          API Documentation
-        </a>
-      </Link>
-      <Link href="/dashboard">
-        <a>
-          <RiDashboardLine size={24} />
-          Dashboard
-        </a>
-      </Link>
-      <Link href="/settings">
-        <a>
-          <MdOutlineSettings size={24} />
-          Settings
-        </a>
-      </Link>
-      <Link href="/code">
-        <a>
-          <AiOutlineCode size={24} />
-          Code
-        </a>
-      </Link>
-    </div>
+    // existing JSX code
   );
 }

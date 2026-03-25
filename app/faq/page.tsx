@@ -50,27 +50,32 @@ export default function FaqPage() {
     <div>
       <Head>
         <title>AutoGenerate API Documentation - Frequently Asked Questions</title>
-        <meta name="description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and version control." />
-        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, API documentation generation, API documentation templates, collaboration, version control, technical writing, software development" />
+        <meta name="description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, programming languages, customization, collaboration, and change tracking." />
+        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, API documentation generation, programming languages, customization, collaboration, change tracking, software development, technical writing" />
+        <meta property="og:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
+        <meta property="og:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, programming languages, customization, collaboration, and change tracking." />
+        <meta property="og:url" content="https://autogenerate-api-documentation.com/faq" />
+        <meta property="og:site_name" content="AutoGenerate API Documentation" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
+        <meta name="twitter:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, programming languages, customization, collaboration, and change tracking." />
       </Head>
-      <h1>AutoGenerate API Documentation - Frequently Asked Questions</h1>
-      <h2>Introduction to AutoGenerate API Documentation</h2>
-      <p>AutoGenerate API Documentation is a tool that automatically generates API documentation from code, saving developers time and reducing errors.</p>
-      <h2>FAQs</h2>
-      {questions.map((question) => (
-        <div key={question.id}>
-          <h3>{question.question}</h3>
-          <button onClick={() => handleToggle(question.id)}>
-            {activeQuestion === question.id ? 'Hide answer' : 'Show answer'}
-            <AiOutlineArrowRight />
-          </button>
-          {activeQuestion === question.id && (
-            <p>{question.answer}</p>
-          )}
-        </div>
-      ))}
-      <h2>Conclusion</h2>
-      <p>AutoGenerate API Documentation is a powerful tool for software development and technical writing. With its comprehensive features and customization options, it is an ideal solution for teams and individuals looking to streamline their API documentation process.</p>
+      <h1>Frequently Asked Questions</h1>
+      <ul>
+        {questions.map((question) => (
+          <li key={question.id}>
+            <div>
+              <h2>{question.question}</h2>
+              <button onClick={() => handleToggle(question.id)}>
+                <AiOutlineArrowRight />
+              </button>
+            </div>
+            {activeQuestion === question.id && (
+              <p>{question.answer}</p>
+            )}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
