@@ -81,29 +81,66 @@ export default function Page() {
   });
   const [demoMode, setDemoMode] = useState(false);
 
-  useEffect(() => {
-    const storedUserId = localStorage.getItem('userId');
-    if (storedUserId) {
-      getUserProgress(storedUserId).then((data) => {
-        if (data) {
-          setUserProgress(data);
-        }
-      });
+  const guidedTourSteps = [
+    {
+      title: 'Welcome to AutoGenerate API Documentation',
+      description: 'This is the first step of the guided tour.',
+      action: 'Click on the "Next" button to proceed.',
+    },
+    {
+      title: 'Features and Functionality',
+      description: 'This is the second step of the guided tour.',
+      action: 'Click on the "Next" button to proceed.',
+    },
+    {
+      title: 'Getting Started with AutoGenerate API Documentation',
+      description: 'This is the third step of the guided tour.',
+      action: 'Click on the "Finish" button to complete the tour.',
+    },
+  ];
+
+  const startGuidedTour = () => {
+    setGuidedTour(true);
+    setGuidedTourStep(1);
+  };
+
+  const nextGuidedTourStep = () => {
+    if (guidedTourStep < guidedTourSteps.length) {
+      setGuidedTourStep(guidedTourStep + 1);
+    } else {
+      setGuidedTour(false);
     }
-  }, [userId]);
+  };
+
+  const previousGuidedTourStep = () => {
+    if (guidedTourStep > 1) {
+      setGuidedTourStep(guidedTourStep - 1);
+    }
+  };
 
   useEffect(() => {
-    saveUserProgress(userId, userProgress);
-    localStorage.setItem('userProgress', JSON.stringify(userProgress));
-  }, [userProgress, userId]);
-
-  useEffect(() => {
-    localStorage.setItem('tutorialStep', tutorialStep.toString());
-    localStorage.setItem('progress', JSON.stringify(progress));
-    localStorage.setItem('userId', userId);
-  }, [tutorialStep, progress, userId]);
+    if (guidedTour) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [guidedTour]);
 
   return (
-    // your JSX code here
+    <div>
+      {guidedTour && (
+        <div className="guided-tour-overlay">
+          <div className="guided-tour-container">
+            <h2>{guidedTourSteps[guidedTourStep - 1].title}</h2>
+            <p>{guidedTourSteps[guidedTourStep - 1].description}</p>
+            <p>{guidedTourSteps[guidedTourStep - 1].action}</p>
+            <button onClick={previousGuidedTourStep}>Previous</button>
+            <button onClick={nextGuidedTourStep}>{guidedTourStep < guidedTourSteps.length ? 'Next' : 'Finish'}</button>
+          </div>
+        </div>
+      )}
+      <button onClick={startGuidedTour}>Start Guided Tour</button>
+      {/* Rest of the page content */}
+    </div>
   );
 }
