@@ -103,14 +103,14 @@ export default function CtaPage() {
               viewBox="0 0 24 24"
             />
           ) : (
-            <AiOutlineArrowRight />
+            <AiOutlineArrowRight size={20} />
           )}
           {isSubmitting ? 'Submitting...' : 'Get Started'}
         </button>
         {formErrors.general.message && (
           <p className="text-red-500 text-sm mt-4">{formErrors.general.message}</p>
         )}
-        {isSuccess && (
+        {successMessage && (
           <p className="text-green-500 text-sm mt-4">{successMessage}</p>
         )}
       </form>

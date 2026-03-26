@@ -31,6 +31,7 @@ const getUserProgress = async (userId: string) => {
     return response.data;
   } catch (error) {
     console.error(error);
+    return null; // Return null if user progress is not found
   }
 };
 
@@ -83,56 +84,63 @@ export default function Page() {
   const [timeLeft, setTimeLeft] = useState(null);
   const [userProgress, setUserProgress] = useState(() => {
     const storedUserProgress = localStorage.getItem('userProgress');
-    return storedUserProgress ? JSON.parse(storedUserProgress) : {
-      completedSteps: [],
-      recommendedSteps: [],
-    };
+    return storedUserProgress ? JSON.parse(storedUserProgress) : null;
   });
 
   useEffect(() => {
     const fetchUserProgress = async () => {
-      const storedUserId = localStorage.getItem('userId');
-      if (storedUserId) {
-        const fetchedProgress = await getUserProgress(storedUserId);
-        if (fetchedProgress) {
-          setUserProgress(fetchedProgress);
-        }
+      const fetchedUserProgress = await getUserProgress(userId);
+      if (fetchedUserProgress) {
+        setUserProgress(fetchedUserProgress);
+      } else {
+        const defaultUserProgress = {
+          tutorialStep: 1,
+          sampleProject: false,
+          trialStarted: false,
+          trialDays: 14,
+          trialExpired: false,
+          demoStarted: false,
+          demoTime: 30,
+          demoExpired: false,
+        };
+        setUserProgress(defaultUserProgress);
+        await saveUserProgress(userId, defaultUserProgress);
       }
     };
     fetchUserProgress();
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
-    const saveProgress = async () => {
-      await saveUserProgress(userId, userProgress);
-    };
-    saveProgress();
+    if (userProgress) {
+      setTutorialStep(userProgress.tutorialStep);
+      setSampleProject(userProgress.sampleProject);
+      setTrialStarted(userProgress.trialStarted);
+      setTrialDays(userProgress.trialDays);
+      setTrialExpired(userProgress.trialExpired);
+      setDemoStarted(userProgress.demoStarted);
+      setDemoTime(userProgress.demoTime);
+      setDemoExpired(userProgress.demoExpired);
+    }
   }, [userProgress]);
 
   useEffect(() => {
-    const fetchRecommendedSteps = async () => {
-      const recommendedSteps = await getRecommendedSteps(userId, userProgress.completedSteps);
-      setUserProgress((prevProgress) => ({ ...prevProgress, recommendedSteps }));
-    };
-    fetchRecommendedSteps();
-  }, [userProgress.completedSteps]);
-
-  const handleStepCompletion = (step: string) => {
-    setUserProgress((prevProgress) => ({
-      ...prevProgress,
-      completedSteps: [...prevProgress.completedSteps, step],
-    }));
-  };
+    if (userProgress) {
+      const updatedUserProgress = {
+        ...userProgress,
+        tutorialStep,
+        sampleProject,
+        trialStarted,
+        trialDays,
+        trialExpired,
+        demoStarted,
+        demoTime,
+        demoExpired,
+      };
+      saveUserProgress(userId, updatedUserProgress);
+    }
+  }, [tutorialStep, sampleProject, trialStarted, trialDays, trialExpired, demoStarted, demoTime, demoExpired, userId, userProgress]);
 
   return (
-    <div>
-      {/* Your existing JSX code here */}
-      {userProgress.recommendedSteps.map((step, index) => (
-        <div key={index}>
-          <p>Recommended Step: {step}</p>
-          <button onClick={() => handleStepCompletion(step)}>Complete Step</button>
-        </div>
-      ))}
-    </div>
+    // Your JSX code here
   );
 }
