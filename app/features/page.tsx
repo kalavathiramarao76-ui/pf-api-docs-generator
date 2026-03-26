@@ -34,6 +34,18 @@ const getUserProgress = async (userId: string) => {
   }
 };
 
+const getRecommendedSteps = async (userId: string, completedSteps: any) => {
+  try {
+    const response = await client.post('/get-recommended-steps', {
+      userId,
+      completedSteps,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export default function Page() {
   const [tutorialStep, setTutorialStep] = useState(() => {
     const storedTutorialStep = localStorage.getItem('tutorialStep');
@@ -81,66 +93,38 @@ export default function Page() {
   });
   const [demoMode, setDemoMode] = useState(false);
 
-  const guidedTourSteps = [
-    {
-      title: 'Welcome to AutoGenerate API Documentation',
-      description: 'This is the first step of the guided tour.',
-      action: 'Click on the "Next" button to proceed.',
-    },
-    {
-      title: 'Features and Functionality',
-      description: 'This is the second step of the guided tour.',
-      action: 'Click on the "Next" button to proceed.',
-    },
-    {
-      title: 'Getting Started with AutoGenerate API Documentation',
-      description: 'This is the third step of the guided tour.',
-      action: 'Click on the "Finish" button to complete the tour.',
-    },
-  ];
-
-  const startGuidedTour = () => {
-    setGuidedTour(true);
-    setGuidedTourStep(1);
-  };
-
-  const nextGuidedTourStep = () => {
-    if (guidedTourStep < guidedTourSteps.length) {
-      setGuidedTourStep(guidedTourStep + 1);
+  useEffect(() => {
+    const storedUserProgress = localStorage.getItem('userProgress');
+    if (storedUserProgress) {
+      const parsedUserProgress = JSON.parse(storedUserProgress);
+      setUserProgress(parsedUserProgress);
     } else {
-      setGuidedTour(false);
+      const userId = generateUUID();
+      setUserId(userId);
+      saveUserProgress(userId, {
+        completedSteps: [],
+        recommendedSteps: []
+      });
     }
-  };
-
-  const previousGuidedTourStep = () => {
-    if (guidedTourStep > 1) {
-      setGuidedTourStep(guidedTourStep - 1);
-    }
-  };
+  }, []);
 
   useEffect(() => {
-    if (guidedTour) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
+    if (userProgress.completedSteps.length > 0) {
+      getRecommendedSteps(userId, userProgress.completedSteps).then((recommendedSteps) => {
+        setUserProgress({
+          ...userProgress,
+          recommendedSteps: recommendedSteps
+        });
+      });
     }
-  }, [guidedTour]);
+  }, [userProgress.completedSteps]);
+
+  useEffect(() => {
+    saveUserProgress(userId, userProgress);
+    localStorage.setItem('userProgress', JSON.stringify(userProgress));
+  }, [userProgress]);
 
   return (
-    <div>
-      {guidedTour && (
-        <div className="guided-tour-overlay">
-          <div className="guided-tour-container">
-            <h2>{guidedTourSteps[guidedTourStep - 1].title}</h2>
-            <p>{guidedTourSteps[guidedTourStep - 1].description}</p>
-            <p>{guidedTourSteps[guidedTourStep - 1].action}</p>
-            <button onClick={previousGuidedTourStep}>Previous</button>
-            <button onClick={nextGuidedTourStep}>{guidedTourStep < guidedTourSteps.length ? 'Next' : 'Finish'}</button>
-          </div>
-        </div>
-      )}
-      <button onClick={startGuidedTour}>Start Guided Tour</button>
-      {/* Rest of the page content */}
-    </div>
+    // existing JSX code
   );
 }
