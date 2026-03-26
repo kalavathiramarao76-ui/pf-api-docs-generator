@@ -47,6 +47,7 @@ const getRecommendedSteps = async (userId: string, completedSteps: any) => {
 };
 
 export default function Page() {
+  const userId = generateUUID();
   const [tutorialStep, setTutorialStep] = useState(() => {
     const storedTutorialStep = localStorage.getItem('tutorialStep');
     return storedTutorialStep ? parseInt(storedTutorialStep) : 1;
@@ -83,48 +84,35 @@ export default function Page() {
   const [userProgress, setUserProgress] = useState(() => {
     const storedUserProgress = localStorage.getItem('userProgress');
     return storedUserProgress ? JSON.parse(storedUserProgress) : {
-      completedSteps: [],
-      recommendedSteps: []
+      tutorialStep: 1,
+      sampleProject: false,
+      trialStarted: false,
+      trialDays: 14,
+      trialExpired: false,
+      demoStarted: false,
+      demoTime: 30,
+      demoExpired: false,
     };
   });
-  const [userId, setUserId] = useState(() => {
-    const storedUserId = localStorage.getItem('userId');
-    return storedUserId ? storedUserId : generateUUID();
-  });
-  const [demoMode, setDemoMode] = useState(false);
 
   useEffect(() => {
-    const storedUserProgress = localStorage.getItem('userProgress');
-    if (storedUserProgress) {
-      const parsedUserProgress = JSON.parse(storedUserProgress);
-      setUserProgress(parsedUserProgress);
-    } else {
-      const userId = generateUUID();
-      setUserId(userId);
-      saveUserProgress(userId, {
-        completedSteps: [],
-        recommendedSteps: []
-      });
-    }
-  }, []);
+    const loadUserProgress = async () => {
+      const storedUserProgress = await getUserProgress(userId);
+      if (storedUserProgress) {
+        setUserProgress(storedUserProgress);
+      }
+    };
+    loadUserProgress();
+  }, [userId]);
 
   useEffect(() => {
-    if (userProgress.completedSteps.length > 0) {
-      getRecommendedSteps(userId, userProgress.completedSteps).then((recommendedSteps) => {
-        setUserProgress({
-          ...userProgress,
-          recommendedSteps: recommendedSteps
-        });
-      });
-    }
-  }, [userProgress.completedSteps]);
-
-  useEffect(() => {
-    saveUserProgress(userId, userProgress);
-    localStorage.setItem('userProgress', JSON.stringify(userProgress));
-  }, [userProgress]);
+    const saveProgress = async () => {
+      await saveUserProgress(userId, userProgress);
+    };
+    saveProgress();
+  }, [userProgress, userId]);
 
   return (
-    // existing JSX code
+    // your JSX code here
   );
 }
