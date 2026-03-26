@@ -68,6 +68,24 @@ const onboardingSteps = [
   },
 ];
 
+const features = [
+  {
+    id: 1,
+    title: 'API Documentation',
+    description: 'Create and manage your API documentation',
+  },
+  {
+    id: 2,
+    title: 'Code Generation',
+    description: 'Generate code snippets for your API',
+  },
+  {
+    id: 3,
+    title: 'Settings',
+    description: 'Configure your API documentation settings',
+  },
+];
+
 export default function Page() {
   const userId = generateUUID();
   const [tutorialStep, setTutorialStep] = useState(() => {
@@ -95,31 +113,44 @@ export default function Page() {
     };
   });
   const [guidedTour, setGuidedTour] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredSteps, setFilteredSteps] = useState(onboardingSteps);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  useEffect(() => {
-    const filteredSteps = onboardingSteps.filter((step) => {
-      return step.title.toLowerCase().includes(searchTerm.toLowerCase()) || step.description.toLowerCase().includes(searchTerm.toLowerCase());
-    });
-    setFilteredSteps(filteredSteps);
-  }, [searchTerm]);
+  const filteredOnboardingSteps = onboardingSteps.filter((step) => {
+    return step.title.toLowerCase().includes(searchQuery.toLowerCase()) || step.description.toLowerCase().includes(searchQuery.toLowerCase());
+  });
+
+  const filteredFeatures = features.filter((feature) => {
+    return feature.title.toLowerCase().includes(searchQuery.toLowerCase()) || feature.description.toLowerCase().includes(searchQuery.toLowerCase());
+  });
 
   return (
     <div>
+      <h1>AutoGenerate API Documentation</h1>
       <input
         type="search"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        placeholder="Search features and tutorials"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        placeholder="Search onboarding steps and features"
       />
-      {filteredSteps.map((step) => (
-        <div key={step.id}>
-          <h2>{step.title}</h2>
-          <p>{step.description}</p>
-          <button>{step.action}</button>
-        </div>
-      ))}
+      <h2>Onboarding Steps</h2>
+      <ul>
+        {filteredOnboardingSteps.map((step) => (
+          <li key={step.id}>
+            <h3>{step.title}</h3>
+            <p>{step.description}</p>
+            <button>{step.action}</button>
+          </li>
+        ))}
+      </ul>
+      <h2>Features</h2>
+      <ul>
+        {filteredFeatures.map((feature) => (
+          <li key={feature.id}>
+            <h3>{feature.title}</h3>
+            <p>{feature.description}</p>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
