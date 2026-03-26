@@ -104,26 +104,36 @@ export default function Page() {
     return storedProgress ? JSON.parse(storedProgress) : {};
   });
   const [searchQuery, setSearchQuery] = useState('');
+  const [filteredFeatures, setFilteredFeatures] = useState(features);
 
-  const filteredOnboardingSteps = onboardingSteps.filter((step) => {
-    return step.title.toLowerCase().includes(searchQuery.toLowerCase()) || step.description.toLowerCase().includes(searchQuery.toLowerCase());
-  });
+  useEffect(() => {
+    const filteredFeatures = features.filter((feature) => {
+      return feature.title.toLowerCase().includes(searchQuery.toLowerCase()) || feature.description.toLowerCase().includes(searchQuery.toLowerCase());
+    });
+    setFilteredFeatures(filteredFeatures);
+  }, [searchQuery]);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
 
   return (
     <div>
-      <input
-        type="search"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        placeholder="Search tutorials or guides"
-      />
-      {filteredOnboardingSteps.map((step) => (
-        <div key={step.id}>
-          <h2>{step.title}</h2>
-          <p>{step.description}</p>
-          <button>{step.action}</button>
-        </div>
-      ))}
+      <input type="search" value={searchQuery} onChange={handleSearch} placeholder="Search features and tutorials" />
+      <h1>AutoGenerate API Documentation</h1>
+      <ul>
+        {filteredFeatures.map((feature) => (
+          <li key={feature.id}>
+            <Link href={`/features/${feature.id}`}>
+              <a>
+                <h2>{feature.title}</h2>
+                <p>{feature.description}</p>
+              </a>
+            </Link>
+          </li>
+        ))}
+      </ul>
+      {/* Rest of the code remains the same */}
     </div>
   );
 }

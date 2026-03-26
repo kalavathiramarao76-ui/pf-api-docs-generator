@@ -98,7 +98,10 @@ export default function CtaPage() {
           disabled={isSubmitting}
         >
           {isSubmitting ? (
-            <svg className="animate-spin h-5 w-5 mr-3 border-4 border-blue-500 border-t-transparent" viewBox="0 0 24 24"></svg>
+            <svg
+              className="animate-spin h-5 w-5 mr-3 border-4 border-gray-200 rounded-full border-t-blue-600"
+              viewBox="0 0 24 24"
+            />
           ) : (
             <AiOutlineArrowRight size={20} />
           )}
