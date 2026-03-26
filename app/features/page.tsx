@@ -96,23 +96,40 @@ export default function Page() {
   });
 
   useEffect(() => {
-    const loadUserProgress = async () => {
-      const storedUserProgress = await getUserProgress(userId);
-      if (storedUserProgress) {
-        setUserProgress(storedUserProgress);
-      }
-    };
-    loadUserProgress();
-  }, [userId]);
+    const storedUserProgress = localStorage.getItem('userProgress');
+    if (storedUserProgress) {
+      const parsedUserProgress = JSON.parse(storedUserProgress);
+      setTutorialStep(parsedUserProgress.tutorialStep);
+      setSampleProject(parsedUserProgress.sampleProject);
+      setTrialStarted(parsedUserProgress.trialStarted);
+      setTrialDays(parsedUserProgress.trialDays);
+      setTrialExpired(parsedUserProgress.trialExpired);
+      setDemoStarted(parsedUserProgress.demoStarted);
+      setDemoTime(parsedUserProgress.demoTime);
+      setDemoExpired(parsedUserProgress.demoExpired);
+    } else {
+      saveUserProgress(userId, userProgress);
+    }
+  }, [userId, userProgress]);
 
   useEffect(() => {
-    const saveProgress = async () => {
-      await saveUserProgress(userId, userProgress);
-    };
-    saveProgress();
+    const intervalId = setInterval(async () => {
+      const storedUserProgress = localStorage.getItem('userProgress');
+      if (storedUserProgress) {
+        const parsedUserProgress = JSON.parse(storedUserProgress);
+        setUserProgress(parsedUserProgress);
+      }
+    }, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  useEffect(() => {
+    saveUserProgress(userId, userProgress);
+    localStorage.setItem('userProgress', JSON.stringify(userProgress));
   }, [userProgress, userId]);
 
   return (
-    // your JSX code here
+    // Your existing JSX code here
   );
 }
