@@ -50,31 +50,31 @@ export default function FaqPage() {
     <div>
       <Head>
         <title>AutoGenerate API Documentation - Frequently Asked Questions</title>
-        <meta name="description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and version control." />
-        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, API documentation generation, software development, technical writing, collaboration, version control" />
+        <meta name="description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and more." />
+        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, API documentation generation, API documentation tools, technical writing, software development, collaboration, version control" />
+        <meta property="og:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
+        <meta property="og:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and more." />
+        <meta property="og:url" content="https://autogenerate-api-documentation.com/faq" />
+        <meta property="og:site_name" content="AutoGenerate API Documentation" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
+        <meta name="twitter:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and more." />
       </Head>
-      <h1>AutoGenerate API Documentation - Frequently Asked Questions</h1>
-      <h2>General Questions</h2>
-      {questions.map((question) => (
-        <div key={question.id}>
-          <h3>{question.question}</h3>
-          <p>{activeQuestion === question.id ? question.answer : ''}</p>
-          {activeQuestion !== question.id && (
-            <button onClick={() => handleToggle(question.id)}>
-              <AiOutlineArrowRight />
-              Show Answer
-            </button>
-          )}
-          {activeQuestion === question.id && (
-            <button onClick={() => handleToggle(question.id)}>
-              <AiOutlineArrowRight />
-              Hide Answer
-            </button>
-          )}
-        </div>
-      ))}
-      <h2>Learn More</h2>
-      <p>For more information about AutoGenerate API Documentation, please visit our <Link href="/">homepage</Link>.</p>
+      <h1>Frequently Asked Questions</h1>
+      <ul>
+        {questions.map((question) => (
+          <li key={question.id}>
+            <div>
+              <span onClick={() => handleToggle(question.id)}>{question.question}</span>
+              {activeQuestion === question.id && (
+                <div>
+                  <p>{question.answer}</p>
+                </div>
+              )}
+            </div>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

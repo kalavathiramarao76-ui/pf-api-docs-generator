@@ -95,76 +95,34 @@ export default function Page() {
     };
   });
   const [guidedTour, setGuidedTour] = useState(false);
-  const [guidedTourStep, setGuidedTourStep] = useState(1);
-  const [freeTrial, setFreeTrial] = useState(false);
-  const [freeTrialDays, setFreeTrialDays] = useState(7);
-  const [freeTrialStarted, setFreeTrialStarted] = useState(false);
-  const [freeTrialExpired, setFreeTrialExpired] = useState(false);
-  const [trialMode, setTrialMode] = useState(false);
-  const [countdown, setCountdown] = useState(30 * 24 * 60 * 60 * 1000); // 30 days in milliseconds
-  const [timeLeft, setTimeLeft] = useState(null);
-  const [userProgress, setUserProgress] = useState(() => {
-    const storedUserProgress = localStorage.getItem('userProgress');
-    return storedUserProgress ? JSON.parse(storedUserProgress) : {
-      completedSteps: [],
-    };
-  });
-  const [onboardingStep, setOnboardingStep] = useState(() => {
-    const storedOnboardingStep = localStorage.getItem('onboardingStep');
-    return storedOnboardingStep ? parseInt(storedOnboardingStep) : 1;
-  });
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredSteps, setFilteredSteps] = useState(onboardingSteps);
 
   useEffect(() => {
-    const storedOnboardingStep = localStorage.getItem('onboardingStep');
-    if (storedOnboardingStep) {
-      setOnboardingStep(parseInt(storedOnboardingStep));
-    }
-  }, []);
+    const filteredSteps = onboardingSteps.filter((step) => {
+      const title = step.title.toLowerCase();
+      const description = step.description.toLowerCase();
+      const action = step.action.toLowerCase();
+      const searchQuery = searchQuery.toLowerCase();
+      return title.includes(searchQuery) || description.includes(searchQuery) || action.includes(searchQuery);
+    });
+    setFilteredSteps(filteredSteps);
+  }, [searchQuery]);
 
-  const handleOnboardingStep = () => {
-    setOnboardingStep(onboardingStep + 1);
-    localStorage.setItem('onboardingStep', (onboardingStep + 1).toString());
-  };
-
-  const handleTutorialStep = () => {
-    setTutorialStep(tutorialStep + 1);
-    localStorage.setItem('tutorialStep', (tutorialStep + 1).toString());
-  };
-
-  const handleCompletedStep = (stepId: number) => {
-    const updatedUserProgress = { ...userProgress };
-    updatedUserProgress.completedSteps.push(stepId);
-    setUserProgress(updatedUserProgress);
-    localStorage.setItem('userProgress', JSON.stringify(updatedUserProgress));
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
   };
 
   return (
     <div>
-      {onboardingStep <= onboardingSteps.length && (
-        <div>
-          <h2>{onboardingSteps[onboardingStep - 1].title}</h2>
-          <p>{onboardingSteps[onboardingStep - 1].description}</p>
-          <button onClick={handleOnboardingStep}>{onboardingSteps[onboardingStep - 1].action}</button>
+      <input type="search" value={searchQuery} onChange={handleSearch} placeholder="Search onboarding steps" />
+      {filteredSteps.map((step) => (
+        <div key={step.id}>
+          <h2>{step.title}</h2>
+          <p>{step.description}</p>
+          <button>{step.action}</button>
         </div>
-      )}
-      {onboardingStep > onboardingSteps.length && (
-        <div>
-          <h2>Getting Started with AutoGenerate API Documentation</h2>
-          <p>Follow these steps to get started:</p>
-          <ul>
-            <li>
-              <Link href="/create-api-documentation">
-                <a>Create Your First API Documentation</a>
-              </Link>
-            </li>
-            <li>
-              <Link href="/explore-advanced-features">
-                <a>Explore Advanced Features</a>
-              </Link>
-            </li>
-          </ul>
-        </div>
-      )}
+      ))}
     </div>
   );
 }
