@@ -47,6 +47,27 @@ const getRecommendedSteps = async (userId: string, completedSteps: any) => {
   }
 };
 
+const onboardingSteps = [
+  {
+    id: 1,
+    title: 'Welcome to AutoGenerate API Documentation',
+    description: 'Get started with our interactive tutorials and step-by-step guides',
+    action: 'Start Tutorial',
+  },
+  {
+    id: 2,
+    title: 'Create Your First API Documentation',
+    description: 'Learn how to create and manage your API documentation',
+    action: 'Create API Documentation',
+  },
+  {
+    id: 3,
+    title: 'Explore Advanced Features',
+    description: 'Discover how to use advanced features to customize your API documentation',
+    action: 'Explore Advanced Features',
+  },
+];
+
 export default function Page() {
   const userId = generateUUID();
   const [tutorialStep, setTutorialStep] = useState(() => {
@@ -84,63 +105,66 @@ export default function Page() {
   const [timeLeft, setTimeLeft] = useState(null);
   const [userProgress, setUserProgress] = useState(() => {
     const storedUserProgress = localStorage.getItem('userProgress');
-    return storedUserProgress ? JSON.parse(storedUserProgress) : null;
+    return storedUserProgress ? JSON.parse(storedUserProgress) : {
+      completedSteps: [],
+    };
+  });
+  const [onboardingStep, setOnboardingStep] = useState(() => {
+    const storedOnboardingStep = localStorage.getItem('onboardingStep');
+    return storedOnboardingStep ? parseInt(storedOnboardingStep) : 1;
   });
 
   useEffect(() => {
-    const fetchUserProgress = async () => {
-      const fetchedUserProgress = await getUserProgress(userId);
-      if (fetchedUserProgress) {
-        setUserProgress(fetchedUserProgress);
-      } else {
-        const defaultUserProgress = {
-          tutorialStep: 1,
-          sampleProject: false,
-          trialStarted: false,
-          trialDays: 14,
-          trialExpired: false,
-          demoStarted: false,
-          demoTime: 30,
-          demoExpired: false,
-        };
-        setUserProgress(defaultUserProgress);
-        await saveUserProgress(userId, defaultUserProgress);
-      }
-    };
-    fetchUserProgress();
-  }, [userId]);
-
-  useEffect(() => {
-    if (userProgress) {
-      setTutorialStep(userProgress.tutorialStep);
-      setSampleProject(userProgress.sampleProject);
-      setTrialStarted(userProgress.trialStarted);
-      setTrialDays(userProgress.trialDays);
-      setTrialExpired(userProgress.trialExpired);
-      setDemoStarted(userProgress.demoStarted);
-      setDemoTime(userProgress.demoTime);
-      setDemoExpired(userProgress.demoExpired);
+    const storedOnboardingStep = localStorage.getItem('onboardingStep');
+    if (storedOnboardingStep) {
+      setOnboardingStep(parseInt(storedOnboardingStep));
     }
-  }, [userProgress]);
+  }, []);
 
-  useEffect(() => {
-    if (userProgress) {
-      const updatedUserProgress = {
-        ...userProgress,
-        tutorialStep,
-        sampleProject,
-        trialStarted,
-        trialDays,
-        trialExpired,
-        demoStarted,
-        demoTime,
-        demoExpired,
-      };
-      saveUserProgress(userId, updatedUserProgress);
-    }
-  }, [tutorialStep, sampleProject, trialStarted, trialDays, trialExpired, demoStarted, demoTime, demoExpired, userId, userProgress]);
+  const handleOnboardingStep = () => {
+    setOnboardingStep(onboardingStep + 1);
+    localStorage.setItem('onboardingStep', (onboardingStep + 1).toString());
+  };
+
+  const handleTutorialStep = () => {
+    setTutorialStep(tutorialStep + 1);
+    localStorage.setItem('tutorialStep', (tutorialStep + 1).toString());
+  };
+
+  const handleCompletedStep = (stepId: number) => {
+    const updatedUserProgress = { ...userProgress };
+    updatedUserProgress.completedSteps.push(stepId);
+    setUserProgress(updatedUserProgress);
+    localStorage.setItem('userProgress', JSON.stringify(updatedUserProgress));
+  };
 
   return (
-    // Your JSX code here
+    <div>
+      {onboardingStep <= onboardingSteps.length && (
+        <div>
+          <h2>{onboardingSteps[onboardingStep - 1].title}</h2>
+          <p>{onboardingSteps[onboardingStep - 1].description}</p>
+          <button onClick={handleOnboardingStep}>{onboardingSteps[onboardingStep - 1].action}</button>
+        </div>
+      )}
+      {onboardingStep > onboardingSteps.length && (
+        <div>
+          <h2>Getting Started with AutoGenerate API Documentation</h2>
+          <p>Follow these steps to get started:</p>
+          <ul>
+            <li>
+              <Link href="/create-api-documentation">
+                <a>Create Your First API Documentation</a>
+              </Link>
+            </li>
+            <li>
+              <Link href="/explore-advanced-features">
+                <a>Explore Advanced Features</a>
+              </Link>
+            </li>
+          </ul>
+        </div>
+      )}
+    </div>
   );
 }
