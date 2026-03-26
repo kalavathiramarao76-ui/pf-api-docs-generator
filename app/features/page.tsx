@@ -103,26 +103,33 @@ export default function Page() {
     const storedProgress = localStorage.getItem('progress');
     return storedProgress ? JSON.parse(storedProgress) : {};
   });
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredFeatures, setFilteredFeatures] = useState(features);
 
-  const filteredFeatures = features.filter((feature) => {
-    return feature.title.toLowerCase().includes(searchQuery.toLowerCase()) || feature.description.toLowerCase().includes(searchQuery.toLowerCase());
-  });
+  useEffect(() => {
+    const filteredFeatures = features.filter((feature) => {
+      return feature.title.toLowerCase().includes(searchTerm.toLowerCase()) || feature.description.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+    setFilteredFeatures(filteredFeatures);
+  }, [searchTerm]);
 
   return (
     <div>
-      <input 
-        type="search" 
-        value={searchQuery} 
-        onChange={(e) => setSearchQuery(e.target.value)} 
-        placeholder="Search features" 
+      <input
+        type="search"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        placeholder="Search features and tutorials"
       />
-      {filteredFeatures.map((feature) => (
-        <div key={feature.id}>
-          <h2>{feature.title}</h2>
-          <p>{feature.description}</p>
-        </div>
-      ))}
+      <ul>
+        {filteredFeatures.map((feature) => (
+          <li key={feature.id}>
+            <h2>{feature.title}</h2>
+            <p>{feature.description}</p>
+          </li>
+        ))}
+      </ul>
+      {/* Rest of the code remains the same */}
     </div>
   );
 }
