@@ -103,33 +103,27 @@ export default function Page() {
     const storedProgress = localStorage.getItem('progress');
     return storedProgress ? JSON.parse(storedProgress) : {};
   });
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredFeatures, setFilteredFeatures] = useState(features);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  useEffect(() => {
-    const filteredFeatures = features.filter((feature) => {
-      return feature.title.toLowerCase().includes(searchTerm.toLowerCase()) || feature.description.toLowerCase().includes(searchTerm.toLowerCase());
-    });
-    setFilteredFeatures(filteredFeatures);
-  }, [searchTerm]);
+  const filteredOnboardingSteps = onboardingSteps.filter((step) => {
+    return step.title.toLowerCase().includes(searchQuery.toLowerCase()) || step.description.toLowerCase().includes(searchQuery.toLowerCase());
+  });
 
   return (
     <div>
       <input
         type="search"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        placeholder="Search features and tutorials"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        placeholder="Search tutorials or guides"
       />
-      <ul>
-        {filteredFeatures.map((feature) => (
-          <li key={feature.id}>
-            <h2>{feature.title}</h2>
-            <p>{feature.description}</p>
-          </li>
-        ))}
-      </ul>
-      {/* Rest of the code remains the same */}
+      {filteredOnboardingSteps.map((step) => (
+        <div key={step.id}>
+          <h2>{step.title}</h2>
+          <p>{step.description}</p>
+          <button>{step.action}</button>
+        </div>
+      ))}
     </div>
   );
 }
