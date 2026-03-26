@@ -101,23 +101,9 @@ export default function Page() {
   const [demoExpired, setDemoExpired] = useState(false);
   const [progress, setProgress] = useState(() => {
     const storedProgress = localStorage.getItem('progress');
-    return storedProgress ? JSON.parse(storedProgress) : {
-      tutorialStep: 1,
-      sampleProject: false,
-      trialStarted: false,
-      trialDays: 14,
-      trialExpired: false,
-      demoStarted: false,
-      demoTime: 30,
-      demoExpired: false,
-    };
+    return storedProgress ? JSON.parse(storedProgress) : {};
   });
-  const [guidedTour, setGuidedTour] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-
-  const filteredOnboardingSteps = onboardingSteps.filter((step) => {
-    return step.title.toLowerCase().includes(searchQuery.toLowerCase()) || step.description.toLowerCase().includes(searchQuery.toLowerCase());
-  });
 
   const filteredFeatures = features.filter((feature) => {
     return feature.title.toLowerCase().includes(searchQuery.toLowerCase()) || feature.description.toLowerCase().includes(searchQuery.toLowerCase());
@@ -125,32 +111,18 @@ export default function Page() {
 
   return (
     <div>
-      <h1>AutoGenerate API Documentation</h1>
-      <input
-        type="search"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        placeholder="Search onboarding steps and features"
+      <input 
+        type="search" 
+        value={searchQuery} 
+        onChange={(e) => setSearchQuery(e.target.value)} 
+        placeholder="Search features" 
       />
-      <h2>Onboarding Steps</h2>
-      <ul>
-        {filteredOnboardingSteps.map((step) => (
-          <li key={step.id}>
-            <h3>{step.title}</h3>
-            <p>{step.description}</p>
-            <button>{step.action}</button>
-          </li>
-        ))}
-      </ul>
-      <h2>Features</h2>
-      <ul>
-        {filteredFeatures.map((feature) => (
-          <li key={feature.id}>
-            <h3>{feature.title}</h3>
-            <p>{feature.description}</p>
-          </li>
-        ))}
-      </ul>
+      {filteredFeatures.map((feature) => (
+        <div key={feature.id}>
+          <h2>{feature.title}</h2>
+          <p>{feature.description}</p>
+        </div>
+      ))}
     </div>
   );
 }

@@ -51,29 +51,19 @@ export default function FaqPage() {
       <Head>
         <title>AutoGenerate API Documentation - Frequently Asked Questions</title>
         <meta name="description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and version control." />
-        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, API documentation generation, API documentation tools, technical writing, software development, collaboration, version control" />
-        <meta property="og:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
-        <meta property="og:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and version control." />
-        <meta property="og:url" content={router.asPath} />
-        <meta property="og:site_name" content="AutoGenerate API Documentation" />
-        <meta name="twitter:card" content="summary" />
-        <meta name="twitter:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
-        <meta name="twitter:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and version control." />
+        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, API documentation generation, software development, technical writing, collaboration, version control" />
       </Head>
+      <h1>AutoGenerate API Documentation - Frequently Asked Questions</h1>
+      <h2>Introduction to AutoGenerate API Documentation</h2>
+      <p>AutoGenerate API Documentation is a tool that automatically generates API documentation from code, saving developers time and reducing errors.</p>
       {questions.map((question) => (
         <div key={question.id}>
-          <h2 onClick={() => handleToggle(question.id)}>{question.question}</h2>
-          {activeQuestion === question.id && (
-            <p>{question.answer}</p>
-          )}
-          {activeQuestion === question.id && (
-            <Link href="#top">
-              <a>
-                <AiOutlineArrowRight />
-                Back to top
-              </a>
-            </Link>
-          )}
+          <h3>{question.question}</h3>
+          <p>{activeQuestion === question.id ? question.answer : ''}</p>
+          <button onClick={() => handleToggle(question.id)}>
+            {activeQuestion === question.id ? 'Hide Answer' : 'Show Answer'}
+            <AiOutlineArrowRight />
+          </button>
         </div>
       ))}
     </div>

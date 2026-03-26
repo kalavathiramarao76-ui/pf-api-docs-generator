@@ -98,7 +98,7 @@ export default function CtaPage() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`px-4 py-2 bg-blue-500 text-white rounded ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`}
+          className={`px-4 py-2 bg-blue-500 text-white rounded ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
         >
           {isSubmitting ? 'Submitting...' : 'Get Started'}
         </button>
