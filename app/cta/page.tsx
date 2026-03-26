@@ -94,13 +94,16 @@ export default function CtaPage() {
         )}
         <button
           type="submit"
+          className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"
           disabled={isSubmitting}
-          className={`px-4 py-2 bg-blue-500 text-white rounded ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`}
         >
           {isSubmitting ? (
-            <svg className="animate-spin h-5 w-5 mr-3 border-4 border-gray-200 rounded-full border-t-blue-600" viewBox="0 0 24 24"></svg>
+            <svg
+              className="animate-spin h-5 w-5 mr-3 border-4 border-gray-200 rounded-full border-t-blue-600"
+              viewBox="0 0 24 24"
+            />
           ) : (
-            <AiOutlineArrowRight size={20} />
+            <AiOutlineArrowRight />
           )}
           {isSubmitting ? 'Submitting...' : 'Get Started'}
         </button>
