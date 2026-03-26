@@ -99,7 +99,7 @@ export default function CtaPage() {
         >
           {isSubmitting ? (
             <svg
-              className="animate-spin h-5 w-5 border-4 border-gray-200 rounded-full border-t-blue-600"
+              className="animate-spin h-5 w-5 mr-3 border-4 border-gray-200 rounded-full border-t-blue-600"
               viewBox="0 0 24 24"
             />
           ) : (

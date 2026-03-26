@@ -95,27 +95,24 @@ export default function Page() {
     };
   });
   const [guidedTour, setGuidedTour] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [filteredSteps, setFilteredSteps] = useState(onboardingSteps);
 
   useEffect(() => {
     const filteredSteps = onboardingSteps.filter((step) => {
-      const title = step.title.toLowerCase();
-      const description = step.description.toLowerCase();
-      const action = step.action.toLowerCase();
-      const searchQuery = searchQuery.toLowerCase();
-      return title.includes(searchQuery) || description.includes(searchQuery) || action.includes(searchQuery);
+      return step.title.toLowerCase().includes(searchTerm.toLowerCase()) || step.description.toLowerCase().includes(searchTerm.toLowerCase());
     });
     setFilteredSteps(filteredSteps);
-  }, [searchQuery]);
-
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
+  }, [searchTerm]);
 
   return (
     <div>
-      <input type="search" value={searchQuery} onChange={handleSearch} placeholder="Search onboarding steps" />
+      <input
+        type="search"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        placeholder="Search features and tutorials"
+      />
       {filteredSteps.map((step) => (
         <div key={step.id}>
           <h2>{step.title}</h2>
