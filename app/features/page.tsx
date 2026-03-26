@@ -103,37 +103,25 @@ export default function Page() {
     const storedProgress = localStorage.getItem('progress');
     return storedProgress ? JSON.parse(storedProgress) : {};
   });
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filteredFeatures, setFilteredFeatures] = useState(features);
 
   useEffect(() => {
-    const filteredFeatures = features.filter((feature) => {
-      return feature.title.toLowerCase().includes(searchQuery.toLowerCase()) || feature.description.toLowerCase().includes(searchQuery.toLowerCase());
-    });
-    setFilteredFeatures(filteredFeatures);
-  }, [searchQuery]);
+    const loadUserProgress = async () => {
+      const userProgress = await getUserProgress(userId);
+      if (userProgress) {
+        setProgress(userProgress);
+      }
+    };
+    loadUserProgress();
+  }, [userId]);
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
+  useEffect(() => {
+    const saveProgress = async () => {
+      await saveUserProgress(userId, progress);
+    };
+    saveProgress();
+  }, [progress, userId]);
 
   return (
-    <div>
-      <input type="search" value={searchQuery} onChange={handleSearch} placeholder="Search features and tutorials" />
-      <h1>AutoGenerate API Documentation</h1>
-      <ul>
-        {filteredFeatures.map((feature) => (
-          <li key={feature.id}>
-            <Link href={`/features/${feature.id}`}>
-              <a>
-                <h2>{feature.title}</h2>
-                <p>{feature.description}</p>
-              </a>
-            </Link>
-          </li>
-        ))}
-      </ul>
-      {/* Rest of the code remains the same */}
-    </div>
+    // Your existing JSX code here
   );
 }
