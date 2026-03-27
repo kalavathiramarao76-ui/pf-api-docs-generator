@@ -86,6 +86,27 @@ const features = [
   },
 ];
 
+const guidedOnboardingSteps = [
+  {
+    id: 1,
+    title: 'Step 1: Introduction to AutoGenerate API Documentation',
+    description: 'Learn about the benefits of using AutoGenerate API Documentation',
+    tutorial: 'https://example.com/tutorial-1',
+  },
+  {
+    id: 2,
+    title: 'Step 2: Creating Your First API Documentation',
+    description: 'Follow a step-by-step guide to create your first API documentation',
+    tutorial: 'https://example.com/tutorial-2',
+  },
+  {
+    id: 3,
+    title: 'Step 3: Customizing Your API Documentation',
+    description: 'Discover how to customize your API documentation with advanced features',
+    tutorial: 'https://example.com/tutorial-3',
+  },
+];
+
 export default function Page() {
   const userId = generateUUID();
   const [tutorialStep, setTutorialStep] = useState(() => {
@@ -103,25 +124,73 @@ export default function Page() {
     const storedProgress = localStorage.getItem('progress');
     return storedProgress ? JSON.parse(storedProgress) : {};
   });
+  const [guidedOnboardingProgress, setGuidedOnboardingProgress] = useState(() => {
+    const storedGuidedOnboardingProgress = localStorage.getItem('guidedOnboardingProgress');
+    return storedGuidedOnboardingProgress ? JSON.parse(storedGuidedOnboardingProgress) : {};
+  });
 
-  useEffect(() => {
-    const fetchUserProgress = async () => {
-      const userProgress = await getUserProgress(userId);
-      if (userProgress) {
-        setProgress(userProgress);
-      }
-    };
-    fetchUserProgress();
-  }, [userId]);
+  const handleGuidedOnboardingStepCompletion = (stepId: number) => {
+    const updatedGuidedOnboardingProgress = { ...guidedOnboardingProgress };
+    updatedGuidedOnboardingProgress[stepId] = true;
+    setGuidedOnboardingProgress(updatedGuidedOnboardingProgress);
+    localStorage.setItem('guidedOnboardingProgress', JSON.stringify(updatedGuidedOnboardingProgress));
+  };
 
-  useEffect(() => {
-    const saveProgress = async () => {
-      await saveUserProgress(userId, progress);
-    };
-    saveProgress();
-  }, [progress, userId]);
+  const handleTutorialStepCompletion = (stepId: number) => {
+    const updatedProgress = { ...progress };
+    updatedProgress[stepId] = true;
+    setProgress(updatedProgress);
+    localStorage.setItem('progress', JSON.stringify(updatedProgress));
+  };
 
   return (
-    // Your existing JSX code here
+    <div>
+      <h1>AutoGenerate API Documentation</h1>
+      <p>Welcome to our guided onboarding process!</p>
+      <ul>
+        {guidedOnboardingSteps.map((step) => (
+          <li key={step.id}>
+            <h2>{step.title}</h2>
+            <p>{step.description}</p>
+            <a href={step.tutorial} target="_blank" rel="noopener noreferrer">
+              Start Tutorial
+            </a>
+            {guidedOnboardingProgress[step.id] ? (
+              <p>Completed!</p>
+            ) : (
+              <button onClick={() => handleGuidedOnboardingStepCompletion(step.id)}>
+                Mark as Completed
+              </button>
+            )}
+          </li>
+        ))}
+      </ul>
+      <h2>Onboarding Steps</h2>
+      <ul>
+        {onboardingSteps.map((step) => (
+          <li key={step.id}>
+            <h2>{step.title}</h2>
+            <p>{step.description}</p>
+            <button onClick={() => handleTutorialStepCompletion(step.id)}>
+              {step.action}
+            </button>
+            {progress[step.id] ? (
+              <p>Completed!</p>
+            ) : (
+              <p>Not Completed</p>
+            )}
+          </li>
+        ))}
+      </ul>
+      <h2>Features</h2>
+      <ul>
+        {features.map((feature) => (
+          <li key={feature.id}>
+            <h2>{feature.title}</h2>
+            <p>{feature.description}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
