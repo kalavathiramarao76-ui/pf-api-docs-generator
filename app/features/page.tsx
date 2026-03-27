@@ -108,88 +108,104 @@ const guidedOnboardingSteps = [
 ];
 
 export default function Page() {
-  const [userId, setUserId] = useState<string | null>(null);
-  const [userProgress, setUserProgress] = useState<any | null>(null);
-  const [currentStep, setCurrentStep] = useState<number | null>(null);
-  const [completedSteps, setCompletedSteps] = useState<any | null>(null);
+  const [userProgress, setUserProgress] = useState(null);
+  const [recommendedSteps, setRecommendedSteps] = useState(null);
+  const [userId, setUserId] = useState(generateUUID());
 
   useEffect(() => {
-    const storedUserId = localStorage.getItem('userId');
-    if (storedUserId) {
-      setUserId(storedUserId);
-      getUserProgress(storedUserId).then((progress) => {
-        setUserProgress(progress);
-        if (progress) {
-          const completedSteps = progress.completedSteps;
-          setCompletedSteps(completedSteps);
-          const nextStep = guidedOnboardingSteps.find((step) => !completedSteps.includes(step.id));
-          if (nextStep) {
-            setCurrentStep(nextStep.id);
-          }
-        }
-      });
-    } else {
-      const newUserId = generateUUID();
-      setUserId(newUserId);
-      localStorage.setItem('userId', newUserId);
-    }
-  }, []);
+    const fetchUserProgress = async () => {
+      const progress = await getUserProgress(userId);
+      setUserProgress(progress);
+    };
+    fetchUserProgress();
+  }, [userId]);
 
-  const handleStartTutorial = () => {
-    if (userId) {
-      const initialProgress = { completedSteps: [] };
-      saveUserProgress(userId, initialProgress).then((progress) => {
-        setUserProgress(progress);
-        setCompletedSteps(progress.completedSteps);
-        const nextStep = guidedOnboardingSteps[0];
-        setCurrentStep(nextStep.id);
-      });
-    }
-  };
+  useEffect(() => {
+    const fetchRecommendedSteps = async () => {
+      if (userProgress) {
+        const steps = await getRecommendedSteps(userId, userProgress);
+        setRecommendedSteps(steps);
+      }
+    };
+    fetchRecommendedSteps();
+  }, [userProgress, userId]);
 
-  const handleCompleteStep = (stepId: number) => {
-    if (userId && userProgress) {
+  const handleStepCompletion = async (stepId: number) => {
+    if (userProgress) {
       const updatedProgress = { ...userProgress, completedSteps: [...userProgress.completedSteps, stepId] };
-      saveUserProgress(userId, updatedProgress).then((progress) => {
-        setUserProgress(progress);
-        setCompletedSteps(progress.completedSteps);
-        const nextStep = guidedOnboardingSteps.find((step) => step.id > stepId && !progress.completedSteps.includes(step.id));
-        if (nextStep) {
-          setCurrentStep(nextStep.id);
-        }
-      });
+      await saveUserProgress(userId, updatedProgress);
+      setUserProgress(updatedProgress);
     }
   };
 
   return (
     <div>
-      {userId && userProgress && currentStep ? (
+      <h1>AutoGenerate API Documentation</h1>
+      <nav>
+        <Link href="/api-documentation">
+          <a>
+            <TbApi size={24} />
+            API Documentation
+          </a>
+        </Link>
+        <Link href="/code-generation">
+          <a>
+            <AiOutlineCode size={24} />
+            Code Generation
+          </a>
+        </Link>
+        <Link href="/settings">
+          <a>
+            <MdOutlineSettings size={24} />
+            Settings
+          </a>
+        </Link>
+        <Link href="/dashboard">
+          <a>
+            <RiDashboardLine size={24} />
+            Dashboard
+          </a>
+        </Link>
+      </nav>
+      <h2>Onboarding Steps</h2>
+      <ul>
+        {onboardingSteps.map((step) => (
+          <li key={step.id}>
+            <h3>{step.title}</h3>
+            <p>{step.description}</p>
+            <button onClick={() => handleStepCompletion(step.id)}>{step.action}</button>
+          </li>
+        ))}
+      </ul>
+      <h2>Features</h2>
+      <ul>
+        {features.map((feature) => (
+          <li key={feature.id}>
+            <h3>{feature.title}</h3>
+            <p>{feature.description}</p>
+          </li>
+        ))}
+      </ul>
+      <h2>Guided Onboarding Steps</h2>
+      <ul>
+        {guidedOnboardingSteps.map((step) => (
+          <li key={step.id}>
+            <h3>{step.title}</h3>
+            <p>{step.description}</p>
+            <a href={step.tutorial} target="_blank" rel="noopener noreferrer">Start Tutorial</a>
+          </li>
+        ))}
+      </ul>
+      <h2>Dashboard</h2>
+      {userProgress && (
         <div>
-          <h1>Guided Onboarding</h1>
-          <p>Current Step: {guidedOnboardingSteps.find((step) => step.id === currentStep)?.title}</p>
-          <p>Description: {guidedOnboardingSteps.find((step) => step.id === currentStep)?.description}</p>
-          <p>Tutorial: <a href={guidedOnboardingSteps.find((step) => step.id === currentStep)?.tutorial} target="_blank" rel="noreferrer">View Tutorial</a></p>
-          <button onClick={() => handleCompleteStep(currentStep)}>Complete Step</button>
-        </div>
-      ) : (
-        <div>
-          <h1>AutoGenerate API Documentation</h1>
-          <p>Welcome to our interactive tutorials and step-by-step guides</p>
-          <button onClick={handleStartTutorial}>Start Tutorial</button>
+          <h3>Completed Steps: {userProgress.completedSteps.length}</h3>
+          <h3>Recommended Steps:</h3>
           <ul>
-            {onboardingSteps.map((step) => (
+            {recommendedSteps && recommendedSteps.map((step) => (
               <li key={step.id}>
-                <h2>{step.title}</h2>
+                <h3>{step.title}</h3>
                 <p>{step.description}</p>
-                <p>Action: {step.action}</p>
-              </li>
-            ))}
-          </ul>
-          <ul>
-            {features.map((feature) => (
-              <li key={feature.id}>
-                <h2>{feature.title}</h2>
-                <p>{feature.description}</p>
               </li>
             ))}
           </ul>
