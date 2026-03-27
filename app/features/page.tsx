@@ -110,12 +110,14 @@ const guidedOnboardingSteps = [
 export default function Page() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredFeatures, setFilteredFeatures] = useState(features);
+  const [filteredGuidedOnboardingSteps, setFilteredGuidedOnboardingSteps] = useState(guidedOnboardingSteps);
 
   useEffect(() => {
-    const filteredFeatures = features.filter((feature) => {
-      return feature.title.toLowerCase().includes(searchTerm.toLowerCase()) || feature.description.toLowerCase().includes(searchTerm.toLowerCase());
-    });
+    const filteredFeatures = features.filter(feature => feature.title.toLowerCase().includes(searchTerm.toLowerCase()) || feature.description.toLowerCase().includes(searchTerm.toLowerCase()));
     setFilteredFeatures(filteredFeatures);
+
+    const filteredGuidedOnboardingSteps = guidedOnboardingSteps.filter(step => step.title.toLowerCase().includes(searchTerm.toLowerCase()) || step.description.toLowerCase().includes(searchTerm.toLowerCase()));
+    setFilteredGuidedOnboardingSteps(filteredGuidedOnboardingSteps);
   }, [searchTerm]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -124,12 +126,30 @@ export default function Page() {
 
   return (
     <div>
-      <input type="search" value={searchTerm} onChange={handleSearch} placeholder="Search features" />
+      <input type="search" value={searchTerm} onChange={handleSearch} placeholder="Search features and tutorials" />
+      <h1>Features</h1>
       <ul>
-        {filteredFeatures.map((feature) => (
+        {filteredFeatures.map(feature => (
           <li key={feature.id}>
-            <h2>{feature.title}</h2>
-            <p>{feature.description}</p>
+            <Link href={`/features/${feature.id}`}>
+              <a>
+                <h2>{feature.title}</h2>
+                <p>{feature.description}</p>
+              </a>
+            </Link>
+          </li>
+        ))}
+      </ul>
+      <h1>Guided Onboarding Steps</h1>
+      <ul>
+        {filteredGuidedOnboardingSteps.map(step => (
+          <li key={step.id}>
+            <Link href={step.tutorial}>
+              <a>
+                <h2>{step.title}</h2>
+                <p>{step.description}</p>
+              </a>
+            </Link>
           </li>
         ))}
       </ul>
