@@ -105,13 +105,13 @@ export default function Page() {
   });
 
   useEffect(() => {
-    const loadUserProgress = async () => {
+    const fetchUserProgress = async () => {
       const userProgress = await getUserProgress(userId);
       if (userProgress) {
         setProgress(userProgress);
       }
     };
-    loadUserProgress();
+    fetchUserProgress();
   }, [userId]);
 
   useEffect(() => {
