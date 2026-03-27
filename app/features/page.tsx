@@ -109,15 +109,13 @@ const guidedOnboardingSteps = [
 
 export default function Page() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [filteredFeatures, setFilteredFeatures] = useState(features);
-  const [filteredGuidedOnboardingSteps, setFilteredGuidedOnboardingSteps] = useState(guidedOnboardingSteps);
+  const [filteredOnboardingSteps, setFilteredOnboardingSteps] = useState(onboardingSteps);
 
   useEffect(() => {
-    const filteredFeatures = features.filter((feature) => feature.title.toLowerCase().includes(searchTerm.toLowerCase()));
-    setFilteredFeatures(filteredFeatures);
-
-    const filteredGuidedOnboardingSteps = guidedOnboardingSteps.filter((step) => step.title.toLowerCase().includes(searchTerm.toLowerCase()));
-    setFilteredGuidedOnboardingSteps(filteredGuidedOnboardingSteps);
+    const filteredSteps = onboardingSteps.filter(step => {
+      return step.title.toLowerCase().includes(searchTerm.toLowerCase()) || step.description.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+    setFilteredOnboardingSteps(filteredSteps);
   }, [searchTerm]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -126,35 +124,19 @@ export default function Page() {
 
   return (
     <div>
+      <h1>AutoGenerate API Documentation</h1>
       <input
         type="search"
         value={searchTerm}
         onChange={handleSearch}
-        placeholder="Search features and tutorials"
+        placeholder="Search onboarding steps"
       />
-      <h1>Features</h1>
       <ul>
-        {filteredFeatures.map((feature) => (
-          <li key={feature.id}>
-            <Link href={`/features/${feature.id}`}>
-              <a>
-                {feature.title}
-              </a>
-            </Link>
-            <p>{feature.description}</p>
-          </li>
-        ))}
-      </ul>
-      <h1>Guided Onboarding Steps</h1>
-      <ul>
-        {filteredGuidedOnboardingSteps.map((step) => (
+        {filteredOnboardingSteps.map(step => (
           <li key={step.id}>
-            <Link href={step.tutorial}>
-              <a>
-                {step.title}
-              </a>
-            </Link>
+            <h2>{step.title}</h2>
             <p>{step.description}</p>
+            <p>{step.action}</p>
           </li>
         ))}
       </ul>
