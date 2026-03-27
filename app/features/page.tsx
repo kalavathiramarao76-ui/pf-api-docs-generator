@@ -113,15 +113,17 @@ export default function Page() {
   const [filteredOnboardingSteps, setFilteredOnboardingSteps] = useState(onboardingSteps);
   const [filteredGuidedOnboardingSteps, setFilteredGuidedOnboardingSteps] = useState(guidedOnboardingSteps);
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const searchTerm = event.target.value.toLowerCase();
-    setSearchTerm(searchTerm);
-    const filteredFeatures = features.filter((feature) => feature.title.toLowerCase().includes(searchTerm) || feature.description.toLowerCase().includes(searchTerm));
+  useEffect(() => {
+    const filteredFeatures = features.filter(feature => feature.title.toLowerCase().includes(searchTerm.toLowerCase()));
+    const filteredOnboardingSteps = onboardingSteps.filter(step => step.title.toLowerCase().includes(searchTerm.toLowerCase()));
+    const filteredGuidedOnboardingSteps = guidedOnboardingSteps.filter(step => step.title.toLowerCase().includes(searchTerm.toLowerCase()));
     setFilteredFeatures(filteredFeatures);
-    const filteredOnboardingSteps = onboardingSteps.filter((step) => step.title.toLowerCase().includes(searchTerm) || step.description.toLowerCase().includes(searchTerm));
     setFilteredOnboardingSteps(filteredOnboardingSteps);
-    const filteredGuidedOnboardingSteps = guidedOnboardingSteps.filter((step) => step.title.toLowerCase().includes(searchTerm) || step.description.toLowerCase().includes(searchTerm));
     setFilteredGuidedOnboardingSteps(filteredGuidedOnboardingSteps);
+  }, [searchTerm]);
+
+  const handleSearch = (e: any) => {
+    setSearchTerm(e.target.value);
   };
 
   return (
@@ -129,11 +131,10 @@ export default function Page() {
       <input type="search" value={searchTerm} onChange={handleSearch} placeholder="Search features and tutorials" />
       <h2>Features</h2>
       <ul>
-        {filteredFeatures.map((feature) => (
+        {filteredFeatures.map(feature => (
           <li key={feature.id}>
             <Link href={`/features/${feature.id}`}>
               <a>
-                <TbApi />
                 {feature.title}
               </a>
             </Link>
@@ -143,11 +144,10 @@ export default function Page() {
       </ul>
       <h2>Onboarding Steps</h2>
       <ul>
-        {filteredOnboardingSteps.map((step) => (
+        {filteredOnboardingSteps.map(step => (
           <li key={step.id}>
             <Link href={`/onboarding/${step.id}`}>
               <a>
-                <RiDashboardLine />
                 {step.title}
               </a>
             </Link>
@@ -157,11 +157,10 @@ export default function Page() {
       </ul>
       <h2>Guided Onboarding Steps</h2>
       <ul>
-        {filteredGuidedOnboardingSteps.map((step) => (
+        {filteredGuidedOnboardingSteps.map(step => (
           <li key={step.id}>
             <Link href={step.tutorial}>
               <a>
-                <AiOutlineCode />
                 {step.title}
               </a>
             </Link>
