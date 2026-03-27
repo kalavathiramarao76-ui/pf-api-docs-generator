@@ -108,83 +108,47 @@ const guidedOnboardingSteps = [
 ];
 
 export default function Page() {
-  const userId = generateUUID();
-  const [tutorialStep, setTutorialStep] = useState(() => {
-    const storedTutorialStep = localStorage.getItem('tutorialStep');
-    return storedTutorialStep ? parseInt(storedTutorialStep) : 1;
-  });
-  const [sampleProject, setSampleProject] = useState(false);
-  const [trialStarted, setTrialStarted] = useState(false);
-  const [trialDays, setTrialDays] = useState(14);
-  const [trialExpired, setTrialExpired] = useState(false);
-  const [demoStarted, setDemoStarted] = useState(false);
-  const [demoTime, setDemoTime] = useState(30); 
-  const [demoExpired, setDemoExpired] = useState(false);
-  const [progress, setProgress] = useState(() => {
-    const storedProgress = localStorage.getItem('progress');
-    return storedProgress ? JSON.parse(storedProgress) : {};
-  });
-  const [guidedOnboardingProgress, setGuidedOnboardingProgress] = useState(() => {
-    const storedGuidedOnboardingProgress = localStorage.getItem('guidedOnboardingProgress');
-    return storedGuidedOnboardingProgress ? JSON.parse(storedGuidedOnboardingProgress) : {};
-  });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredGuidedOnboardingSteps, setFilteredGuidedOnboardingSteps] = useState(guidedOnboardingSteps);
 
-  const handleGuidedOnboardingStepCompletion = (stepId: number) => {
-    const updatedGuidedOnboardingProgress = { ...guidedOnboardingProgress };
-    updatedGuidedOnboardingProgress[stepId] = true;
-    setGuidedOnboardingProgress(updatedGuidedOnboardingProgress);
-    localStorage.setItem('guidedOnboardingProgress', JSON.stringify(updatedGuidedOnboardingProgress));
-  };
-
-  const handleTutorialStepCompletion = (stepId: number) => {
-    const updatedProgress = { ...progress };
-    updatedProgress[stepId] = true;
-    setProgress(updatedProgress);
-    localStorage.setItem('progress', JSON.stringify(updatedProgress));
-  };
+  useEffect(() => {
+    const filteredSteps = guidedOnboardingSteps.filter(step => {
+      return step.title.toLowerCase().includes(searchTerm.toLowerCase()) || step.description.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+    setFilteredGuidedOnboardingSteps(filteredSteps);
+  }, [searchTerm]);
 
   return (
     <div>
       <h1>AutoGenerate API Documentation</h1>
-      <p>Welcome to our guided onboarding process!</p>
+      <input
+        type="search"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        placeholder="Search tutorials or guides"
+      />
       <ul>
-        {guidedOnboardingSteps.map((step) => (
+        {filteredGuidedOnboardingSteps.map(step => (
           <li key={step.id}>
             <h2>{step.title}</h2>
             <p>{step.description}</p>
-            <a href={step.tutorial} target="_blank" rel="noopener noreferrer">
-              Start Tutorial
-            </a>
-            {guidedOnboardingProgress[step.id] ? (
-              <p>Completed!</p>
-            ) : (
-              <button onClick={() => handleGuidedOnboardingStepCompletion(step.id)}>
-                Mark as Completed
-              </button>
-            )}
+            <a href={step.tutorial}>View Tutorial</a>
           </li>
         ))}
       </ul>
       <h2>Onboarding Steps</h2>
       <ul>
-        {onboardingSteps.map((step) => (
+        {onboardingSteps.map(step => (
           <li key={step.id}>
             <h2>{step.title}</h2>
             <p>{step.description}</p>
-            <button onClick={() => handleTutorialStepCompletion(step.id)}>
-              {step.action}
-            </button>
-            {progress[step.id] ? (
-              <p>Completed!</p>
-            ) : (
-              <p>Not Completed</p>
-            )}
+            <button>{step.action}</button>
           </li>
         ))}
       </ul>
       <h2>Features</h2>
       <ul>
-        {features.map((feature) => (
+        {features.map(feature => (
           <li key={feature.id}>
             <h2>{feature.title}</h2>
             <p>{feature.description}</p>
