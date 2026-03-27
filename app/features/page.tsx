@@ -110,13 +110,19 @@ const guidedOnboardingSteps = [
 export default function Page() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredFeatures, setFilteredFeatures] = useState(features);
+  const [filteredOnboardingSteps, setFilteredOnboardingSteps] = useState(onboardingSteps);
   const [filteredGuidedOnboardingSteps, setFilteredGuidedOnboardingSteps] = useState(guidedOnboardingSteps);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = event.target.value.toLowerCase();
     setSearchTerm(searchTerm);
+
     const filteredFeatures = features.filter((feature) => feature.title.toLowerCase().includes(searchTerm) || feature.description.toLowerCase().includes(searchTerm));
     setFilteredFeatures(filteredFeatures);
+
+    const filteredOnboardingSteps = onboardingSteps.filter((step) => step.title.toLowerCase().includes(searchTerm) || step.description.toLowerCase().includes(searchTerm));
+    setFilteredOnboardingSteps(filteredOnboardingSteps);
+
     const filteredGuidedOnboardingSteps = guidedOnboardingSteps.filter((step) => step.title.toLowerCase().includes(searchTerm) || step.description.toLowerCase().includes(searchTerm));
     setFilteredGuidedOnboardingSteps(filteredGuidedOnboardingSteps);
   };
@@ -137,16 +143,23 @@ export default function Page() {
           </li>
         ))}
       </ul>
+      <h2>Onboarding Steps</h2>
+      <ul>
+        {filteredOnboardingSteps.map((step) => (
+          <li key={step.id}>
+            <h3>{step.title}</h3>
+            <p>{step.description}</p>
+            <p>{step.action}</p>
+          </li>
+        ))}
+      </ul>
       <h2>Guided Onboarding Steps</h2>
       <ul>
         {filteredGuidedOnboardingSteps.map((step) => (
           <li key={step.id}>
-            <Link href={step.tutorial}>
-              <a>
-                <h3>{step.title}</h3>
-                <p>{step.description}</p>
-              </a>
-            </Link>
+            <h3>{step.title}</h3>
+            <p>{step.description}</p>
+            <p><a href={step.tutorial} target="_blank" rel="noopener noreferrer">View Tutorial</a></p>
           </li>
         ))}
       </ul>
