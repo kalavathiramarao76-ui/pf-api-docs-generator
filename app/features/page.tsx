@@ -110,7 +110,6 @@ const guidedOnboardingSteps = [
 export default function Page() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredFeatures, setFilteredFeatures] = useState(features);
-  const [filteredOnboardingSteps, setFilteredOnboardingSteps] = useState(onboardingSteps);
   const [filteredGuidedOnboardingSteps, setFilteredGuidedOnboardingSteps] = useState(guidedOnboardingSteps);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -118,8 +117,6 @@ export default function Page() {
     setSearchTerm(searchTerm);
     const filteredFeatures = features.filter((feature) => feature.title.toLowerCase().includes(searchTerm) || feature.description.toLowerCase().includes(searchTerm));
     setFilteredFeatures(filteredFeatures);
-    const filteredOnboardingSteps = onboardingSteps.filter((step) => step.title.toLowerCase().includes(searchTerm) || step.description.toLowerCase().includes(searchTerm));
-    setFilteredOnboardingSteps(filteredOnboardingSteps);
     const filteredGuidedOnboardingSteps = guidedOnboardingSteps.filter((step) => step.title.toLowerCase().includes(searchTerm) || step.description.toLowerCase().includes(searchTerm));
     setFilteredGuidedOnboardingSteps(filteredGuidedOnboardingSteps);
   };
@@ -127,36 +124,29 @@ export default function Page() {
   return (
     <div>
       <input type="search" value={searchTerm} onChange={handleSearch} placeholder="Search features and tutorials" />
-      <h1>Features</h1>
+      <h2>Features</h2>
       <ul>
         {filteredFeatures.map((feature) => (
           <li key={feature.id}>
             <Link href={`/features/${feature.id}`}>
               <a>
-                <h2>{feature.title}</h2>
+                <h3>{feature.title}</h3>
                 <p>{feature.description}</p>
               </a>
             </Link>
           </li>
         ))}
       </ul>
-      <h1>Onboarding Steps</h1>
-      <ul>
-        {filteredOnboardingSteps.map((step) => (
-          <li key={step.id}>
-            <h2>{step.title}</h2>
-            <p>{step.description}</p>
-            <p>{step.action}</p>
-          </li>
-        ))}
-      </ul>
-      <h1>Guided Onboarding Steps</h1>
+      <h2>Guided Onboarding Steps</h2>
       <ul>
         {filteredGuidedOnboardingSteps.map((step) => (
           <li key={step.id}>
-            <h2>{step.title}</h2>
-            <p>{step.description}</p>
-            <p><a href={step.tutorial} target="_blank" rel="noreferrer">View Tutorial</a></p>
+            <Link href={step.tutorial}>
+              <a>
+                <h3>{step.title}</h3>
+                <p>{step.description}</p>
+              </a>
+            </Link>
           </li>
         ))}
       </ul>

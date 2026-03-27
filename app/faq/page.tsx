@@ -59,12 +59,18 @@ export default function FaqPage() {
         <meta name="twitter:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
         <meta name="twitter:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and more." />
       </Head>
-      {questions.map((question) => (
-        <div key={question.id}>
-          <h2 onClick={() => handleToggle(question.id)}>{question.question}</h2>
-          {activeQuestion === question.id && <p>{question.answer}</p>}
-        </div>
-      ))}
+      <h1>Frequently Asked Questions</h1>
+      <ul>
+        {questions.map((question) => (
+          <li key={question.id}>
+            <button onClick={() => handleToggle(question.id)}>
+              {question.question}
+              <AiOutlineArrowRight />
+            </button>
+            {activeQuestion === question.id && <p>{question.answer}</p>}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
