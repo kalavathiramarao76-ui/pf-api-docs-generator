@@ -108,145 +108,67 @@ const guidedOnboardingSteps = [
 ];
 
 export default function Page() {
-  const [userId, setUserId] = useState(generateUUID());
-  const [userProgress, setUserProgress] = useState(null);
-  const [recommendedSteps, setRecommendedSteps] = useState(null);
-  const [showDashboard, setShowDashboard] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredFeatures, setFilteredFeatures] = useState(features);
+  const [filteredOnboardingSteps, setFilteredOnboardingSteps] = useState(onboardingSteps);
+  const [filteredGuidedOnboardingSteps, setFilteredGuidedOnboardingSteps] = useState(guidedOnboardingSteps);
 
-  useEffect(() => {
-    const fetchUserProgress = async () => {
-      const progress = await getUserProgress(userId);
-      setUserProgress(progress);
-    };
-    fetchUserProgress();
-  }, [userId]);
-
-  useEffect(() => {
-    const fetchRecommendedSteps = async () => {
-      if (userProgress) {
-        const steps = await getRecommendedSteps(userId, userProgress);
-        setRecommendedSteps(steps);
-      }
-    };
-    fetchRecommendedSteps();
-  }, [userProgress, userId]);
-
-  const handleSaveProgress = async (stepId: number) => {
-    if (userProgress) {
-      const updatedProgress = { ...userProgress, [stepId]: true };
-      await saveUserProgress(userId, updatedProgress);
-      setUserProgress(updatedProgress);
-    }
-  };
-
-  const handleShowDashboard = () => {
-    setShowDashboard(true);
-  };
-
-  const handleHideDashboard = () => {
-    setShowDashboard(false);
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const searchTerm = event.target.value.toLowerCase();
+    setSearchTerm(searchTerm);
+    const filteredFeatures = features.filter((feature) => feature.title.toLowerCase().includes(searchTerm) || feature.description.toLowerCase().includes(searchTerm));
+    setFilteredFeatures(filteredFeatures);
+    const filteredOnboardingSteps = onboardingSteps.filter((step) => step.title.toLowerCase().includes(searchTerm) || step.description.toLowerCase().includes(searchTerm));
+    setFilteredOnboardingSteps(filteredOnboardingSteps);
+    const filteredGuidedOnboardingSteps = guidedOnboardingSteps.filter((step) => step.title.toLowerCase().includes(searchTerm) || step.description.toLowerCase().includes(searchTerm));
+    setFilteredGuidedOnboardingSteps(filteredGuidedOnboardingSteps);
   };
 
   return (
     <div>
-      <header>
-        <nav>
-          <ul>
-            <li>
-              <Link href="/">
-                <a>
-                  <AiOutlineCode size={24} />
-                  API Documentation
-                </a>
-              </Link>
-            </li>
-            <li>
-              <Link href="/code-generation">
-                <a>
-                  <MdOutlineSettings size={24} />
-                  Code Generation
-                </a>
-              </Link>
-            </li>
-            <li>
-              <Link href="/settings">
-                <a>
-                  <RiDashboardLine size={24} />
-                  Settings
-                </a>
-              </Link>
-            </li>
-            <li>
-              <button onClick={handleShowDashboard}>
-                <RiDashboardLine size={24} />
-                Dashboard
-              </button>
-            </li>
-          </ul>
-        </nav>
-      </header>
-      <main>
-        {showDashboard && (
-          <div>
-            <h1>Dashboard</h1>
-            {userProgress && (
-              <div>
-                <h2>Progress</h2>
-                <ul>
-                  {onboardingSteps.map((step) => (
-                    <li key={step.id}>
-                      <span>{step.title}</span>
-                      {userProgress[step.id] ? (
-                        <span>Completed</span>
-                      ) : (
-                        <button onClick={() => handleSaveProgress(step.id)}>Mark as Completed</button>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            {recommendedSteps && (
-              <div>
-                <h2>Recommended Steps</h2>
-                <ul>
-                  {recommendedSteps.map((step) => (
-                    <li key={step.id}>
-                      <span>{step.title}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-            <button onClick={handleHideDashboard}>Hide Dashboard</button>
-          </div>
-        )}
-        <h1>AutoGenerate API Documentation</h1>
-        <ul>
-          {features.map((feature) => (
-            <li key={feature.id}>
-              <Link href={`/${feature.title.toLowerCase().replace(' ', '-')}`}>
-                <a>
-                  <TbApi size={24} />
-                  {feature.title}
-                </a>
-              </Link>
-            </li>
-          ))}
-        </ul>
-        <h2>Guided Onboarding</h2>
-        <ol>
-          {guidedOnboardingSteps.map((step) => (
-            <li key={step.id}>
-              <span>{step.title}</span>
-              <p>{step.description}</p>
-              <a href={step.tutorial} target="_blank" rel="noreferrer">
-                Start Tutorial
+      <input type="search" value={searchTerm} onChange={handleSearch} placeholder="Search features and tutorials" />
+      <h2>Features</h2>
+      <ul>
+        {filteredFeatures.map((feature) => (
+          <li key={feature.id}>
+            <Link href={`/features/${feature.id}`}>
+              <a>
+                <TbApi />
+                {feature.title}
               </a>
-            </li>
-          ))}
-        </ol>
-      </main>
+            </Link>
+            <p>{feature.description}</p>
+          </li>
+        ))}
+      </ul>
+      <h2>Onboarding Steps</h2>
+      <ul>
+        {filteredOnboardingSteps.map((step) => (
+          <li key={step.id}>
+            <Link href={`/onboarding/${step.id}`}>
+              <a>
+                <RiDashboardLine />
+                {step.title}
+              </a>
+            </Link>
+            <p>{step.description}</p>
+          </li>
+        ))}
+      </ul>
+      <h2>Guided Onboarding Steps</h2>
+      <ul>
+        {filteredGuidedOnboardingSteps.map((step) => (
+          <li key={step.id}>
+            <Link href={step.tutorial}>
+              <a>
+                <AiOutlineCode />
+                {step.title}
+              </a>
+            </Link>
+            <p>{step.description}</p>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
