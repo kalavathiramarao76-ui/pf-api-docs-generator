@@ -87,26 +87,21 @@ export default function CtaPage() {
           onChange={handleEmailChange}
           onBlur={handleBlur}
           placeholder="Enter your email"
-          className={`px-4 py-2 mb-4 border ${formErrors.email.isValid ? 'border-gray-300' : 'border-red-500'}`}
+          className={`px-4 py-2 mb-4 border ${formErrors.email.isValid ? 'border-gray-300' : 'border-red-500'} rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
         />
         {formErrors.email.message && (
           <p className="text-red-500 text-sm mb-4">{formErrors.email.message}</p>
         )}
+        {formErrors.general.message && (
+          <p className="text-red-500 text-sm mb-4">{formErrors.general.message}</p>
+        )}
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`px-4 py-2 bg-blue-500 text-white rounded ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`}
+          className={`px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
-          {isSubmitting ? (
-            <svg className="animate-spin h-5 w-5 mr-3 border-4 border-blue-500 border-t-transparent" viewBox="0 0 24 24"></svg>
-          ) : (
-            <AiOutlineArrowRight size={20} />
-          )}
           {isSubmitting ? 'Submitting...' : 'Get Started'}
         </button>
-        {formErrors.general.message && (
-          <p className="text-red-500 text-sm mt-4">{formErrors.general.message}</p>
-        )}
         {isSuccess && (
           <p className="text-green-500 text-sm mt-4">{successMessage}</p>
         )}
