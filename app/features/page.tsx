@@ -108,57 +108,55 @@ const guidedOnboardingSteps = [
 ];
 
 export default function Page() {
-  const [userId, setUserId] = useState<string | null>(null);
-  const [userProgress, setUserProgress] = useState<any>(null);
-  const [currentStep, setCurrentStep] = useState<number | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredFeatures, setFilteredFeatures] = useState(features);
+  const [filteredGuidedOnboardingSteps, setFilteredGuidedOnboardingSteps] = useState(guidedOnboardingSteps);
 
   useEffect(() => {
-    const storedUserId = localStorage.getItem('userId');
-    if (storedUserId) {
-      setUserId(storedUserId);
-      getUserProgress(storedUserId).then((progress) => {
-        setUserProgress(progress);
-        if (progress) {
-          const currentStepId = progress.currentStep;
-          const stepIndex = onboardingSteps.findIndex((step) => step.id === currentStepId);
-          if (stepIndex !== -1) {
-            setCurrentStep(stepIndex + 1);
-          }
-        }
-      });
-    } else {
-      const newUserId = generateUUID();
-      setUserId(newUserId);
-      localStorage.setItem('userId', newUserId);
-    }
-  }, []);
+    const filteredFeatures = features.filter((feature) => feature.title.toLowerCase().includes(searchTerm.toLowerCase()));
+    const filteredGuidedOnboardingSteps = guidedOnboardingSteps.filter((step) => step.title.toLowerCase().includes(searchTerm.toLowerCase()));
+    setFilteredFeatures(filteredFeatures);
+    setFilteredGuidedOnboardingSteps(filteredGuidedOnboardingSteps);
+  }, [searchTerm]);
 
-  const handleStepCompletion = async (stepId: number) => {
-    if (userId) {
-      const updatedProgress = { ...userProgress, currentStep: stepId };
-      await saveUserProgress(userId, updatedProgress);
-      setUserProgress(updatedProgress);
-      const recommendedSteps = await getRecommendedSteps(userId, updatedProgress);
-      if (recommendedSteps) {
-        const nextStepId = recommendedSteps.nextStep;
-        const nextStepIndex = onboardingSteps.findIndex((step) => step.id === nextStepId);
-        if (nextStepIndex !== -1) {
-          setCurrentStep(nextStepIndex + 1);
-        }
-      }
-    }
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
   };
 
   return (
     <div>
-      {onboardingSteps.map((step, index) => (
-        <div key={step.id}>
-          <h2>{step.title}</h2>
-          <p>{step.description}</p>
-          <button onClick={() => handleStepCompletion(step.id)}>{step.action}</button>
-          {index === currentStep - 1 && <p>Current Step</p>}
-        </div>
-      ))}
+      <input
+        type="search"
+        value={searchTerm}
+        onChange={handleSearch}
+        placeholder="Search features and tutorials"
+      />
+      <h1>Features</h1>
+      <ul>
+        {filteredFeatures.map((feature) => (
+          <li key={feature.id}>
+            <Link href={`/features/${feature.id}`}>
+              <a>
+                {feature.title}
+              </a>
+            </Link>
+            <p>{feature.description}</p>
+          </li>
+        ))}
+      </ul>
+      <h1>Guided Onboarding Steps</h1>
+      <ul>
+        {filteredGuidedOnboardingSteps.map((step) => (
+          <li key={step.id}>
+            <Link href={step.tutorial}>
+              <a>
+                {step.title}
+              </a>
+            </Link>
+            <p>{step.description}</p>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
