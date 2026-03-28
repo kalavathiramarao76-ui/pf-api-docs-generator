@@ -119,30 +119,61 @@ const authenticateUser = async (username: string) => {
 };
 
 const Page = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredGuidedOnboardingSteps, setFilteredGuidedOnboardingSteps] = useState(guidedOnboardingSteps);
+  const [userId, setUserId] = useState('');
+  const [userProgress, setUserProgress] = useState(null);
+  const [completedSteps, setCompletedSteps] = useState([]);
 
   useEffect(() => {
-    const filteredSteps = guidedOnboardingSteps.filter((step) => {
-      return step.title.toLowerCase().includes(searchTerm.toLowerCase()) || step.description.toLowerCase().includes(searchTerm.toLowerCase());
-    });
-    setFilteredGuidedOnboardingSteps(filteredSteps);
-  }, [searchTerm]);
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      setUserId(userId);
+      getUserProgress(userId).then((progress) => {
+        setUserProgress(progress);
+        if (progress) {
+          setCompletedSteps(progress.completedSteps);
+        }
+      });
+    } else {
+      const newUserId = generateUUID();
+      setUserId(newUserId);
+      localStorage.setItem('userId', newUserId);
+    }
+  }, []);
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+  const handleStepCompletion = (stepId: number) => {
+    const newCompletedSteps = [...completedSteps, stepId];
+    setCompletedSteps(newCompletedSteps);
+    saveUserProgress(userId, { completedSteps: newCompletedSteps });
   };
 
   return (
     <div>
       <h1>AutoGenerate API Documentation</h1>
-      <input type="search" value={searchTerm} onChange={handleSearch} placeholder="Search tutorials or guides" />
       <ul>
-        {filteredGuidedOnboardingSteps.map((step) => (
+        {onboardingSteps.map((step) => (
           <li key={step.id}>
             <h2>{step.title}</h2>
             <p>{step.description}</p>
-            <a href={step.tutorial}>View Tutorial</a>
+            <button onClick={() => handleStepCompletion(step.id)}>{step.action}</button>
+          </li>
+        ))}
+      </ul>
+      <h2>Features</h2>
+      <ul>
+        {features.map((feature) => (
+          <li key={feature.id}>
+            <h2>{feature.title}</h2>
+            <p>{feature.description}</p>
+          </li>
+        ))}
+      </ul>
+      <h2>Guided Onboarding</h2>
+      <ul>
+        {guidedOnboardingSteps.map((step) => (
+          <li key={step.id}>
+            <h2>{step.title}</h2>
+            <p>{step.description}</p>
+            <a href={step.tutorial} target="_blank" rel="noopener noreferrer">Start Tutorial</a>
           </li>
         ))}
       </ul>
