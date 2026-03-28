@@ -118,90 +118,34 @@ const authenticateUser = async (username: string) => {
   }
 };
 
-const Dashboard = () => {
-  const [userProgress, setUserProgress] = useState(null);
-  const [recommendedSteps, setRecommendedSteps] = useState(null);
-  const [userId, setUserId] = useState('');
+const Page = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredGuidedOnboardingSteps, setFilteredGuidedOnboardingSteps] = useState(guidedOnboardingSteps);
 
   useEffect(() => {
-    const storedUserId = localStorage.getItem('userId');
-    if (storedUserId) {
-      setUserId(storedUserId);
-      getUserProgress(storedUserId).then((progress) => {
-        setUserProgress(progress);
-        getRecommendedSteps(storedUserId, progress).then((steps) => {
-          setRecommendedSteps(steps);
-        });
-      });
-    }
-  }, []);
+    const filteredSteps = guidedOnboardingSteps.filter((step) => {
+      return step.title.toLowerCase().includes(searchTerm.toLowerCase()) || step.description.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+    setFilteredGuidedOnboardingSteps(filteredSteps);
+  }, [searchTerm]);
 
-  const handleCompleteStep = (stepId: number) => {
-    if (userProgress) {
-      const updatedProgress = { ...userProgress, completedSteps: [...userProgress.completedSteps, stepId] };
-      saveUserProgress(userId, updatedProgress).then(() => {
-        setUserProgress(updatedProgress);
-        getRecommendedSteps(userId, updatedProgress).then((steps) => {
-          setRecommendedSteps(steps);
-        });
-      });
-    }
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
   };
 
   return (
     <div>
-      <h1>Dashboard</h1>
-      {userProgress && (
-        <div>
-          <h2>Completed Steps:</h2>
-          <ul>
-            {userProgress.completedSteps.map((stepId: number) => (
-              <li key={stepId}>{onboardingSteps.find((step) => step.id === stepId).title}</li>
-            ))}
-          </ul>
-          <h2>Recommended Steps:</h2>
-          <ul>
-            {recommendedSteps && recommendedSteps.map((step: any) => (
-              <li key={step.id}>
-                {step.title}
-                <button onClick={() => handleCompleteStep(step.id)}>Complete</button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
-  );
-};
-
-const Page = () => {
-  return (
-    <div>
-      <Link href="/api-documentation">
-        <a>
-          <TbApi size={24} />
-          API Documentation
-        </a>
-      </Link>
-      <Link href="/code-generation">
-        <a>
-          <AiOutlineCode size={24} />
-          Code Generation
-        </a>
-      </Link>
-      <Link href="/settings">
-        <a>
-          <MdOutlineSettings size={24} />
-          Settings
-        </a>
-      </Link>
-      <Link href="/dashboard">
-        <a>
-          <RiDashboardLine size={24} />
-          Dashboard
-        </a>
-      </Link>
-      <Dashboard />
+      <h1>AutoGenerate API Documentation</h1>
+      <input type="search" value={searchTerm} onChange={handleSearch} placeholder="Search tutorials or guides" />
+      <ul>
+        {filteredGuidedOnboardingSteps.map((step) => (
+          <li key={step.id}>
+            <h2>{step.title}</h2>
+            <p>{step.description}</p>
+            <a href={step.tutorial}>View Tutorial</a>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
