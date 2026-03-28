@@ -108,64 +108,64 @@ const guidedOnboardingSteps = [
 ];
 
 export default function Page() {
-  const [userId, setUserId] = useState(generateUUID());
-  const [userProgress, setUserProgress] = useState({});
+  const [userId, setUserId] = useState<string | null>(null);
+  const [userProgress, setUserProgress] = useState<any>(null);
+  const [currentStep, setCurrentStep] = useState<number>(0);
 
   useEffect(() => {
-    const loadUserProgress = async () => {
-      const progress = await getUserProgress(userId);
-      if (progress) {
-        setUserProgress(progress);
+    const storedUserId = localStorage.getItem('userId');
+    if (storedUserId) {
+      setUserId(storedUserId);
+      getUserProgress(storedUserId).then((progress) => {
+        if (progress) {
+          setUserProgress(progress);
+          const completedSteps = progress.completedSteps;
+          const nextStep = onboardingSteps.find((step) => !completedSteps.includes(step.id));
+          if (nextStep) {
+            setCurrentStep(onboardingSteps.indexOf(nextStep));
+          }
+        }
+      });
+    } else {
+      const newUserId = generateUUID();
+      setUserId(newUserId);
+      localStorage.setItem('userId', newUserId);
+    }
+  }, []);
+
+  const handleStepCompletion = async (stepId: number) => {
+    if (userProgress) {
+      const updatedProgress = { ...userProgress };
+      if (!updatedProgress.completedSteps) {
+        updatedProgress.completedSteps = [];
       }
-    };
-    loadUserProgress();
-  }, [userId]);
-
-  const handleSaveProgress = async () => {
-    await saveUserProgress(userId, userProgress);
-  };
-
-  const handleUpdateProgress = (newProgress: any) => {
-    setUserProgress(newProgress);
-    handleSaveProgress();
+      updatedProgress.completedSteps.push(stepId);
+      await saveUserProgress(userId as string, updatedProgress);
+      setUserProgress(updatedProgress);
+    } else {
+      const newProgress = {
+        completedSteps: [stepId],
+      };
+      await saveUserProgress(userId as string, newProgress);
+      setUserProgress(newProgress);
+    }
+    const nextStep = onboardingSteps.find((step) => !userProgress?.completedSteps.includes(step.id));
+    if (nextStep) {
+      setCurrentStep(onboardingSteps.indexOf(nextStep));
+    }
   };
 
   return (
     <div>
-      <h1>AutoGenerate API Documentation</h1>
-      <p>Welcome to our interactive tutorials and step-by-step guides</p>
-      <ul>
-        {onboardingSteps.map((step) => (
-          <li key={step.id}>
-            <h2>{step.title}</h2>
-            <p>{step.description}</p>
-            <button onClick={() => handleUpdateProgress({ ...userProgress, [step.id]: true })}>
-              {step.action}
-            </button>
-          </li>
-        ))}
-      </ul>
-      <h2>Features</h2>
-      <ul>
-        {features.map((feature) => (
-          <li key={feature.id}>
-            <h3>{feature.title}</h3>
-            <p>{feature.description}</p>
-          </li>
-        ))}
-      </ul>
-      <h2>Guided Onboarding</h2>
-      <ul>
-        {guidedOnboardingSteps.map((step) => (
-          <li key={step.id}>
-            <h3>{step.title}</h3>
-            <p>{step.description}</p>
-            <a href={step.tutorial} target="_blank" rel="noopener noreferrer">
-              Start Tutorial
-            </a>
-          </li>
-        ))}
-      </ul>
+      {onboardingSteps.map((step, index) => (
+        <div key={step.id}>
+          <h2>{step.title}</h2>
+          <p>{step.description}</p>
+          {index === currentStep && (
+            <button onClick={() => handleStepCompletion(step.id)}>{step.action}</button>
+          )}
+        </div>
+      ))}
     </div>
   );
 }
