@@ -114,60 +114,49 @@ export default function Page() {
   const [filteredGuidedOnboardingSteps, setFilteredGuidedOnboardingSteps] = useState(guidedOnboardingSteps);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const term = event.target.value.toLowerCase();
-    setSearchTerm(term);
-    const filteredFeaturesResult = features.filter((feature) => feature.title.toLowerCase().includes(term) || feature.description.toLowerCase().includes(term));
-    const filteredOnboardingStepsResult = onboardingSteps.filter((step) => step.title.toLowerCase().includes(term) || step.description.toLowerCase().includes(term));
-    const filteredGuidedOnboardingStepsResult = guidedOnboardingSteps.filter((step) => step.title.toLowerCase().includes(term) || step.description.toLowerCase().includes(term));
-    setFilteredFeatures(filteredFeaturesResult);
-    setFilteredOnboardingSteps(filteredOnboardingStepsResult);
-    setFilteredGuidedOnboardingSteps(filteredGuidedOnboardingStepsResult);
+    const searchTerm = event.target.value.toLowerCase();
+    setSearchTerm(searchTerm);
+    const filteredFeatures = features.filter((feature) => feature.title.toLowerCase().includes(searchTerm) || feature.description.toLowerCase().includes(searchTerm));
+    setFilteredFeatures(filteredFeatures);
+    const filteredOnboardingSteps = onboardingSteps.filter((step) => step.title.toLowerCase().includes(searchTerm) || step.description.toLowerCase().includes(searchTerm));
+    setFilteredOnboardingSteps(filteredOnboardingSteps);
+    const filteredGuidedOnboardingSteps = guidedOnboardingSteps.filter((step) => step.title.toLowerCase().includes(searchTerm) || step.description.toLowerCase().includes(searchTerm));
+    setFilteredGuidedOnboardingSteps(filteredGuidedOnboardingSteps);
   };
 
   return (
     <div>
-      <input
-        type="search"
-        value={searchTerm}
-        onChange={handleSearch}
-        placeholder="Search features and tutorials"
-      />
-      <h2>Features</h2>
+      <input type="search" value={searchTerm} onChange={handleSearch} placeholder="Search features and tutorials" />
+      <h1>Features</h1>
       <ul>
         {filteredFeatures.map((feature) => (
           <li key={feature.id}>
             <Link href={`/features/${feature.id}`}>
               <a>
-                {feature.title}
+                <h2>{feature.title}</h2>
+                <p>{feature.description}</p>
               </a>
             </Link>
-            <p>{feature.description}</p>
           </li>
         ))}
       </ul>
-      <h2>Onboarding Steps</h2>
+      <h1>Onboarding Steps</h1>
       <ul>
         {filteredOnboardingSteps.map((step) => (
           <li key={step.id}>
-            <Link href={`/onboarding/${step.id}`}>
-              <a>
-                {step.title}
-              </a>
-            </Link>
+            <h2>{step.title}</h2>
             <p>{step.description}</p>
+            <p>{step.action}</p>
           </li>
         ))}
       </ul>
-      <h2>Guided Onboarding Steps</h2>
+      <h1>Guided Onboarding Steps</h1>
       <ul>
         {filteredGuidedOnboardingSteps.map((step) => (
           <li key={step.id}>
-            <Link href={step.tutorial}>
-              <a>
-                {step.title}
-              </a>
-            </Link>
+            <h2>{step.title}</h2>
             <p>{step.description}</p>
+            <p><a href={step.tutorial} target="_blank" rel="noopener noreferrer">View Tutorial</a></p>
           </li>
         ))}
       </ul>
