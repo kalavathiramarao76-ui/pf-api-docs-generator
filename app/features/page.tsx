@@ -107,71 +107,158 @@ const guidedOnboardingSteps = [
   },
 ];
 
+const authenticateUser = async (username: string, password: string) => {
+  try {
+    const response = await client.post('/authenticate', {
+      username,
+      password,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const registerUser = async (username: string, password: string) => {
+  try {
+    const response = await client.post('/register', {
+      username,
+      password,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const logoutUser = async (userId: string) => {
+  try {
+    const response = await client.post('/logout', {
+      userId,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export default function Page() {
   const [userId, setUserId] = useState<string | null>(null);
   const [userProgress, setUserProgress] = useState<any | null>(null);
-  const [currentStep, setCurrentStep] = useState<number | null>(null);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const storedUserId = localStorage.getItem('userId');
     if (storedUserId) {
       setUserId(storedUserId);
+      setIsLoggedIn(true);
       getUserProgress(storedUserId).then((progress) => {
         setUserProgress(progress);
-        if (progress) {
-          const completedSteps = progress.completedSteps;
-          const nextStep = onboardingSteps.find((step) => !completedSteps.includes(step.id));
-          if (nextStep) {
-            setCurrentStep(nextStep.id);
-          }
-        }
       });
-    } else {
-      const newUserId = generateUUID();
-      setUserId(newUserId);
-      localStorage.setItem('userId', newUserId);
     }
   }, []);
 
-  const handleStepCompletion = (stepId: number) => {
-    if (userProgress) {
-      const updatedProgress = { ...userProgress };
-      if (!updatedProgress.completedSteps) {
-        updatedProgress.completedSteps = [];
-      }
-      updatedProgress.completedSteps.push(stepId);
-      saveUserProgress(userId as string, updatedProgress).then(() => {
-        setUserProgress(updatedProgress);
-        const nextStep = onboardingSteps.find((step) => !updatedProgress.completedSteps.includes(step.id));
-        if (nextStep) {
-          setCurrentStep(nextStep.id);
-        }
+  const handleLogin = async () => {
+    const userData = await authenticateUser(username, password);
+    if (userData) {
+      setUserId(userData.userId);
+      setIsLoggedIn(true);
+      localStorage.setItem('userId', userData.userId);
+      getUserProgress(userData.userId).then((progress) => {
+        setUserProgress(progress);
       });
+    }
+  };
+
+  const handleRegister = async () => {
+    const userData = await registerUser(username, password);
+    if (userData) {
+      setUserId(userData.userId);
+      setIsLoggedIn(true);
+      localStorage.setItem('userId', userData.userId);
+      getUserProgress(userData.userId).then((progress) => {
+        setUserProgress(progress);
+      });
+    }
+  };
+
+  const handleLogout = async () => {
+    await logoutUser(userId as string);
+    setUserId(null);
+    setIsLoggedIn(false);
+    localStorage.removeItem('userId');
+  };
+
+  const handleSaveProgress = async () => {
+    if (userId) {
+      await saveUserProgress(userId, userProgress);
     }
   };
 
   return (
     <div>
-      {onboardingSteps.map((step) => (
-        <div key={step.id}>
-          <h2>{step.title}</h2>
-          <p>{step.description}</p>
-          <button onClick={() => handleStepCompletion(step.id)}>{step.action}</button>
+      {isLoggedIn ? (
+        <div>
+          <h1>Welcome, {username}!</h1>
+          <button onClick={handleLogout}>Logout</button>
+          <button onClick={handleSaveProgress}>Save Progress</button>
+          <div>
+            <h2>Onboarding Steps</h2>
+            <ul>
+              {onboardingSteps.map((step) => (
+                <li key={step.id}>
+                  <h3>{step.title}</h3>
+                  <p>{step.description}</p>
+                  <p>{step.action}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h2>Features</h2>
+            <ul>
+              {features.map((feature) => (
+                <li key={feature.id}>
+                  <h3>{feature.title}</h3>
+                  <p>{feature.description}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <h2>Guided Onboarding Steps</h2>
+            <ul>
+              {guidedOnboardingSteps.map((step) => (
+                <li key={step.id}>
+                  <h3>{step.title}</h3>
+                  <p>{step.description}</p>
+                  <p>{step.tutorial}</p>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-      ))}
-      {features.map((feature) => (
-        <div key={feature.id}>
-          <h2>{feature.title}</h2>
-          <p>{feature.description}</p>
+      ) : (
+        <div>
+          <h1>Login or Register</h1>
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Username"
+          />
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
+          />
+          <button onClick={handleLogin}>Login</button>
+          <button onClick={handleRegister}>Register</button>
         </div>
-      ))}
-      {guidedOnboardingSteps.map((step) => (
-        <div key={step.id}>
-          <h2>{step.title}</h2>
-          <p>{step.description}</p>
-          <a href={step.tutorial} target="_blank" rel="noreferrer">Start Tutorial</a>
-        </div>
-      ))}
+      )}
     </div>
   );
 }
