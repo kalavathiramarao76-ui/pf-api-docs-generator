@@ -50,30 +50,31 @@ export default function FaqPage() {
     <div>
       <Head>
         <title>AutoGenerate API Documentation - Frequently Asked Questions</title>
-        <meta name="description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering topics such as API documentation generation, customization, collaboration, and version control." />
-        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, FAQ, software development, technical writing, collaboration, version control" />
-        <meta name="robots" content="index, follow" />
-        <meta name="author" content="AutoGenerate API Documentation" />
+        <meta name="description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and more." />
+        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, API documentation generation, API documentation tools, software development, technical writing, collaboration, version control" />
         <meta property="og:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
-        <meta property="og:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering topics such as API documentation generation, customization, collaboration, and version control." />
+        <meta property="og:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and more." />
         <meta property="og:url" content="https://autogenerate-api-documentation.com/faq" />
-        <meta property="og:image" content="https://autogenerate-api-documentation.com/logo.png" />
-        <meta property="twitter:card" content="summary" />
-        <meta property="twitter:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
-        <meta property="twitter:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering topics such as API documentation generation, customization, collaboration, and version control." />
-        <meta property="twitter:image" content="https://autogenerate-api-documentation.com/logo.png" />
-        <link rel="canonical" href="https://autogenerate-api-documentation.com/faq" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
+        <meta name="twitter:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and more." />
       </Head>
-      {questions.map((question) => (
-        <div key={question.id}>
-          <h2 onClick={() => handleToggle(question.id)}>{question.question}</h2>
-          {activeQuestion === question.id && <p>{question.answer}</p>}
-          {activeQuestion === question.id && <AiOutlineArrowRight />}
-        </div>
-      ))}
-      <Link href="/">
-        <a>Back to Home</a>
-      </Link>
+      <h1>Frequently Asked Questions</h1>
+      <ul>
+        {questions.map((question) => (
+          <li key={question.id}>
+            <div>
+              <h2>{question.question}</h2>
+              <button onClick={() => handleToggle(question.id)}>
+                <AiOutlineArrowRight />
+              </button>
+            </div>
+            {activeQuestion === question.id && (
+              <p>{question.answer}</p>
+            )}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
