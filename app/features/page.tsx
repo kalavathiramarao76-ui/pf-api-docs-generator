@@ -108,9 +108,9 @@ const guidedOnboardingSteps = [
 ];
 
 export default function Page() {
-  const [userId, setUserId] = useState(generateUUID());
   const [userProgress, setUserProgress] = useState(null);
   const [recommendedSteps, setRecommendedSteps] = useState(null);
+  const [userId, setUserId] = useState(generateUUID());
 
   useEffect(() => {
     const fetchUserProgress = async () => {
@@ -130,15 +130,11 @@ export default function Page() {
     fetchRecommendedSteps();
   }, [userProgress, userId]);
 
-  const handleSaveProgress = async (stepId: number) => {
+  const handleStepCompletion = async (stepId: number) => {
     if (userProgress) {
-      const updatedProgress = { ...userProgress, [stepId]: true };
+      const updatedProgress = { ...userProgress, completedSteps: [...userProgress.completedSteps, stepId] };
       await saveUserProgress(userId, updatedProgress);
       setUserProgress(updatedProgress);
-    } else {
-      const newProgress = { [stepId]: true };
-      await saveUserProgress(userId, newProgress);
-      setUserProgress(newProgress);
     }
   };
 
@@ -146,48 +142,13 @@ export default function Page() {
     <div>
       <h1>AutoGenerate API Documentation</h1>
       <div>
-        <h2>Onboarding Steps</h2>
-        <ul>
-          {onboardingSteps.map((step) => (
-            <li key={step.id}>
-              <h3>{step.title}</h3>
-              <p>{step.description}</p>
-              <button onClick={() => handleSaveProgress(step.id)}>{step.action}</button>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div>
-        <h2>Features</h2>
-        <ul>
-          {features.map((feature) => (
-            <li key={feature.id}>
-              <h3>{feature.title}</h3>
-              <p>{feature.description}</p>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div>
-        <h2>Guided Onboarding Steps</h2>
-        <ul>
-          {guidedOnboardingSteps.map((step) => (
-            <li key={step.id}>
-              <h3>{step.title}</h3>
-              <p>{step.description}</p>
-              <a href={step.tutorial} target="_blank" rel="noreferrer">View Tutorial</a>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div>
         <h2>Dashboard</h2>
         {userProgress && (
           <div>
             <h3>Completed Steps:</h3>
             <ul>
-              {Object.keys(userProgress).map((stepId) => (
-                <li key={stepId}>{onboardingSteps.find((step) => step.id === parseInt(stepId)).title}</li>
+              {userProgress.completedSteps.map((stepId: number) => (
+                <li key={stepId}>{onboardingSteps.find((step) => step.id === stepId).title}</li>
               ))}
             </ul>
           </div>
@@ -196,12 +157,78 @@ export default function Page() {
           <div>
             <h3>Recommended Steps:</h3>
             <ul>
-              {recommendedSteps.map((step) => (
-                <li key={step.id}>{step.title}</li>
+              {recommendedSteps.map((step: any) => (
+                <li key={step.id}>
+                  <Link href={step.tutorial}>
+                    <a>{step.title}</a>
+                  </Link>
+                  <button onClick={() => handleStepCompletion(step.id)}>Mark as Completed</button>
+                </li>
               ))}
             </ul>
           </div>
         )}
+      </div>
+      <div>
+        <h2>Features</h2>
+        <ul>
+          {features.map((feature) => (
+            <li key={feature.id}>
+              <Link href={`/features/${feature.id}`}>
+                <a>{feature.title}</a>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <h2>Guided Onboarding</h2>
+        <ul>
+          {guidedOnboardingSteps.map((step) => (
+            <li key={step.id}>
+              <Link href={step.tutorial}>
+                <a>{step.title}</a>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <h2>Navigation</h2>
+        <ul>
+          <li>
+            <Link href="/api-documentation">
+              <a>
+                <TbApi />
+                API Documentation
+              </a>
+            </Link>
+          </li>
+          <li>
+            <Link href="/code-generation">
+              <a>
+                <AiOutlineCode />
+                Code Generation
+              </a>
+            </Link>
+          </li>
+          <li>
+            <Link href="/settings">
+              <a>
+                <MdOutlineSettings />
+                Settings
+              </a>
+            </Link>
+          </li>
+          <li>
+            <Link href="/dashboard">
+              <a>
+                <RiDashboardLine />
+                Dashboard
+              </a>
+            </Link>
+          </li>
+        </ul>
       </div>
     </div>
   );
