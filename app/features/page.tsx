@@ -108,58 +108,70 @@ const guidedOnboardingSteps = [
 ];
 
 export default function Page() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredFeatures, setFilteredFeatures] = useState(features);
-  const [filteredOnboardingSteps, setFilteredOnboardingSteps] = useState(onboardingSteps);
-  const [filteredGuidedOnboardingSteps, setFilteredGuidedOnboardingSteps] = useState(guidedOnboardingSteps);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [userProgress, setUserProgress] = useState<any | null>(null);
+  const [currentStep, setCurrentStep] = useState<number | null>(null);
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const searchTerm = event.target.value.toLowerCase();
-    setSearchTerm(searchTerm);
-    const filteredFeatures = features.filter((feature) => feature.title.toLowerCase().includes(searchTerm) || feature.description.toLowerCase().includes(searchTerm));
-    setFilteredFeatures(filteredFeatures);
-    const filteredOnboardingSteps = onboardingSteps.filter((step) => step.title.toLowerCase().includes(searchTerm) || step.description.toLowerCase().includes(searchTerm));
-    setFilteredOnboardingSteps(filteredOnboardingSteps);
-    const filteredGuidedOnboardingSteps = guidedOnboardingSteps.filter((step) => step.title.toLowerCase().includes(searchTerm) || step.description.toLowerCase().includes(searchTerm));
-    setFilteredGuidedOnboardingSteps(filteredGuidedOnboardingSteps);
+  useEffect(() => {
+    const storedUserId = localStorage.getItem('userId');
+    if (storedUserId) {
+      setUserId(storedUserId);
+      getUserProgress(storedUserId).then((progress) => {
+        setUserProgress(progress);
+        if (progress) {
+          const completedSteps = progress.completedSteps;
+          const nextStep = onboardingSteps.find((step) => !completedSteps.includes(step.id));
+          if (nextStep) {
+            setCurrentStep(nextStep.id);
+          }
+        }
+      });
+    } else {
+      const newUserId = generateUUID();
+      setUserId(newUserId);
+      localStorage.setItem('userId', newUserId);
+    }
+  }, []);
+
+  const handleStepCompletion = (stepId: number) => {
+    if (userProgress) {
+      const updatedProgress = { ...userProgress };
+      if (!updatedProgress.completedSteps) {
+        updatedProgress.completedSteps = [];
+      }
+      updatedProgress.completedSteps.push(stepId);
+      saveUserProgress(userId as string, updatedProgress).then(() => {
+        setUserProgress(updatedProgress);
+        const nextStep = onboardingSteps.find((step) => !updatedProgress.completedSteps.includes(step.id));
+        if (nextStep) {
+          setCurrentStep(nextStep.id);
+        }
+      });
+    }
   };
 
   return (
     <div>
-      <input type="search" value={searchTerm} onChange={handleSearch} placeholder="Search features and tutorials" />
-      <h1>Features</h1>
-      <ul>
-        {filteredFeatures.map((feature) => (
-          <li key={feature.id}>
-            <Link href={`/features/${feature.id}`}>
-              <a>
-                <h2>{feature.title}</h2>
-                <p>{feature.description}</p>
-              </a>
-            </Link>
-          </li>
-        ))}
-      </ul>
-      <h1>Onboarding Steps</h1>
-      <ul>
-        {filteredOnboardingSteps.map((step) => (
-          <li key={step.id}>
-            <h2>{step.title}</h2>
-            <p>{step.description}</p>
-            <p>{step.action}</p>
-          </li>
-        ))}
-      </ul>
-      <h1>Guided Onboarding Steps</h1>
-      <ul>
-        {filteredGuidedOnboardingSteps.map((step) => (
-          <li key={step.id}>
-            <h2>{step.title}</h2>
-            <p>{step.description}</p>
-            <p><a href={step.tutorial} target="_blank" rel="noopener noreferrer">View Tutorial</a></p>
-          </li>
-        ))}
-      </ul>
+      {onboardingSteps.map((step) => (
+        <div key={step.id}>
+          <h2>{step.title}</h2>
+          <p>{step.description}</p>
+          <button onClick={() => handleStepCompletion(step.id)}>{step.action}</button>
+        </div>
+      ))}
+      {features.map((feature) => (
+        <div key={feature.id}>
+          <h2>{feature.title}</h2>
+          <p>{feature.description}</p>
+        </div>
+      ))}
+      {guidedOnboardingSteps.map((step) => (
+        <div key={step.id}>
+          <h2>{step.title}</h2>
+          <p>{step.description}</p>
+          <a href={step.tutorial} target="_blank" rel="noreferrer">Start Tutorial</a>
+        </div>
+      ))}
     </div>
   );
 }
