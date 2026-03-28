@@ -108,72 +108,40 @@ const guidedOnboardingSteps = [
 ];
 
 export default function Page() {
-  const [userProgress, setUserProgress] = useState(null);
-  const [recommendedSteps, setRecommendedSteps] = useState(null);
   const [userId, setUserId] = useState(generateUUID());
+  const [userProgress, setUserProgress] = useState({});
 
   useEffect(() => {
-    const fetchUserProgress = async () => {
+    const loadUserProgress = async () => {
       const progress = await getUserProgress(userId);
-      setUserProgress(progress);
-    };
-    fetchUserProgress();
-  }, [userId]);
-
-  useEffect(() => {
-    const fetchRecommendedSteps = async () => {
-      if (userProgress) {
-        const steps = await getRecommendedSteps(userId, userProgress);
-        setRecommendedSteps(steps);
+      if (progress) {
+        setUserProgress(progress);
       }
     };
-    fetchRecommendedSteps();
-  }, [userProgress, userId]);
+    loadUserProgress();
+  }, [userId]);
 
-  const handleStepCompletion = async (stepId: number) => {
-    if (userProgress) {
-      const updatedProgress = { ...userProgress, completedSteps: [...userProgress.completedSteps, stepId] };
-      await saveUserProgress(userId, updatedProgress);
-      setUserProgress(updatedProgress);
-    }
+  const handleSaveProgress = async () => {
+    await saveUserProgress(userId, userProgress);
+  };
+
+  const handleUpdateProgress = (newProgress: any) => {
+    setUserProgress(newProgress);
+    handleSaveProgress();
   };
 
   return (
     <div>
       <h1>AutoGenerate API Documentation</h1>
-      <nav>
-        <Link href="/api-documentation">
-          <a>
-            <TbApi size={24} />
-            API Documentation
-          </a>
-        </Link>
-        <Link href="/code-generation">
-          <a>
-            <AiOutlineCode size={24} />
-            Code Generation
-          </a>
-        </Link>
-        <Link href="/settings">
-          <a>
-            <MdOutlineSettings size={24} />
-            Settings
-          </a>
-        </Link>
-        <Link href="/dashboard">
-          <a>
-            <RiDashboardLine size={24} />
-            Dashboard
-          </a>
-        </Link>
-      </nav>
-      <h2>Onboarding Steps</h2>
+      <p>Welcome to our interactive tutorials and step-by-step guides</p>
       <ul>
         {onboardingSteps.map((step) => (
           <li key={step.id}>
-            <h3>{step.title}</h3>
+            <h2>{step.title}</h2>
             <p>{step.description}</p>
-            <button onClick={() => handleStepCompletion(step.id)}>{step.action}</button>
+            <button onClick={() => handleUpdateProgress({ ...userProgress, [step.id]: true })}>
+              {step.action}
+            </button>
           </li>
         ))}
       </ul>
@@ -186,31 +154,18 @@ export default function Page() {
           </li>
         ))}
       </ul>
-      <h2>Guided Onboarding Steps</h2>
+      <h2>Guided Onboarding</h2>
       <ul>
         {guidedOnboardingSteps.map((step) => (
           <li key={step.id}>
             <h3>{step.title}</h3>
             <p>{step.description}</p>
-            <a href={step.tutorial} target="_blank" rel="noopener noreferrer">Start Tutorial</a>
+            <a href={step.tutorial} target="_blank" rel="noopener noreferrer">
+              Start Tutorial
+            </a>
           </li>
         ))}
       </ul>
-      <h2>Dashboard</h2>
-      {userProgress && (
-        <div>
-          <h3>Completed Steps: {userProgress.completedSteps.length}</h3>
-          <h3>Recommended Steps:</h3>
-          <ul>
-            {recommendedSteps && recommendedSteps.map((step) => (
-              <li key={step.id}>
-                <h3>{step.title}</h3>
-                <p>{step.description}</p>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
     </div>
   );
 }
