@@ -88,22 +88,22 @@ export default function CtaPage() {
             onChange={handleEmailChange}
             onBlur={handleBlur}
             placeholder="Enter your email address"
-            className="w-full p-4 pl-10 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full p-4 pl-10 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600"
           />
           {formErrors.email.message && (
-            <div className="absolute top-full left-0 mt-2 text-sm text-red-500">{formErrors.email.message}</div>
+            <div className="absolute top-full left-0 mt-2 text-xs text-red-600">{formErrors.email.message}</div>
           )}
         </div>
         <button
           type="submit"
-          disabled={isSubmitting}
-          className={`w-full p-4 text-sm text-white bg-blue-500 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+          className={`w-full p-4 text-sm text-white bg-gray-600 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-600 ${
             isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
           }`}
+          disabled={isSubmitting}
         >
           {isSubmitting ? (
             <svg
-              className="w-5 h-5 mr-3 border-4 border-gray-200 border-t-gray-100 rounded-full animate-spin"
+              className="w-5 h-5 mr-3 border-4 border-gray-200 rounded-full border-t-gray-600 animate-spin"
               viewBox="0 0 24 24"
             />
           ) : (
@@ -112,10 +112,10 @@ export default function CtaPage() {
           {isSubmitting ? 'Submitting...' : 'Get Started'}
         </button>
         {formErrors.general.message && (
-          <div className="mt-2 text-sm text-red-500">{formErrors.general.message}</div>
+          <div className="mt-2 text-xs text-red-600">{formErrors.general.message}</div>
         )}
         {isSuccess && (
-          <div className="mt-2 text-sm text-green-500">{successMessage}</div>
+          <div className="mt-2 text-xs text-green-600">{successMessage}</div>
         )}
       </form>
     </div>
