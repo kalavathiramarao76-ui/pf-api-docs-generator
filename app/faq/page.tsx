@@ -50,20 +50,22 @@ export default function FaqPage() {
     <div>
       <Head>
         <title>AutoGenerate API Documentation - Frequently Asked Questions</title>
-        <meta name="description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, programming languages, customization, collaboration, and change tracking." />
-        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, API documentation generation, programming languages, customization, collaboration, change tracking, software development, technical writing" />
+        <meta name="description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and more." />
+        <meta name="keywords" content="AutoGenerate API Documentation, API documentation, API documentation generation, technical writing, software development, collaboration, customization, version control" />
         <meta property="og:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
-        <meta property="og:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, programming languages, customization, collaboration, and change tracking." />
-        <meta property="og:keywords" content="AutoGenerate API Documentation, API documentation, API documentation generation, programming languages, customization, collaboration, change tracking, software development, technical writing" />
+        <meta property="og:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and more." />
+        <meta property="og:url" content={router.asPath} />
+        <meta property="og:site_name" content="AutoGenerate API Documentation" />
         <meta name="twitter:card" content="summary" />
         <meta name="twitter:title" content="AutoGenerate API Documentation - Frequently Asked Questions" />
-        <meta name="twitter:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, programming languages, customization, collaboration, and change tracking." />
-        <meta name="twitter:keywords" content="AutoGenerate API Documentation, API documentation, API documentation generation, programming languages, customization, collaboration, change tracking, software development, technical writing" />
+        <meta name="twitter:description" content="Discover the power of AutoGenerate API Documentation with our comprehensive FAQ section, covering API documentation generation, customization, collaboration, and more." />
       </Head>
       {questions.map((question) => (
         <div key={question.id}>
           <h2 onClick={() => handleToggle(question.id)}>{question.question}</h2>
-          {activeQuestion === question.id && <p>{question.answer}</p>}
+          {activeQuestion === question.id && (
+            <p>{question.answer}</p>
+          )}
         </div>
       ))}
       <Link href="/">

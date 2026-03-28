@@ -107,11 +107,10 @@ const guidedOnboardingSteps = [
   },
 ];
 
-const authenticateUser = async (username: string, password: string) => {
+const authenticateUser = async (username: string) => {
   try {
     const response = await client.post('/authenticate', {
       username,
-      password,
     });
     return response.data;
   } catch (error) {
@@ -119,146 +118,92 @@ const authenticateUser = async (username: string, password: string) => {
   }
 };
 
-const registerUser = async (username: string, password: string) => {
-  try {
-    const response = await client.post('/register', {
-      username,
-      password,
-    });
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const logoutUser = async (userId: string) => {
-  try {
-    const response = await client.post('/logout', {
-      userId,
-    });
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-export default function Page() {
-  const [userId, setUserId] = useState<string | null>(null);
-  const [userProgress, setUserProgress] = useState<any | null>(null);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+const Dashboard = () => {
+  const [userProgress, setUserProgress] = useState(null);
+  const [recommendedSteps, setRecommendedSteps] = useState(null);
+  const [userId, setUserId] = useState('');
 
   useEffect(() => {
     const storedUserId = localStorage.getItem('userId');
     if (storedUserId) {
       setUserId(storedUserId);
-      setIsLoggedIn(true);
       getUserProgress(storedUserId).then((progress) => {
         setUserProgress(progress);
+        getRecommendedSteps(storedUserId, progress).then((steps) => {
+          setRecommendedSteps(steps);
+        });
       });
     }
   }, []);
 
-  const handleLogin = async () => {
-    const userData = await authenticateUser(username, password);
-    if (userData) {
-      setUserId(userData.userId);
-      setIsLoggedIn(true);
-      localStorage.setItem('userId', userData.userId);
-      getUserProgress(userData.userId).then((progress) => {
-        setUserProgress(progress);
+  const handleCompleteStep = (stepId: number) => {
+    if (userProgress) {
+      const updatedProgress = { ...userProgress, completedSteps: [...userProgress.completedSteps, stepId] };
+      saveUserProgress(userId, updatedProgress).then(() => {
+        setUserProgress(updatedProgress);
+        getRecommendedSteps(userId, updatedProgress).then((steps) => {
+          setRecommendedSteps(steps);
+        });
       });
-    }
-  };
-
-  const handleRegister = async () => {
-    const userData = await registerUser(username, password);
-    if (userData) {
-      setUserId(userData.userId);
-      setIsLoggedIn(true);
-      localStorage.setItem('userId', userData.userId);
-      getUserProgress(userData.userId).then((progress) => {
-        setUserProgress(progress);
-      });
-    }
-  };
-
-  const handleLogout = async () => {
-    await logoutUser(userId as string);
-    setUserId(null);
-    setIsLoggedIn(false);
-    localStorage.removeItem('userId');
-  };
-
-  const handleSaveProgress = async () => {
-    if (userId) {
-      await saveUserProgress(userId, userProgress);
     }
   };
 
   return (
     <div>
-      {isLoggedIn ? (
+      <h1>Dashboard</h1>
+      {userProgress && (
         <div>
-          <h1>Welcome, {username}!</h1>
-          <button onClick={handleLogout}>Logout</button>
-          <button onClick={handleSaveProgress}>Save Progress</button>
-          <div>
-            <h2>Onboarding Steps</h2>
-            <ul>
-              {onboardingSteps.map((step) => (
-                <li key={step.id}>
-                  <h3>{step.title}</h3>
-                  <p>{step.description}</p>
-                  <p>{step.action}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h2>Features</h2>
-            <ul>
-              {features.map((feature) => (
-                <li key={feature.id}>
-                  <h3>{feature.title}</h3>
-                  <p>{feature.description}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h2>Guided Onboarding Steps</h2>
-            <ul>
-              {guidedOnboardingSteps.map((step) => (
-                <li key={step.id}>
-                  <h3>{step.title}</h3>
-                  <p>{step.description}</p>
-                  <p>{step.tutorial}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      ) : (
-        <div>
-          <h1>Login or Register</h1>
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Username"
-          />
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-          />
-          <button onClick={handleLogin}>Login</button>
-          <button onClick={handleRegister}>Register</button>
+          <h2>Completed Steps:</h2>
+          <ul>
+            {userProgress.completedSteps.map((stepId: number) => (
+              <li key={stepId}>{onboardingSteps.find((step) => step.id === stepId).title}</li>
+            ))}
+          </ul>
+          <h2>Recommended Steps:</h2>
+          <ul>
+            {recommendedSteps && recommendedSteps.map((step: any) => (
+              <li key={step.id}>
+                {step.title}
+                <button onClick={() => handleCompleteStep(step.id)}>Complete</button>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>
   );
-}
+};
+
+const Page = () => {
+  return (
+    <div>
+      <Link href="/api-documentation">
+        <a>
+          <TbApi size={24} />
+          API Documentation
+        </a>
+      </Link>
+      <Link href="/code-generation">
+        <a>
+          <AiOutlineCode size={24} />
+          Code Generation
+        </a>
+      </Link>
+      <Link href="/settings">
+        <a>
+          <MdOutlineSettings size={24} />
+          Settings
+        </a>
+      </Link>
+      <Link href="/dashboard">
+        <a>
+          <RiDashboardLine size={24} />
+          Dashboard
+        </a>
+      </Link>
+      <Dashboard />
+    </div>
+  );
+};
+
+export default Page;
