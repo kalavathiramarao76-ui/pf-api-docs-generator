@@ -81,34 +81,33 @@ export default function CtaPage() {
       <h1 className="text-3xl font-bold mb-4">Get Started with AutoGenerate API Documentation</h1>
       <p className="text-lg text-gray-500 mb-8">Save time and reduce errors with our automatic API documentation generator.</p>
       <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center">
-        <input
-          type="email"
-          value={email}
-          onChange={handleEmailChange}
-          onBlur={handleBlur}
-          placeholder="Enter your email"
-          className={`px-4 py-2 mb-4 border ${formErrors.email.isValid ? 'border-gray-300' : 'border-red-500'}`}
-        />
-        {formErrors.email.message && (
-          <p className="text-red-500 text-sm mb-4">{formErrors.email.message}</p>
+        <div className="relative mb-4">
+          <input
+            type="email"
+            value={email}
+            onChange={handleEmailChange}
+            onBlur={handleBlur}
+            placeholder="Enter your email"
+            className={`px-4 py-2 w-80 border ${formErrors.email.isValid ? 'border-gray-300' : 'border-red-500'} rounded-lg focus:outline-none focus:ring focus:ring-blue-500`}
+          />
+          {formErrors.email.message && (
+            <div className="absolute bottom-0 left-0 mb-2 text-red-500 text-xs">{formErrors.email.message}</div>
+          )}
+        </div>
+        {formErrors.general.message && (
+          <div className="text-red-500 text-xs mb-4">{formErrors.general.message}</div>
         )}
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`px-4 py-2 bg-blue-500 text-white rounded ${isSubmitting ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'}`}
+          className={`px-4 py-2 w-80 bg-blue-500 text-white rounded-lg focus:outline-none focus:ring focus:ring-blue-500 ${
+            isSubmitting ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+          }`}
         >
-          {isSubmitting ? (
-            <svg className="animate-spin h-5 w-5 mr-3 border-4 border-blue-500 border-t-transparent" viewBox="0 0 24 24" />
-          ) : (
-            <AiOutlineArrowRight size={20} />
-          )}
           {isSubmitting ? 'Submitting...' : 'Get Started'}
         </button>
-        {formErrors.general.message && (
-          <p className="text-red-500 text-sm mt-4">{formErrors.general.message}</p>
-        )}
         {isSuccess && (
-          <p className="text-green-500 text-sm mt-4">{successMessage}</p>
+          <div className="text-green-500 text-xs mt-4">{successMessage}</div>
         )}
       </form>
     </div>
