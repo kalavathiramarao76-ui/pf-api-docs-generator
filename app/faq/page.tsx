@@ -63,17 +63,17 @@ export default function FaqPage() {
       {questions.map((question) => (
         <div key={question.id}>
           <h2 onClick={() => handleToggle(question.id)}>{question.question}</h2>
-          {activeQuestion === question.id && <p>{question.answer}</p>}
           {activeQuestion === question.id && (
-            <Link href="#top" passHref>
-              <a>
-                <AiOutlineArrowRight />
-                Back to top
-              </a>
-            </Link>
+            <p>{question.answer}</p>
           )}
         </div>
       ))}
+      <Link href="/">
+        <a>
+          <AiOutlineArrowRight />
+          Back to Home
+        </a>
+      </Link>
     </div>
   );
 }

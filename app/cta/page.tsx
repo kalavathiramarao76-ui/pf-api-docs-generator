@@ -88,7 +88,7 @@ export default function CtaPage() {
             onChange={handleEmailChange}
             onBlur={handleBlur}
             placeholder="Enter your email address"
-            className="w-full p-4 pl-10 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600"
+            className="w-full p-4 pl-10 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-600"
           />
           {formErrors.email.message && (
             <div className="absolute top-full left-0 mt-2 text-xs text-red-600">{formErrors.email.message}</div>
@@ -108,14 +108,7 @@ export default function CtaPage() {
               fill="none"
               viewBox="0 0 24 24"
             >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              />
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
               <path
                 className="opacity-75"
                 fill="currentColor"
