@@ -9,6 +9,9 @@ import DashboardLayout from '../../components/DashboardLayout';
 export default function DashboardPage() {
   const [darkMode, setDarkMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [apiDocs, setApiDocs] = useState([]);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
   const router = useRouter();
 
   useEffect(() => {
@@ -16,6 +19,14 @@ export default function DashboardPage() {
     if (storedDarkMode !== null) {
       setDarkMode(storedDarkMode === 'true');
     }
+  }, []);
+
+  useEffect(() => {
+    const fetchApiDocs = async () => {
+      const response = await client.get('/api-documentation');
+      setApiDocs(response.data);
+    };
+    fetchApiDocs();
   }, []);
 
   const handleDarkModeToggle = () => {
@@ -26,6 +37,18 @@ export default function DashboardPage() {
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value.toLowerCase());
   };
+
+  const handlePageChange = (pageNumber: number) => {
+    setPageNumber(pageNumber);
+  };
+
+  const filteredApiDocs = apiDocs.filter((item) => {
+    const title = item.title.toLowerCase();
+    const description = item.description.toLowerCase();
+    return title.includes(searchQuery) || description.includes(searchQuery);
+  });
+
+  const paginatedApiDocs = filteredApiDocs.slice((pageNumber - 1) * itemsPerPage, pageNumber * itemsPerPage);
 
   return (
     <DashboardLayout>
@@ -48,15 +71,7 @@ export default function DashboardPage() {
         />
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {[
-          { href: '/api-documentation', title: 'API Documentation', description: 'Generate high-quality API documentation automatically' },
-          { href: '/settings', title: 'Settings', description: 'Customize your API documentation experience' },
-          { href: '/collaboration', title: 'Collaboration', description: 'Invite team members to collaborate on API documentation' },
-        ].filter((item) => {
-          const title = item.title.toLowerCase();
-          const description = item.description.toLowerCase();
-          return title.includes(searchQuery) || description.includes(searchQuery);
-        }).map((item, index) => (
+        {paginatedApiDocs.map((item, index) => (
           <Link
             key={index}
             href={item.href}
@@ -66,6 +81,17 @@ export default function DashboardPage() {
             <p className="text-gray-600 dark:text-gray-400">{item.description}</p>
             <AiOutlinePlus size={24} className="text-gray-600 dark:text-gray-400" />
           </Link>
+        ))}
+      </div>
+      <div className="flex justify-center mt-4">
+        {[...Array(Math.ceil(filteredApiDocs.length / itemsPerPage)).keys()].map((pageNumber) => (
+          <button
+            key={pageNumber}
+            className={`p-2 mx-1 rounded-lg ${pageNumber + 1 === pageNumber ? 'bg-gray-200 dark:bg-gray-700' : 'hover:bg-gray-200 dark:hover:bg-gray-700'}`}
+            onClick={() => handlePageChange(pageNumber + 1)}
+          >
+            {pageNumber + 1}
+          </button>
         ))}
       </div>
     </DashboardLayout>
