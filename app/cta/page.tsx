@@ -88,60 +88,24 @@ export default function CtaPage() {
             onChange={handleEmailChange}
             onBlur={handleBlur}
             placeholder="Enter your email address"
-            className="w-full p-4 pl-10 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className={`w-full p-4 pl-10 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border ${formErrors.email.isValid ? 'border-gray-200' : 'border-red-500'} rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600 focus:border-transparent`}
           />
           {formErrors.email.message && (
-            <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-              <svg
-                className="w-5 h-5 text-red-500"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </div>
+            <div className="absolute top-100 left-0 text-red-500 text-xs">{formErrors.email.message}</div>
           )}
         </div>
-        {formErrors.email.message && (
-          <div className="mb-4 text-red-500">{formErrors.email.message}</div>
+        {formErrors.general.message && (
+          <div className="text-red-500 text-xs mb-4">{formErrors.general.message}</div>
         )}
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`w-full p-4 text-sm text-white bg-blue-500 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-            isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
+          className={`w-full px-8 py-3 text-lg text-white bg-gray-600 hover:bg-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
-          {isSubmitting ? (
-            <svg
-              className="w-5 h-5 mr-3 animate-spin"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-              />
-            </svg>
-          ) : (
-            <AiOutlineArrowRight size={20} />
-          )}
           {isSubmitting ? 'Submitting...' : 'Get Started'}
         </button>
-        {formErrors.general.message && (
-          <div className="mt-4 text-red-500">{formErrors.general.message}</div>
-        )}
         {isSuccess && (
-          <div className="mt-4 text-green-500">{successMessage}</div>
+          <div className="text-green-500 text-xs mt-4">{successMessage}</div>
         )}
       </form>
     </div>
