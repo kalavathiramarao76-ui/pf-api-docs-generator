@@ -91,7 +91,7 @@ export default function DashboardPage() {
       const response = await client.get('/api-documentation', {
         params: {
           limit: itemsPerPage,
-          offset,
+          offset: offset,
         },
       });
       setApiDocs([...apiDocs, ...response.data]);
@@ -112,7 +112,7 @@ export default function DashboardPage() {
       </div>
       <div className="search-bar">
         <input
-          type="search"
+          type="text"
           value={searchQuery}
           onChange={handleSearch}
           placeholder="Search API documentation"
@@ -127,16 +127,10 @@ export default function DashboardPage() {
         ))}
       </div>
       <div className="pagination">
-        {[...Array(Math.ceil(filteredApiDocs.length / itemsPerPage)).keys()].map((pageNumber) => (
-          <button key={pageNumber} onClick={() => handlePageChange(pageNumber + 1)}>
-            {pageNumber + 1}
-          </button>
-        ))}
+        <button onClick={() => handlePageChange(pageNumber - 1)}>Previous</button>
+        <span>Page {pageNumber}</span>
+        <button onClick={() => handlePageChange(pageNumber + 1)}>Next</button>
       </div>
-      {loading && <p>Loading...</p>}
-      {hasMore && !loading && (
-        <button onClick={fetchMoreApiDocs}>Load more</button>
-      )}
     </DashboardLayout>
   );
 }

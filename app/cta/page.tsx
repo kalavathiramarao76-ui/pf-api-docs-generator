@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { AiOutlineArrowRight } from 'react-icons/ai';
+import StripeCheckout from 'react-stripe-checkout';
 
 export default function CtaPage() {
   const [email, setEmail] = useState('');
@@ -19,6 +20,8 @@ export default function CtaPage() {
   const [successMessage, setSuccessMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [paymentMethod, setPaymentMethod] = useState('');
+  const [subscriptionPlan, setSubscriptionPlan] = useState('');
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -96,44 +99,82 @@ export default function CtaPage() {
     setFormErrors((prevErrors) => ({ ...prevErrors, email: emailValidationError }));
   };
 
+  const handlePaymentMethodChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setPaymentMethod(e.target.value);
+  };
+
+  const handleSubscriptionPlanChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSubscriptionPlan(e.target.value);
+  };
+
+  const onToken = (token: any) => {
+    try {
+      const response = fetch('/api/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          token,
+          email,
+          paymentMethod,
+          subscriptionPlan,
+        }),
+      });
+      response.json().then((data) => {
+        if (data.success) {
+          setSuccessMessage('Payment successful!');
+          setIsSuccess(true);
+        } else {
+          setFormErrors((prevErrors) => ({ ...prevErrors, general: { message: data.message, isValid: false } }));
+        }
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        setFormErrors((prevErrors) => ({ ...prevErrors, general: { message: error.message, isValid: false } }));
+      } else {
+        setFormErrors((prevErrors) => ({ ...prevErrors, general: { message: 'An unknown error occurred', isValid: false } }));
+      }
+    }
+  };
+
   return (
     <div>
-      <h1>AutoGenerate API Documentation</h1>
+      <h1>Get Started</h1>
       <form onSubmit={handleSubmit}>
         <label>
           Email:
           <input type="email" value={email} onChange={handleEmailChange} onBlur={handleBlur} />
-          {formErrors.email.message && (
-            <div style={{ color: 'red' }}>
-              {formErrors.email.message}
-              {formErrors.email.suggestions.map((suggestion, index) => (
-                <div key={index}>{suggestion}</div>
-              ))}
-            </div>
-          )}
+          {formErrors.email.message && <div style={{ color: 'red' }}>{formErrors.email.message}</div>}
+        </label>
+        <label>
+          Payment Method:
+          <select value={paymentMethod} onChange={handlePaymentMethodChange}>
+            <option value="">Select a payment method</option>
+            <option value="credit-card">Credit Card</option>
+            <option value="paypal">PayPal</option>
+          </select>
+        </label>
+        <label>
+          Subscription Plan:
+          <select value={subscriptionPlan} onChange={handleSubscriptionPlanChange}>
+            <option value="">Select a subscription plan</option>
+            <option value="monthly">Monthly</option>
+            <option value="yearly">Yearly</option>
+          </select>
         </label>
         <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? (
-            <div>
-              Submitting... {progress}%
-            </div>
-          ) : (
-            <div>
-              Submit <AiOutlineArrowRight />
-            </div>
-          )}
+          {isSubmitting ? 'Submitting...' : 'Submit'}
         </button>
-        {isSuccess && (
-          <div style={{ color: 'green' }}>
-            {successMessage}
-          </div>
-        )}
-        {formErrors.general.message && (
-          <div style={{ color: 'red' }}>
-            {formErrors.general.message}
-          </div>
-        )}
+        <StripeCheckout
+          token={onToken}
+          stripeKey="YOUR_STRIPE_PUBLIC_KEY"
+          name="AutoGen Docs"
+          description="Premium features and subscriptions"
+          amount={1000}
+        />
       </form>
+      {successMessage && <div style={{ color: 'green' }}>{successMessage}</div>}
     </div>
   );
 }
