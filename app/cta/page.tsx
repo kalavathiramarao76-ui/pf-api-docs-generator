@@ -96,53 +96,63 @@ export default function CtaPage() {
     setFormErrors((prevErrors) => ({ ...prevErrors, email: emailValidationError }));
   };
 
+  const handleError = (error: any) => {
+    if (error instanceof Error) {
+      setFormErrors((prevErrors) => ({ ...prevErrors, general: { message: error.message, isValid: false } }));
+    } else {
+      setFormErrors((prevErrors) => ({ ...prevErrors, general: { message: 'An unknown error occurred', isValid: false } }));
+    }
+  };
+
+  const handleFormValidation = () => {
+    const emailValidationError = validateEmail(email);
+    if (!emailValidationError.isValid) {
+      setFormErrors((prevErrors) => ({ ...prevErrors, email: emailValidationError }));
+      return false;
+    }
+    return true;
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-      <h1 className="text-3xl font-bold mb-4">Unlock the Power of AutoGen Docs</h1>
-      <p className="text-lg text-gray-500 mb-8">Take the first step towards effortless API documentation and discover</p>
-      <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center">
+    <div>
+      <form onSubmit={handleSubmit}>
         <input
           type="email"
           value={email}
           onChange={handleEmailChange}
           onBlur={handleBlur}
           placeholder="Enter your email"
-          className="px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          aria-label="Email"
+          aria-invalid={!formErrors.email.isValid}
+          aria-describedby="email-error"
         />
         {formErrors.email.message && (
-          <p className="text-red-500 mb-4">{formErrors.email.message}</p>
+          <div id="email-error" role="alert" aria-live="assertive">
+            {formErrors.email.message}
+            <ul>
+              {formErrors.email.suggestions.map((suggestion, index) => (
+                <li key={index}>{suggestion}</li>
+              ))}
+            </ul>
+          </div>
         )}
-        {formErrors.email.suggestions.length > 0 && (
-          <ul className="list-disc text-gray-500 mb-4">
-            {formErrors.email.suggestions.map((suggestion, index) => (
-              <li key={index}>{suggestion}</li>
-            ))}
-          </ul>
-        )}
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
-        >
-          {isSubmitting ? (
-            <div className="flex items-center justify-center">
-              <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
-                <div className="bg-blue-500 h-2 rounded-full" style={{ width: `${progress}%` }} />
-              </div>
-              Submitting...
-            </div>
-          ) : (
-            <div className="flex items-center justify-center">
-              Submit
-              <AiOutlineArrowRight className="ml-2" />
-            </div>
-          )}
+        <button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? 'Submitting...' : 'Submit'}
         </button>
         {formErrors.general.message && (
-          <p className="text-red-500 mb-4">{formErrors.general.message}</p>
+          <div role="alert" aria-live="assertive">
+            {formErrors.general.message}
+          </div>
         )}
         {successMessage && (
-          <p className="text-green-500 mb-4">{successMessage}</p>
+          <div role="alert" aria-live="assertive">
+            {successMessage}
+          </div>
+        )}
+        {isSuccess && (
+          <div>
+            <progress value={progress} max="100" />
+          </div>
         )}
       </form>
     </div>

@@ -24,6 +24,7 @@ export default function ApiDocsPage() {
     const storedFavorites = localStorage.getItem('favorites');
     return storedFavorites ? JSON.parse(storedFavorites) : [];
   });
+  const [suggestions, setSuggestions] = useState([]);
 
   useEffect(() => {
     const fetchApiDocs = async () => {
@@ -79,6 +80,14 @@ export default function ApiDocsPage() {
     localStorage.setItem('favorites', JSON.stringify(favorites));
   }, [favorites]);
 
+  useEffect(() => {
+    const suggestions = apiDocs.filter((doc) =>
+      doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      doc.description.toLowerCase().includes(searchTerm.toLowerCase())
+    ).map((doc) => doc.title);
+    setSuggestions(suggestions.slice(0, 5));
+  }, [apiDocs, searchTerm]);
+
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -90,64 +99,70 @@ export default function ApiDocsPage() {
 
   const handleFilterTags = (e) => {
     const tag = e.target.value;
-    if (e.target.checked) {
-      setFilterTags([...filterTags, tag]);
-    } else {
+    if (filterTags.includes(tag)) {
       setFilterTags(filterTags.filter((t) => t !== tag));
+    } else {
+      setFilterTags([...filterTags, tag]);
     }
   };
 
-  const handleFilterCategories = (e) => {
-    const category = e.target.value;
-    if (e.target.checked) {
-      setFilterCategories([...filterCategories, category]);
-    } else {
-      setFilterCategories(filterCategories.filter((c) => c !== category));
-    }
-  };
-
-  const handleFavorite = (doc) => {
-    if (favorites.includes(doc.id)) {
-      setFavorites(favorites.filter((id) => id !== doc.id));
-    } else {
-      setFavorites([...favorites, doc.id]);
-    }
+  const handleSelectSuggestion = (suggestion) => {
+    setSearchTerm(suggestion);
   };
 
   return (
     <Layout>
-      <SEO title="API Docs" />
-      <div className="container mx-auto p-4">
-        <h1 className="text-3xl font-bold mb-4">API Docs</h1>
-        <input
-          type="search"
-          value={searchTerm}
-          onChange={handleSearch}
-          placeholder="Search API Docs"
-          className="w-full p-2 mb-4 border border-gray-400 rounded"
-        />
-        <div className="flex justify-between mb-4">
-          <select value={sortBy} onChange={handleSort} className="p-2 border border-gray-400 rounded">
-            <option value="title">Title</option>
-            <option value="description">Description</option>
-          </select>
-          <button
-            data-order={sortOrder === 'asc' ? 'desc' : 'asc'}
-            onClick={handleSort}
-            className="p-2 border border-gray-400 rounded"
-          >
-            {sortOrder === 'asc' ? 'Descending' : 'Ascending'}
-          </button>
+      <SEO title="API Documentation" />
+      <div className="flex flex-col items-center justify-center h-screen">
+        <h1 className="text-3xl font-bold mb-4">API Documentation</h1>
+        <div className="flex flex-col items-center justify-center w-full">
+          <input
+            type="search"
+            value={searchTerm}
+            onChange={handleSearch}
+            placeholder="Search API Documentation"
+            className="w-full p-2 pl-10 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-gray-500 focus:border-gray-500"
+          />
+          <ul className="absolute bg-white border border-gray-300 rounded-lg w-full">
+            {suggestions.map((suggestion) => (
+              <li
+                key={suggestion}
+                onClick={() => handleSelectSuggestion(suggestion)}
+                className="py-2 px-4 hover:bg-gray-100 cursor-pointer"
+              >
+                {suggestion}
+              </li>
+            ))}
+          </ul>
         </div>
-        <div className="mb-4">
-          <h2 className="text-2xl font-bold mb-2">Tags</h2>
+        <div className="flex flex-col items-center justify-center w-full mt-4">
+          <select
+            value={sortBy}
+            onChange={handleSort}
+            className="w-full p-2 pl-10 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-gray-500 focus:border-gray-500"
+          >
+            <option value="title" data-order="asc">
+              Sort by Title (A-Z)
+            </option>
+            <option value="title" data-order="desc">
+              Sort by Title (Z-A)
+            </option>
+            <option value="description" data-order="asc">
+              Sort by Description (A-Z)
+            </option>
+            <option value="description" data-order="desc">
+              Sort by Description (Z-A)
+            </option>
+          </select>
+        </div>
+        <div className="flex flex-col items-center justify-center w-full mt-4">
+          <h2 className="text-xl font-bold mb-2">Filter by Tags</h2>
           <ul>
             {apiDocs.map((doc) => (
-              <li key={doc.id}>
+              <li key={doc.title}>
                 <input
                   type="checkbox"
                   value={doc.tags[0]}
-                  checked={filterTags.includes(doc.tags[0])}
                   onChange={handleFilterTags}
                   className="mr-2"
                 />
@@ -156,16 +171,15 @@ export default function ApiDocsPage() {
             ))}
           </ul>
         </div>
-        <div className="mb-4">
-          <h2 className="text-2xl font-bold mb-2">Categories</h2>
+        <div className="flex flex-col items-center justify-center w-full mt-4">
+          <h2 className="text-xl font-bold mb-2">Filter by Categories</h2>
           <ul>
             {apiDocs.map((doc) => (
-              <li key={doc.id}>
+              <li key={doc.title}>
                 <input
                   type="checkbox"
                   value={doc.categories[0]}
-                  checked={filterCategories.includes(doc.categories[0])}
-                  onChange={handleFilterCategories}
+                  onChange={handleFilterTags}
                   className="mr-2"
                 />
                 <span>{doc.categories[0]}</span>
@@ -173,21 +187,25 @@ export default function ApiDocsPage() {
             ))}
           </ul>
         </div>
-        <h2 className="text-2xl font-bold mb-4">API Docs</h2>
-        <ul>
-          {filteredApiDocs.map((doc) => (
-            <li key={doc.id} className="mb-4">
-              <h3 className="text-xl font-bold mb-2">{doc.title}</h3>
-              <p>{doc.description}</p>
-              <button
-                onClick={() => handleFavorite(doc)}
-                className={`p-2 border border-gray-400 rounded ${favorites.includes(doc.id) ? 'bg-green-500 text-white' : ''}`}
-              >
-                {favorites.includes(doc.id) ? 'Unfavorite' : 'Favorite'}
-              </button>
-            </li>
-          ))}
-        </ul>
+        <div className="flex flex-col items-center justify-center w-full mt-4">
+          <h2 className="text-xl font-bold mb-2">Favorites</h2>
+          <ul>
+            {favorites.map((favorite) => (
+              <li key={favorite}>{favorite}</li>
+            ))}
+          </ul>
+        </div>
+        <div className="flex flex-col items-center justify-center w-full mt-4">
+          <h2 className="text-xl font-bold mb-2">API Documentation</h2>
+          <ul>
+            {filteredApiDocs.map((doc) => (
+              <li key={doc.title}>
+                <h3 className="text-lg font-bold">{doc.title}</h3>
+                <p>{doc.description}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </Layout>
   );

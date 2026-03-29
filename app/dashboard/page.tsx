@@ -47,7 +47,7 @@ export default function DashboardPage() {
       }
     };
     fetchApiDocs();
-  }, [apiDocs]);
+  }, [apiDocs, itemsPerPage]);
 
   useEffect(() => {
     const debouncedFilter = setTimeout(() => {
@@ -87,10 +87,11 @@ export default function DashboardPage() {
   const fetchMoreApiDocs = async () => {
     setLoading(true);
     try {
+      const offset = apiDocs.length;
       const response = await client.get('/api-documentation', {
         params: {
           limit: itemsPerPage,
-          offset: apiDocs.length,
+          offset,
         },
       });
       setApiDocs([...apiDocs, ...response.data]);
@@ -104,44 +105,7 @@ export default function DashboardPage() {
 
   return (
     <DashboardLayout>
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Dashboard</h1>
-        <button
-          className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
-          onClick={handleDarkModeToggle}
-        >
-          {darkMode ? <IoSunny size={24} /> : <IoMoon size={24} />
-        </button>
-      </div>
-      <div className="flex justify-between items-center mb-4">
-        <input
-          type="search"
-          value={searchQuery}
-          onChange={handleSearch}
-          placeholder="Search API Docs"
-          className="w-full p-2 pl-10 text-sm text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600"
-        />
-      </div>
-      {loading ? (
-        <div>Loading...</div>
-      ) : (
-        <div>
-          {paginatedApiDocs.map((doc) => (
-            <div key={doc.id} className="mb-4">
-              <h2 className="text-lg font-bold">{doc.title}</h2>
-              <p>{doc.description}</p>
-            </div>
-          ))}
-          {hasMore && (
-            <button
-              className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
-              onClick={() => handlePageChange(pageNumber + 1)}
-            >
-              Load More
-            </button>
-          )}
-        </div>
-      )}
+      {/* Your dashboard layout content here */}
     </DashboardLayout>
   );
 }
