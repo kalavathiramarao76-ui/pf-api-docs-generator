@@ -105,41 +105,50 @@ export default function DashboardPage() {
 
   return (
     <DashboardLayout>
-      <div className="dark-mode-toggle">
-        <button onClick={handleDarkModeToggle}>
-          {darkMode ? <IoSunny /> : <IoMoon />}
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">AutoGen Docs</h1>
+        <button
+          className="bg-gray-200 hover:bg-gray-300 px-4 py-2 rounded-md"
+          onClick={handleDarkModeToggle}
+        >
+          {darkMode ? <IoSunny size={20} /> : <IoMoon size={20} />}
         </button>
       </div>
-      <div className="search-bar">
+      <div className="flex justify-between items-center mb-4">
         <input
           type="search"
           value={searchQuery}
           onChange={handleSearch}
-          placeholder="Search API documentation"
+          placeholder="Search API Docs"
+          className="w-full py-2 pl-10 text-sm text-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
         />
+        <Link href="/create-api-doc">
+          <a className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">
+            <AiOutlinePlus size={20} />
+            Create API Doc
+          </a>
+        </Link>
       </div>
-      <div className="api-docs-list">
-        {paginatedApiDocs.map((doc) => (
-          <div key={doc.id}>
-            <h2>{doc.title}</h2>
-            <p>{doc.description}</p>
-          </div>
-        ))}
-      </div>
-      <div className="pagination">
-        {Array(Math.ceil(filteredApiDocs.length / itemsPerPage))
-          .fill(0)
-          .map((_, index) => (
-            <button
-              key={index + 1}
-              onClick={() => handlePageChange(index + 1)}
-              className={pageNumber === index + 1 ? 'active' : ''}
-            >
-              {index + 1}
-            </button>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <div className="grid grid-cols-1 gap-4">
+          {paginatedApiDocs.map((apiDoc) => (
+            <div key={apiDoc.id} className="bg-white p-4 rounded-md shadow-md">
+              <h2 className="text-lg font-bold">{apiDoc.title}</h2>
+              <p className="text-gray-600">{apiDoc.description}</p>
+            </div>
           ))}
-      </div>
-      {loading && <p>Loading...</p>}
+        </div>
+      )}
+      {hasMore && !loading && (
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
+          onClick={() => handlePageChange(pageNumber + 1)}
+        >
+          Load More
+        </button>
+      )}
     </DashboardLayout>
   );
 }

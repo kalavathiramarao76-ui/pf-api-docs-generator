@@ -82,71 +82,53 @@ export default function ApiDocsPage() {
 
   useEffect(() => {
     const handleSearchTermChange = () => {
-    }
-  }, [searchTerm]);
+      if (searchTerm.length > 2) {
+        const suggestions = apiDocs.filter((doc) =>
+          doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          doc.description.toLowerCase().includes(searchTerm.toLowerCase())
+        ).map((doc) => doc.title);
+        setSuggestions(suggestions.slice(0, 5));
+      } else {
+        setSuggestions([]);
+      }
+    };
+    handleSearchTermChange();
+  }, [searchTerm, apiDocs]);
 
-  const handleFavorite = (doc) => {
-    const existingFavorite = favorites.find((favorite) => favorite.id === doc.id);
-    if (existingFavorite) {
-      const newFavorites = favorites.filter((favorite) => favorite.id !== doc.id);
-      setFavorites(newFavorites);
-      localStorage.setItem('favorites', JSON.stringify(newFavorites));
-    } else {
-      const newFavorites = [...favorites, doc];
-      setFavorites(newFavorites);
-      localStorage.setItem('favorites', JSON.stringify(newFavorites));
-    }
-  };
-
-  const isFavorite = (doc) => {
-    return favorites.find((favorite) => favorite.id === doc.id) !== undefined;
+  const handleSearchTermChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
   };
 
   return (
     <Layout>
-      <SEO title="API Documentation" />
-      <div className="container mx-auto p-4">
-        <h1 className="text-3xl font-bold mb-4">API Documentation</h1>
-        <div className="flex flex-wrap justify-center mb-4">
+      <SEO title="API Docs" />
+      <div className="flex flex-col items-center justify-center h-screen">
+        <h1 className="text-3xl font-bold mb-4">API Docs</h1>
+        <input
+          type="search"
+          value={searchTerm}
+          onChange={handleSearchTermChange}
+          placeholder="Search API Docs"
+          className="w-full p-2 pl-10 text-sm text-gray-700 border border-gray-200 rounded-md focus:outline-none focus:ring-gray-500 focus:border-gray-500"
+        />
+        {suggestions.length > 0 && (
+          <ul className="absolute bg-white border border-gray-200 rounded-md w-full mt-2">
+            {suggestions.map((suggestion, index) => (
+              <li
+                key={index}
+                className="py-2 px-4 hover:bg-gray-100 cursor-pointer"
+                onClick={() => setSearchTerm(suggestion)}
+              >
+                {suggestion}
+              </li>
+            ))}
+          </ul>
+        )}
+        <div className="mt-4">
           {filteredApiDocs.map((doc) => (
-            <div key={doc.id} className="w-full md:w-1/2 xl:w-1/3 p-4">
-              <div className="bg-white rounded shadow p-4">
-                <h2 className="text-xl font-bold mb-2">{doc.title}</h2>
-                <p className="text-gray-600">{doc.description}</p>
-                <div className="flex justify-between mt-4">
-                  <Link href={`/api-docs/${doc.id}`}>
-                    <a className="text-blue-600 hover:text-blue-800">View Details</a>
-                  </Link>
-                  <button
-                    className={`text-blue-600 hover:text-blue-800 ${isFavorite(doc) ? 'text-red-600 hover:text-red-800' : ''}`}
-                    onClick={() => handleFavorite(doc)}
-                  >
-                    {isFavorite(doc) ? 'Unfavorite' : 'Favorite'}
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-        <div className="flex flex-wrap justify-center mb-4">
-          <h2 className="text-2xl font-bold mb-4">Favorites</h2>
-          {favorites.map((doc) => (
-            <div key={doc.id} className="w-full md:w-1/2 xl:w-1/3 p-4">
-              <div className="bg-white rounded shadow p-4">
-                <h2 className="text-xl font-bold mb-2">{doc.title}</h2>
-                <p className="text-gray-600">{doc.description}</p>
-                <div className="flex justify-between mt-4">
-                  <Link href={`/api-docs/${doc.id}`}>
-                    <a className="text-blue-600 hover:text-blue-800">View Details</a>
-                  </Link>
-                  <button
-                    className="text-red-600 hover:text-red-800"
-                    onClick={() => handleFavorite(doc)}
-                  >
-                    Unfavorite
-                  </button>
-                </div>
-              </div>
+            <div key={doc.title} className="mb-4">
+              <h2 className="text-xl font-bold">{doc.title}</h2>
+              <p>{doc.description}</p>
             </div>
           ))}
         </div>

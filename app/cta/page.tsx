@@ -98,46 +98,46 @@ export default function CtaPage() {
 
   return (
     <div>
-      <h1>Join Our Community</h1>
-      <p>
-        By signing up, you'll get access to exclusive content, early updates, and a chance to be part of a community that's shaping the future of API documentation.
-      </p>
-      <p>
-        Here are just a few benefits you can expect:
-      </p>
-      <ul>
-        <li>Stay up-to-date with the latest developments in API documentation</li>
-        <li>Get access to exclusive content, including tutorials and guides</li>
-        <li>Connect with a community of like-minded individuals who share your interests</li>
-      </ul>
       <form onSubmit={handleSubmit}>
-        <label>
-          Email:
-          <input type="email" value={email} onChange={handleEmailChange} onBlur={handleBlur} />
-          {formErrors.email.message && <div style={{ color: 'red' }}>{formErrors.email.message}</div>}
-          {formErrors.email.suggestions.length > 0 && (
+        <input
+          type="email"
+          value={email}
+          onChange={handleEmailChange}
+          onBlur={handleBlur}
+          placeholder="Enter your email address"
+          disabled={isSubmitting}
+        />
+        {formErrors.email.message && (
+          <div style={{ color: 'red' }}>
+            {formErrors.email.message}
             <ul>
               {formErrors.email.suggestions.map((suggestion, index) => (
                 <li key={index}>{suggestion}</li>
               ))}
             </ul>
-          )}
-        </label>
+          </div>
+        )}
+        {formErrors.general.message && (
+          <div style={{ color: 'red' }}>{formErrors.general.message}</div>
+        )}
         <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? (
             <div>
               Submitting...{' '}
-              <progress value={progress} max="100" style={{ width: '100px', height: '10px' }} />
+              <progress value={progress} max="100" style={{ width: '100%' }} />
             </div>
           ) : (
             <div>
-              Sign up <AiOutlineArrowRight />
+              Submit <AiOutlineArrowRight />
             </div>
           )}
         </button>
-        {formErrors.general.message && <div style={{ color: 'red' }}>{formErrors.general.message}</div>}
-        {isSuccess && <div style={{ color: 'green' }}>{successMessage}</div>}
       </form>
+      {isSuccess && (
+        <div>
+          <p style={{ color: 'green' }}>{successMessage}</p>
+        </div>
+      )}
     </div>
   );
 }
