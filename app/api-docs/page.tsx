@@ -42,12 +42,12 @@ export default function ApiDocsPage() {
       doc.description.toLowerCase().includes(searchTerm.toLowerCase())
     ).filter((doc) => {
       if (filterTags.length > 0) {
-        return filterTags.some((tag) => doc.tags.includes(tag));
+        return filterTags.every((tag) => doc.tags.includes(tag));
       }
       return true;
     }).filter((doc) => {
       if (filterCategories.length > 0) {
-        return filterCategories.some((category) => doc.category === category);
+        return filterCategories.every((category) => doc.category === category);
       }
       return true;
     });
@@ -98,77 +98,72 @@ export default function ApiDocsPage() {
     }
   };
 
-  const getUniqueTags = () => {
-    const tags = apiDocs.map((doc) => doc.tags);
-    return [...new Set(tags.flat())].sort();
-  };
-
-  const getUniqueCategories = () => {
-    const categories = apiDocs.map((doc) => doc.category);
-    return [...new Set(categories)].sort();
-  };
-
   return (
     <Layout>
-      <SEO
-        title="AutoGen Docs - API Documentation"
-        description="AutoGen Docs generates high-quality API documentation automatically, saving developers time and effort."
-        keywords="API documentation tools, API documentation generator, auto generate API docs, API doc generator, swagger alternative"
+      <SEO title="API Documentation" />
+      <h1>API Documentation</h1>
+      <input
+        type="search"
+        value={searchTerm}
+        onChange={handleSearch}
+        placeholder="Search API documentation"
       />
-      <div className="container mx-auto p-4 pt-6 md:p-6 lg:p-12 xl:p-24">
-        <h1 className="text-3xl font-bold mb-4">API Documentation</h1>
-        <div className="flex justify-between mb-4">
-          <input
-            type="search"
-            value={searchTerm}
-            onChange={handleSearch}
-            placeholder="Search API Docs"
-            className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-2 pl-10 text-sm text-gray-700"
-          />
-        </div>
-        <div className="flex flex-wrap mb-4">
-          <h2 className="text-lg font-bold mr-4">Filter by Tags:</h2>
-          {getUniqueTags().map((tag) => (
-            <div key={tag} className="mr-4">
-              <input
-                type="checkbox"
-                value={tag}
-                onChange={handleFilterTags}
-                className="mr-2"
-              />
-              <span>{tag}</span>
-            </div>
-          ))}
-        </div>
-        <div className="flex flex-wrap mb-4">
-          <h2 className="text-lg font-bold mr-4">Filter by Categories:</h2>
-          {getUniqueCategories().map((category) => (
-            <div key={category} className="mr-4">
-              <input
-                type="checkbox"
-                value={category}
-                onChange={handleFilterCategories}
-                className="mr-2"
-              />
-              <span>{category}</span>
-            </div>
-          ))}
-        </div>
-        <div className="flex justify-between mb-4">
-          <select value={sortBy} onChange={handleSort} data-order="asc">
-            <option value="title" data-order="asc">Sort by Title (A-Z)</option>
-            <option value="title" data-order="desc">Sort by Title (Z-A)</option>
-            <option value="description" data-order="asc">Sort by Description (A-Z)</option>
-            <option value="description" data-order="desc">Sort by Description (Z-A)</option>
-          </select>
-        </div>
-        {filteredApiDocs.map((doc) => (
-          <div key={doc.title} className="mb-4">
-            <h2 className="text-lg font-bold">{doc.title}</h2>
-            <p>{doc.description}</p>
+      <select value={sortBy} onChange={handleSort}>
+        <option value="title" data-order="asc">
+          Title (A-Z)
+        </option>
+        <option value="title" data-order="desc">
+          Title (Z-A)
+        </option>
+        <option value="description" data-order="asc">
+          Description (A-Z)
+        </option>
+        <option value="description" data-order="desc">
+          Description (Z-A)
+        </option>
+      </select>
+      <div>
+        <h2>Filter by Tags:</h2>
+        {apiDocs.map((doc) => (
+          <div key={doc.tags.join(',')}>
+            {doc.tags.map((tag) => (
+              <label key={tag}>
+                <input
+                  type="checkbox"
+                  value={tag}
+                  checked={filterTags.includes(tag)}
+                  onChange={handleFilterTags}
+                />
+                {tag}
+              </label>
+            ))}
           </div>
         ))}
       </div>
+      <div>
+        <h2>Filter by Categories:</h2>
+        {apiDocs.map((doc) => (
+          <label key={doc.category}>
+            <input
+              type="checkbox"
+              value={doc.category}
+              checked={filterCategories.includes(doc.category)}
+              onChange={handleFilterCategories}
+            />
+            {doc.category}
+          </label>
+        ))}
+      </div>
+      <ul>
+        {filteredApiDocs.map((doc) => (
+          <li key={doc.title}>
+            <h3>{doc.title}</h3>
+            <p>{doc.description}</p>
+            <p>Tags: {doc.tags.join(', ')}</p>
+            <p>Category: {doc.category}</p>
+          </li>
+        ))}
+      </ul>
     </Layout>
   );
 }

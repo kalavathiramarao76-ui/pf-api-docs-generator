@@ -12,6 +12,8 @@ export default function DashboardPage() {
   const [apiDocs, setApiDocs] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [filteredApiDocs, setFilteredApiDocs] = useState([]);
+  const [paginatedApiDocs, setPaginatedApiDocs] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -29,6 +31,20 @@ export default function DashboardPage() {
     fetchApiDocs();
   }, []);
 
+  useEffect(() => {
+    const filteredDocs = apiDocs.filter((item) => {
+      const title = item.title.toLowerCase();
+      const description = item.description.toLowerCase();
+      return title.includes(searchQuery) || description.includes(searchQuery);
+    });
+    setFilteredApiDocs(filteredDocs);
+  }, [apiDocs, searchQuery]);
+
+  useEffect(() => {
+    const paginatedDocs = filteredApiDocs.slice((pageNumber - 1) * itemsPerPage, pageNumber * itemsPerPage);
+    setPaginatedApiDocs(paginatedDocs);
+  }, [filteredApiDocs, pageNumber, itemsPerPage]);
+
   const handleDarkModeToggle = () => {
     setDarkMode(!darkMode);
     localStorage.setItem('darkMode', darkMode ? 'false' : 'true');
@@ -41,14 +57,6 @@ export default function DashboardPage() {
   const handlePageChange = (pageNumber: number) => {
     setPageNumber(pageNumber);
   };
-
-  const filteredApiDocs = apiDocs.filter((item) => {
-    const title = item.title.toLowerCase();
-    const description = item.description.toLowerCase();
-    return title.includes(searchQuery) || description.includes(searchQuery);
-  });
-
-  const paginatedApiDocs = filteredApiDocs.slice((pageNumber - 1) * itemsPerPage, pageNumber * itemsPerPage);
 
   return (
     <DashboardLayout>
@@ -81,17 +89,6 @@ export default function DashboardPage() {
             <p className="text-gray-600 dark:text-gray-400">{item.description}</p>
             <AiOutlinePlus size={24} className="text-gray-600 dark:text-gray-400" />
           </Link>
-        ))}
-      </div>
-      <div className="flex justify-center mt-4">
-        {[...Array(Math.ceil(filteredApiDocs.length / itemsPerPage)).keys()].map((pageNumber) => (
-          <button
-            key={pageNumber}
-            className={`p-2 mx-1 rounded-lg ${pageNumber + 1 === pageNumber ? 'bg-gray-200 dark:bg-gray-700' : 'hover:bg-gray-200 dark:hover:bg-gray-700'}`}
-            onClick={() => handlePageChange(pageNumber + 1)}
-          >
-            {pageNumber + 1}
-          </button>
         ))}
       </div>
     </DashboardLayout>
