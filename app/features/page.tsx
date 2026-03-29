@@ -107,10 +107,11 @@ const guidedOnboardingSteps = [
   },
 ];
 
-const authenticateUser = async (username: string) => {
+const authenticateUser = async (username: string, password: string) => {
   try {
     const response = await client.post('/authenticate', {
       username,
+      password,
     });
     return response.data;
   } catch (error) {
@@ -118,101 +119,66 @@ const authenticateUser = async (username: string) => {
   }
 };
 
-const Dashboard = () => {
-  const [userProgress, setUserProgress] = useState(null);
-  const [recommendedSteps, setRecommendedSteps] = useState(null);
-  const [userId, setUserId] = useState('');
+const Page = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredFeatures, setFilteredFeatures] = useState(features);
+  const [filteredOnboardingSteps, setFilteredOnboardingSteps] = useState(onboardingSteps);
+  const [filteredGuidedOnboardingSteps, setFilteredGuidedOnboardingSteps] = useState(guidedOnboardingSteps);
 
-  useEffect(() => {
-    const userId = localStorage.getItem('userId');
-    if (userId) {
-      setUserId(userId);
-      getUserProgress(userId).then((progress) => {
-        setUserProgress(progress);
-        getRecommendedSteps(userId, progress).then((steps) => {
-          setRecommendedSteps(steps);
-        });
-      });
-    }
-  }, []);
-
-  const handleSaveProgress = async (progress: any) => {
-    await saveUserProgress(userId, progress);
-    setUserProgress(progress);
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const term = event.target.value.toLowerCase();
+    setSearchTerm(term);
+    const filteredFeatures = features.filter((feature) => feature.title.toLowerCase().includes(term) || feature.description.toLowerCase().includes(term));
+    const filteredOnboardingSteps = onboardingSteps.filter((step) => step.title.toLowerCase().includes(term) || step.description.toLowerCase().includes(term));
+    const filteredGuidedOnboardingSteps = guidedOnboardingSteps.filter((step) => step.title.toLowerCase().includes(term) || step.description.toLowerCase().includes(term));
+    setFilteredFeatures(filteredFeatures);
+    setFilteredOnboardingSteps(filteredOnboardingSteps);
+    setFilteredGuidedOnboardingSteps(filteredGuidedOnboardingSteps);
   };
 
   return (
     <div>
-      <h1>Dashboard</h1>
-      {userProgress && (
-        <div>
-          <h2>Progress</h2>
-          <ul>
-            {onboardingSteps.map((step) => (
-              <li key={step.id}>
-                <input
-                  type="checkbox"
-                  checked={userProgress.includes(step.id)}
-                  onChange={() => {
-                    const newProgress = [...userProgress];
-                    if (newProgress.includes(step.id)) {
-                      newProgress.splice(newProgress.indexOf(step.id), 1);
-                    } else {
-                      newProgress.push(step.id);
-                    }
-                    handleSaveProgress(newProgress);
-                  }}
-                />
-                <span>{step.title}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-      {recommendedSteps && (
-        <div>
-          <h2>Recommended Steps</h2>
-          <ul>
-            {recommendedSteps.map((step) => (
-              <li key={step.id}>
-                <span>{step.title}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-    </div>
-  );
-};
-
-const Page = () => {
-  return (
-    <div>
-      <Link href="/">
-        <a>
-          <AiOutlineCode size={24} />
-          API Documentation
-        </a>
-      </Link>
-      <Link href="/code-generation">
-        <a>
-          <MdOutlineSettings size={24} />
-          Code Generation
-        </a>
-      </Link>
-      <Link href="/settings">
-        <a>
-          <RiDashboardLine size={24} />
-          Settings
-        </a>
-      </Link>
-      <Link href="/api">
-        <a>
-          <TbApi size={24} />
-          API
-        </a>
-      </Link>
-      <Dashboard />
+      <h1>AutoGenerate API Documentation</h1>
+      <input type="search" value={searchTerm} onChange={handleSearch} placeholder="Search features and tutorials" />
+      <h2>Features</h2>
+      <ul>
+        {filteredFeatures.map((feature) => (
+          <li key={feature.id}>
+            <Link href={`/features/${feature.id}`}>
+              <a>
+                {feature.title}
+              </a>
+            </Link>
+            <p>{feature.description}</p>
+          </li>
+        ))}
+      </ul>
+      <h2>Onboarding Steps</h2>
+      <ul>
+        {filteredOnboardingSteps.map((step) => (
+          <li key={step.id}>
+            <Link href={`/onboarding/${step.id}`}>
+              <a>
+                {step.title}
+              </a>
+            </Link>
+            <p>{step.description}</p>
+          </li>
+        ))}
+      </ul>
+      <h2>Guided Onboarding Steps</h2>
+      <ul>
+        {filteredGuidedOnboardingSteps.map((step) => (
+          <li key={step.id}>
+            <Link href={step.tutorial}>
+              <a>
+                {step.title}
+              </a>
+            </Link>
+            <p>{step.description}</p>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
