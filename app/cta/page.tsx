@@ -98,34 +98,32 @@ export default function CtaPage() {
 
   return (
     <div>
+      <h1>AutoGenerate API Documentation</h1>
+      <p>Enter your email to get started:</p>
       <form onSubmit={handleSubmit}>
-        <label>
-          Email:
-          <input
-            type="email"
-            value={email}
-            onChange={handleEmailChange}
-            onBlur={handleBlur}
-            placeholder="example@example.com"
-          />
-          {formErrors.email.message && (
-            <div style={{ color: 'red' }}>
-              {formErrors.email.message}
-              {formErrors.email.suggestions.length > 0 && (
-                <ul>
-                  {formErrors.email.suggestions.map((suggestion, index) => (
-                    <li key={index}>{suggestion}</li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          )}
-        </label>
+        <input
+          type="email"
+          value={email}
+          onChange={handleEmailChange}
+          onBlur={handleBlur}
+          placeholder="example@example.com"
+          disabled={isSubmitting}
+        />
+        {formErrors.email.message && (
+          <div style={{ color: 'red' }}>
+            {formErrors.email.message}
+            <ul>
+              {formErrors.email.suggestions.map((suggestion, index) => (
+                <li key={index}>{suggestion}</li>
+              ))}
+            </ul>
+          </div>
+        )}
         <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? (
             <div>
               Submitting...{' '}
-              <progress value={progress} max="100" style={{ width: '100%' }} />
+              <progress value={progress} max="100" style={{ width: '100px' }} />
             </div>
           ) : (
             <div>

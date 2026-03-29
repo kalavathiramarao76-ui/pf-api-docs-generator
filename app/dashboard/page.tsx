@@ -115,7 +115,7 @@ export default function DashboardPage() {
           type="search"
           value={searchQuery}
           onChange={handleSearch}
-          placeholder="Search API documentation"
+          placeholder="Search API Documentation"
         />
       </div>
       <div className="api-docs-list">
@@ -125,13 +125,11 @@ export default function DashboardPage() {
             <p>{doc.description}</p>
           </div>
         ))}
+        {loading && <p>Loading...</p>}
+        {hasMore && (
+          <button onClick={() => handlePageChange(pageNumber + 1)}>Load More</button>
+        )}
       </div>
-      <div className="pagination">
-        <button onClick={() => handlePageChange(pageNumber - 1)}>Previous</button>
-        <span>Page {pageNumber}</span>
-        <button onClick={() => handlePageChange(pageNumber + 1)}>Next</button>
-      </div>
-      {loading && <div>Loading...</div>}
     </DashboardLayout>
   );
 }
