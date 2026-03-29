@@ -82,55 +82,157 @@ export default function ApiDocsPage() {
 
   useEffect(() => {
     const handleSearchTermChange = () => {
-      if (searchTerm.length > 2) {
-        const suggestions = apiDocs.filter((doc) =>
-          doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          doc.description.toLowerCase().includes(searchTerm.toLowerCase())
-        ).map((doc) => doc.title);
-        setSuggestions(suggestions.slice(0, 5));
-      } else {
-        setSuggestions([]);
-      }
-    };
-    handleSearchTermChange();
-  }, [searchTerm, apiDocs]);
+    }
+  }, []);
 
-  const handleSearchTermChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
+  const handleFavorite = (doc) => {
+    const existingFavorite = favorites.find((favorite) => favorite.id === doc.id);
+    if (existingFavorite) {
+      const newFavorites = favorites.filter((favorite) => favorite.id !== doc.id);
+      setFavorites(newFavorites);
+      localStorage.setItem('favorites', JSON.stringify(newFavorites));
+    } else {
+      const newFavorites = [...favorites, doc];
+      setFavorites(newFavorites);
+      localStorage.setItem('favorites', JSON.stringify(newFavorites));
+    }
+  };
+
+  const handleRemoveFavorite = (doc) => {
+    const newFavorites = favorites.filter((favorite) => favorite.id !== doc.id);
+    setFavorites(newFavorites);
+    localStorage.setItem('favorites', JSON.stringify(newFavorites));
   };
 
   return (
     <Layout>
-      <SEO title="API Docs" />
-      <div className="flex flex-col items-center justify-center h-screen">
-        <h1 className="text-3xl font-bold mb-4">API Docs</h1>
-        <input
-          type="search"
-          value={searchTerm}
-          onChange={handleSearchTermChange}
-          placeholder="Search API Docs"
-          className="w-full p-2 pl-10 text-sm text-gray-700 border border-gray-200 rounded-md focus:outline-none focus:ring-gray-500 focus:border-gray-500"
-        />
-        {suggestions.length > 0 && (
-          <ul className="absolute bg-white border border-gray-200 rounded-md w-full mt-2">
-            {suggestions.map((suggestion, index) => (
-              <li
-                key={index}
-                className="py-2 px-4 hover:bg-gray-100 cursor-pointer"
-                onClick={() => setSearchTerm(suggestion)}
-              >
-                {suggestion}
+      <SEO title="API Documentation" />
+      <div className="container mx-auto p-4 pt-6 md:p-6 lg:p-12 xl:p-24">
+        <h1 className="text-3xl font-bold mb-4">API Documentation</h1>
+        <div className="flex flex-wrap justify-center mb-4">
+          <Link href="/api-docs" className="mr-4">
+            All API Docs
+          </Link>
+          <Link href="/api-docs/favorites" className="mr-4">
+            Favorites
+          </Link>
+        </div>
+        <div className="mb-4">
+          <input
+            type="search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Search API Docs"
+            className="w-full p-2 pl-10 text-sm text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <div className="mb-4">
+          <select
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+            className="w-full p-2 pl-10 text-sm text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="asc">Ascending</option>
+            <option value="desc">Descending</option>
+          </select>
+        </div>
+        <div className="mb-4">
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="w-full p-2 pl-10 text-sm text-gray-700 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="title">Title</option>
+            <option value="description">Description</option>
+          </select>
+        </div>
+        <div className="mb-4">
+          <ul>
+            {filterTags.map((tag) => (
+              <li key={tag} className="inline-block mr-2">
+                <span className="bg-gray-200 p-2 rounded-md">{tag}</span>
+                <button
+                  onClick={() => setFilterTags(filterTags.filter((t) => t !== tag))}
+                  className="ml-2 text-gray-600 hover:text-gray-900"
+                >
+                  Remove
+                </button>
               </li>
             ))}
           </ul>
-        )}
-        <div className="mt-4">
-          {filteredApiDocs.map((doc) => (
-            <div key={doc.title} className="mb-4">
-              <h2 className="text-xl font-bold">{doc.title}</h2>
-              <p>{doc.description}</p>
-            </div>
-          ))}
+        </div>
+        <div className="mb-4">
+          <ul>
+            {filterCategories.map((category) => (
+              <li key={category} className="inline-block mr-2">
+                <span className="bg-gray-200 p-2 rounded-md">{category}</span>
+                <button
+                  onClick={() => setFilterCategories(filterCategories.filter((c) => c !== category))}
+                  className="ml-2 text-gray-600 hover:text-gray-900"
+                >
+                  Remove
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="mb-4">
+          <h2 className="text-2xl font-bold mb-2">API Docs</h2>
+          <ul>
+            {filteredApiDocs.map((doc) => (
+              <li key={doc.id} className="mb-4">
+                <h3 className="text-xl font-bold mb-2">{doc.title}</h3>
+                <p className="text-gray-600">{doc.description}</p>
+                <div className="flex justify-between mb-2">
+                  <button
+                    onClick={() => handleFavorite(doc)}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  >
+                    Favorite
+                  </button>
+                  {favorites.find((favorite) => favorite.id === doc.id) && (
+                    <button
+                      onClick={() => handleRemoveFavorite(doc)}
+                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                    >
+                      Remove Favorite
+                    </button>
+                  )}
+                </div>
+                <ul>
+                  {doc.tags.map((tag) => (
+                    <li key={tag} className="inline-block mr-2">
+                      <span className="bg-gray-200 p-2 rounded-md">{tag}</span>
+                    </li>
+                  ))}
+                </ul>
+                <ul>
+                  {doc.categories.map((category) => (
+                    <li key={category} className="inline-block mr-2">
+                      <span className="bg-gray-200 p-2 rounded-md">{category}</span>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="mb-4">
+          <h2 className="text-2xl font-bold mb-2">Favorites</h2>
+          <ul>
+            {favorites.map((favorite) => (
+              <li key={favorite.id} className="mb-4">
+                <h3 className="text-xl font-bold mb-2">{favorite.title}</h3>
+                <p className="text-gray-600">{favorite.description}</p>
+                <button
+                  onClick={() => handleRemoveFavorite(favorite)}
+                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                >
+                  Remove Favorite
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </Layout>

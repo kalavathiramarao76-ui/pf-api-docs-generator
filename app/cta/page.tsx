@@ -98,33 +98,24 @@ export default function CtaPage() {
 
   return (
     <div>
+      <h1>AutoGenerate API Documentation</h1>
       <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          value={email}
-          onChange={handleEmailChange}
-          onBlur={handleBlur}
-          placeholder="Enter your email address"
-          disabled={isSubmitting}
-        />
-        {formErrors.email.message && (
-          <div style={{ color: 'red' }}>
-            {formErrors.email.message}
-            <ul>
+        <label>
+          Email:
+          <input type="email" value={email} onChange={handleEmailChange} onBlur={handleBlur} />
+          {formErrors.email.message && (
+            <div style={{ color: 'red' }}>
+              {formErrors.email.message}
               {formErrors.email.suggestions.map((suggestion, index) => (
-                <li key={index}>{suggestion}</li>
+                <div key={index}>{suggestion}</div>
               ))}
-            </ul>
-          </div>
-        )}
-        {formErrors.general.message && (
-          <div style={{ color: 'red' }}>{formErrors.general.message}</div>
-        )}
+            </div>
+          )}
+        </label>
         <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? (
             <div>
-              Submitting...{' '}
-              <progress value={progress} max="100" style={{ width: '100%' }} />
+              Submitting... {progress}%
             </div>
           ) : (
             <div>
@@ -132,12 +123,17 @@ export default function CtaPage() {
             </div>
           )}
         </button>
+        {isSuccess && (
+          <div style={{ color: 'green' }}>
+            {successMessage}
+          </div>
+        )}
+        {formErrors.general.message && (
+          <div style={{ color: 'red' }}>
+            {formErrors.general.message}
+          </div>
+        )}
       </form>
-      {isSuccess && (
-        <div>
-          <p style={{ color: 'green' }}>{successMessage}</p>
-        </div>
-      )}
     </div>
   );
 }
