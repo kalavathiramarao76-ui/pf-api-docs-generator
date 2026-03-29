@@ -47,7 +47,7 @@ export default function ApiDocsPage() {
       return true;
     }).filter((doc) => {
       if (filterCategories.length > 0) {
-        return filterCategories.some((category) => doc.category === category);
+        return filterCategories.every((category) => doc.categories.includes(category));
       }
       return true;
     });
@@ -103,51 +103,32 @@ export default function ApiDocsPage() {
       <SEO title="API Documentation" />
       <div className="container mx-auto p-4">
         <h1 className="text-3xl font-bold mb-4">API Documentation</h1>
-        <div className="flex justify-between mb-4">
+        <div className="flex flex-wrap mb-4">
           <input
             type="search"
             value={searchTerm}
             onChange={handleSearch}
             placeholder="Search API documentation"
-            className="w-1/2 p-2 pl-10 text-sm text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600"
+            className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-2 pl-10 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600"
           />
           <select
             value={sortBy}
             onChange={handleSort}
             data-order="asc"
-            className="p-2 pl-10 text-sm text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600"
+            className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-2 pl-10 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600"
           >
-            <option value="title">Sort by title</option>
-            <option value="description">Sort by description</option>
+            <option value="title">Sort by title (asc)</option>
+            <option value="description" data-order="asc">Sort by description (asc)</option>
+            <option value="title" data-order="desc">Sort by title (desc)</option>
+            <option value="description" data-order="desc">Sort by description (desc)</option>
           </select>
-          <button
-            onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
-            className="p-2 pl-5 pr-5 bg-gray-600 text-gray-100 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600"
-          >
-            {sortOrder === 'asc' ? 'Ascending' : 'Descending'}
-          </button>
         </div>
         <div className="flex flex-wrap mb-4">
+          <h2 className="text-lg font-bold mb-2">Filter by tags:</h2>
           {apiDocs.map((doc) => (
-            <div key={doc.title} className="w-1/2 p-2">
-              <label>
-                <input
-                  type="checkbox"
-                  value={doc.category}
-                  checked={filterCategories.includes(doc.category)}
-                  onChange={handleFilterCategories}
-                  className="mr-2"
-                />
-                {doc.category}
-              </label>
-            </div>
-          ))}
-        </div>
-        <div className="flex flex-wrap mb-4">
-          {apiDocs.map((doc) => (
-            <div key={doc.title} className="w-1/2 p-2">
+            <div key={doc.tags.join(',')} className="mr-4">
               {doc.tags.map((tag) => (
-                <label key={tag} className="mr-2">
+                <label key={tag} className="block">
                   <input
                     type="checkbox"
                     value={tag}
@@ -161,20 +142,43 @@ export default function ApiDocsPage() {
             </div>
           ))}
         </div>
-        {loading ? (
-          <p>Loading...</p>
-        ) : error ? (
-          <p>Error: {error}</p>
-        ) : (
-          <ul>
-            {filteredApiDocs.map((doc) => (
-              <li key={doc.title}>
-                <h2 className="text-2xl font-bold mb-2">{doc.title}</h2>
-                <p className="text-gray-600">{doc.description}</p>
-              </li>
-            ))}
-          </ul>
-        )}
+        <div className="flex flex-wrap mb-4">
+          <h2 className="text-lg font-bold mb-2">Filter by categories:</h2>
+          {apiDocs.map((doc) => (
+            <div key={doc.categories.join(',')} className="mr-4">
+              {doc.categories.map((category) => (
+                <label key={category} className="block">
+                  <input
+                    type="checkbox"
+                    value={category}
+                    checked={filterCategories.includes(category)}
+                    onChange={handleFilterCategories}
+                    className="mr-2"
+                  />
+                  {category}
+                </label>
+              ))}
+            </div>
+          ))}
+        </div>
+        <ul>
+          {filteredApiDocs.map((doc) => (
+            <li key={doc.title} className="mb-4">
+              <h3 className="text-lg font-bold">{doc.title}</h3>
+              <p>{doc.description}</p>
+              <ul>
+                {doc.tags.map((tag) => (
+                  <li key={tag} className="text-gray-600">{tag}</li>
+                ))}
+              </ul>
+              <ul>
+                {doc.categories.map((category) => (
+                  <li key={category} className="text-gray-600">{category}</li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ul>
       </div>
     </Layout>
   );

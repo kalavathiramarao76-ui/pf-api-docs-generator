@@ -28,21 +28,29 @@ export default function DashboardPage() {
     const fetchApiDocs = async () => {
       if (!apiDocs.length) {
         setLoading(true);
-        const response = await client.get('/api-documentation');
-        setApiDocs(response.data);
-        setLoading(false);
+        try {
+          const response = await client.get('/api-documentation');
+          setApiDocs(response.data);
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setLoading(false);
+        }
       }
     };
     fetchApiDocs();
   }, [apiDocs]);
 
   useEffect(() => {
-    const filteredDocs = apiDocs.filter((item) => {
-      const title = item.title.toLowerCase();
-      const description = item.description.toLowerCase();
-      return title.includes(searchQuery) || description.includes(searchQuery);
-    });
-    setFilteredApiDocs(filteredDocs);
+    const debouncedFilter = setTimeout(() => {
+      const filteredDocs = apiDocs.filter((item) => {
+        const title = item.title.toLowerCase();
+        const description = item.description.toLowerCase();
+        return title.includes(searchQuery) || description.includes(searchQuery);
+      });
+      setFilteredApiDocs(filteredDocs);
+    }, 300);
+    return () => clearTimeout(debouncedFilter);
   }, [apiDocs, searchQuery]);
 
   useEffect(() => {
@@ -86,15 +94,30 @@ export default function DashboardPage() {
       {loading ? (
         <div>Loading...</div>
       ) : (
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {paginatedApiDocs.map((item, index) => (
-            <Link
-              key={index}
-              href={item.href}
-            >
-              {item.title}
-            </Link>
+        <div>
+          {paginatedApiDocs.map((doc) => (
+            <div key={doc.title}>
+              <h2>{doc.title}</h2>
+              <p>{doc.description}</p>
+            </div>
           ))}
+          <div className="flex justify-center">
+            <button
+              className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+              onClick={() => handlePageChange(pageNumber - 1)}
+              disabled={pageNumber === 1}
+            >
+              Previous
+            </button>
+            <span className="p-2">{pageNumber}</span>
+            <button
+              className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+              onClick={() => handlePageChange(pageNumber + 1)}
+              disabled={pageNumber * itemsPerPage >= filteredApiDocs.length}
+            >
+              Next
+            </button>
+          </div>
         </div>
       )}
     </DashboardLayout>

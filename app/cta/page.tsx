@@ -9,6 +9,7 @@ export default function CtaPage() {
     email: {
       message: '',
       isValid: true,
+      suggestions: [],
     },
     general: {
       message: '',
@@ -24,17 +25,24 @@ export default function CtaPage() {
       return {
         message: 'Email is required',
         isValid: false,
+        suggestions: ['Please enter a valid email address (e.g. example@example.com)'],
       };
     }
     if (!emailRegex.test(email)) {
       return {
         message: 'Please enter a valid email address (e.g. example@example.com)',
         isValid: false,
+        suggestions: [
+          'Make sure to include the "@" symbol',
+          'Ensure the domain is valid (e.g. example.com)',
+          'Check for any typos in the email address',
+        ],
       };
     }
     return {
       message: '',
       isValid: true,
+      suggestions: [],
     };
   };
 
@@ -84,36 +92,50 @@ export default function CtaPage() {
         <li className="mb-2">Improve code readability and maintainability</li>
         <li className="mb-2">Reduce the time spent on writing and updating documentation</li>
         <li className="mb-2">Enhance collaboration and communication among team members</li>
-        <li className="mb-2">Increase the accuracy and consistency of your documentation</li>
       </ul>
       <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center">
-        <div className="relative mb-4">
-          <input
-            type="email"
-            value={email}
-            onChange={handleEmailChange}
-            onBlur={handleBlur}
-            placeholder="Enter your email to get started"
-            className="py-2 pl-10 text-sm text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600 w-full"
-          />
-          {formErrors.email.message && (
-            <div className="absolute top-0 right-0 mt-2 mr-2 text-red-500 text-xs">{formErrors.email.message}</div>
-          )}
-        </div>
+        <input
+          type="email"
+          value={email}
+          onChange={handleEmailChange}
+          onBlur={handleBlur}
+          placeholder="Enter your email address"
+          className={`w-full p-4 mb-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+            !formErrors.email.isValid ? 'border-red-500' : ''
+          }`}
+        />
+        {formErrors.email.message && (
+          <div className="text-red-500 mb-4">
+            {formErrors.email.message}
+            {formErrors.email.suggestions.length > 0 && (
+              <ul className="list-none mt-2">
+                {formErrors.email.suggestions.map((suggestion, index) => (
+                  <li key={index} className="text-gray-500">
+                    {suggestion}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`py-2 px-4 text-sm text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600 ${
-            isSubmitting ? 'bg-gray-300 cursor-not-allowed' : 'bg-gray-600 hover:bg-gray-700'
+          className={`w-full p-4 bg-blue-500 text-white rounded-lg hover:bg-blue-700 ${
+            isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
           }`}
         >
           {isSubmitting ? 'Submitting...' : 'Get Started'}
         </button>
-        {formErrors.general.message && (
-          <div className="mt-2 text-red-500 text-xs">{formErrors.general.message}</div>
-        )}
         {isSuccess && (
-          <div className="mt-2 text-green-500 text-xs">{successMessage}</div>
+          <div className="text-green-500 mt-4">
+            {successMessage}
+          </div>
+        )}
+        {formErrors.general.message && (
+          <div className="text-red-500 mt-4">
+            {formErrors.general.message}
+          </div>
         )}
       </form>
     </div>
