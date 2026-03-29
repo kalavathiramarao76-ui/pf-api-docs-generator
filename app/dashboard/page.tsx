@@ -15,6 +15,7 @@ export default function DashboardPage() {
   const [filteredApiDocs, setFilteredApiDocs] = useState([]);
   const [paginatedApiDocs, setPaginatedApiDocs] = useState([]);
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const storedDarkMode = localStorage.getItem('darkMode');
@@ -25,11 +26,15 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const fetchApiDocs = async () => {
-      const response = await client.get('/api-documentation');
-      setApiDocs(response.data);
+      if (!apiDocs.length) {
+        setLoading(true);
+        const response = await client.get('/api-documentation');
+        setApiDocs(response.data);
+        setLoading(false);
+      }
     };
     fetchApiDocs();
-  }, []);
+  }, [apiDocs]);
 
   useEffect(() => {
     const filteredDocs = apiDocs.filter((item) => {
@@ -78,19 +83,20 @@ export default function DashboardPage() {
           className="p-2 pl-10 text-sm text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600 w-full"
         />
       </div>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {paginatedApiDocs.map((item, index) => (
-          <Link
-            key={index}
-            href={item.href}
-            className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg"
-          >
-            <h2 className="text-lg font-bold">{item.title}</h2>
-            <p className="text-gray-600 dark:text-gray-400">{item.description}</p>
-            <AiOutlinePlus size={24} className="text-gray-600 dark:text-gray-400" />
-          </Link>
-        ))}
-      </div>
+      {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {paginatedApiDocs.map((item, index) => (
+            <Link
+              key={index}
+              href={item.href}
+            >
+              {item.title}
+            </Link>
+          ))}
+        </div>
+      )}
     </DashboardLayout>
   );
 }

@@ -79,7 +79,13 @@ export default function CtaPage() {
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <h1 className="text-3xl font-bold mb-4">Get Started with AutoGenerate API Documentation</h1>
-      <p className="text-lg text-gray-500 mb-8">Save time and reduce errors with our automatic API documentation generator.</p>
+      <p className="text-lg text-gray-500 mb-8">Save time and reduce errors with our automatic API documentation generator. By using AutoGenerate API documentation, you can:</p>
+      <ul className="list-none mb-8 text-lg text-gray-500">
+        <li className="mb-2">Improve code readability and maintainability</li>
+        <li className="mb-2">Reduce the time spent on writing and updating documentation</li>
+        <li className="mb-2">Enhance collaboration and communication among team members</li>
+        <li className="mb-2">Increase the accuracy and consistency of your documentation</li>
+      </ul>
       <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center">
         <div className="relative mb-4">
           <input
@@ -87,30 +93,27 @@ export default function CtaPage() {
             value={email}
             onChange={handleEmailChange}
             onBlur={handleBlur}
-            placeholder="Enter your email address"
-            className={`w-full p-4 pl-10 text-sm text-gray-700 placeholder-gray-600 bg-gray-100 border-2 border-gray-200 rounded-lg focus:outline-none focus:border-blue-500 ${formErrors.email.isValid ? '' : 'border-red-500'}`}
+            placeholder="Enter your email to get started"
+            className="py-2 pl-10 text-sm text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600 w-full"
           />
           {formErrors.email.message && (
-            <div className="absolute top-full left-0 mt-2 text-red-500 text-xs">{formErrors.email.message}</div>
+            <div className="absolute top-0 right-0 mt-2 mr-2 text-red-500 text-xs">{formErrors.email.message}</div>
           )}
         </div>
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`w-full px-8 py-3 text-lg text-white bg-blue-500 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+          className={`py-2 px-4 text-sm text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600 ${
+            isSubmitting ? 'bg-gray-300 cursor-not-allowed' : 'bg-gray-600 hover:bg-gray-700'
+          }`}
         >
-          {isSubmitting ? (
-            <svg className="animate-spin h-5 w-5 mr-3 border-4 border-gray-200 rounded-full border-t-blue-500" viewBox="0 0 24 24" />
-          ) : (
-            <AiOutlineArrowRight size={20} />
-          )}
           {isSubmitting ? 'Submitting...' : 'Get Started'}
         </button>
-        {isSuccess && (
-          <div className="mt-4 text-green-500 text-lg">{successMessage}</div>
-        )}
         {formErrors.general.message && (
-          <div className="mt-4 text-red-500 text-lg">{formErrors.general.message}</div>
+          <div className="mt-2 text-red-500 text-xs">{formErrors.general.message}</div>
+        )}
+        {isSuccess && (
+          <div className="mt-2 text-green-500 text-xs">{successMessage}</div>
         )}
       </form>
     </div>
