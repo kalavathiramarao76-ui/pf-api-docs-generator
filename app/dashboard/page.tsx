@@ -31,8 +31,7 @@ export default function DashboardPage() {
         try {
           const response = await client.get('/api-documentation', {
             params: {
-              limit: itemsPerPage,
-              offset: (pageNumber - 1) * itemsPerPage,
+              limit: 1000, // fetch all api docs at once
             },
           });
           setApiDocs(response.data);
@@ -44,7 +43,7 @@ export default function DashboardPage() {
       }
     };
     fetchApiDocs();
-  }, [apiDocs, pageNumber, itemsPerPage]);
+  }, [apiDocs]);
 
   useEffect(() => {
     const debouncedFilter = setTimeout(() => {
@@ -85,17 +84,22 @@ export default function DashboardPage() {
           className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
           onClick={handleDarkModeToggle}
         >
-          {darkMode ? <IoSunny size={24} /> : <IoMoon size={24} />}
+          {darkMode ? <IoSunny size={24} /> : <IoMoon size={24} />
         </button>
       </div>
-      <div className="mb-4">
+      <div className="flex justify-between items-center mb-4">
         <input
           type="search"
+          className="w-full p-2 pl-10 text-sm text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600"
+          placeholder="Search API Documentation"
           value={searchQuery}
           onChange={handleSearch}
-          placeholder="Search"
-          className="w-full p-2 pl-10 text-sm text-gray-700 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-600"
         />
+        <Link href="/api-documentation/create">
+          <button className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+            <AiOutlinePlus size={24} />
+          </button>
+        </Link>
       </div>
       {loading ? (
         <div>Loading...</div>
@@ -104,7 +108,7 @@ export default function DashboardPage() {
           {paginatedApiDocs.map((doc) => (
             <div key={doc.id}>
               <h2 className="text-lg font-bold">{doc.title}</h2>
-              <p className="text-gray-600">{doc.description}</p>
+              <p>{doc.description}</p>
             </div>
           ))}
           <div className="flex justify-between items-center mt-4">
@@ -115,7 +119,7 @@ export default function DashboardPage() {
             >
               Previous
             </button>
-            <span className="text-gray-600">
+            <span className="text-sm text-gray-700">
               Page {pageNumber} of {Math.ceil(filteredApiDocs.length / itemsPerPage)}
             </span>
             <button

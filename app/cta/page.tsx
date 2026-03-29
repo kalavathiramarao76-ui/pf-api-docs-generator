@@ -87,33 +87,50 @@ export default function CtaPage() {
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <h1 className="text-3xl font-bold mb-4">Unlock the Power of AutoGen Docs</h1>
-      <p className="text-lg text-gray-500 mb-8">Take the first step towards effortless API documentation and discover how our innovative solution can transform your development workflow.</p>
-      <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center">
+      <p className="text-lg text-gray-500 mb-8">Take the first step towards effortless API documentation and discover</p>
+      <form onSubmit={handleSubmit} className="flex flex-col items-center">
         <input
           type="email"
           value={email}
           onChange={handleEmailChange}
           onBlur={handleBlur}
           placeholder="Enter your email address"
-          className="px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+          className={`w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+            formErrors.email.isValid ? '' : 'border-red-500'
+          }`}
         />
         {formErrors.email.message && (
-          <p className="text-red-500 mb-4">{formErrors.email.message}</p>
+          <div className="text-red-500 mb-4">
+            <p>{formErrors.email.message}</p>
+            <ul>
+              {formErrors.email.suggestions.map((suggestion, index) => (
+                <li key={index} className="text-sm">
+                  {suggestion}
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
         <button
           type="submit"
           disabled={isSubmitting}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg disabled:opacity-50"
+          className={`w-full p-4 bg-blue-500 text-white rounded-lg hover:bg-blue-700 ${
+            isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
         >
-          {isSubmitting ? 'Submitting...' : 'Get Started Today'}
+          {isSubmitting ? 'Submitting...' : 'Get Started'}
         </button>
+        {formErrors.general.message && (
+          <div className="text-red-500 mt-4">
+            <p>{formErrors.general.message}</p>
+          </div>
+        )}
+        {isSuccess && (
+          <div className="text-green-500 mt-4">
+            <p>{successMessage}</p>
+          </div>
+        )}
       </form>
-      {isSuccess && (
-        <p className="text-green-500 mt-4">{successMessage}</p>
-      )}
-      {formErrors.general.message && (
-        <p className="text-red-500 mt-4">{formErrors.general.message}</p>
-      )}
     </div>
   );
 }
