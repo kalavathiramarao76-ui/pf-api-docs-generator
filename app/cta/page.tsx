@@ -86,13 +86,8 @@ export default function CtaPage() {
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
-      <h1 className="text-3xl font-bold mb-4">Get Started with AutoGenerate API Documentation</h1>
-      <p className="text-lg text-gray-500 mb-8">Save time and reduce errors with our automatic API documentation generator. By using AutoGenerate API documentation, you can:</p>
-      <ul className="list-none mb-8 text-lg text-gray-500">
-        <li className="mb-2">Improve code readability and maintainability</li>
-        <li className="mb-2">Reduce the time spent on writing and updating documentation</li>
-        <li className="mb-2">Enhance collaboration and communication among team members</li>
-      </ul>
+      <h1 className="text-3xl font-bold mb-4">Unlock the Power of AutoGen Docs</h1>
+      <p className="text-lg text-gray-500 mb-8">Take the first step towards effortless API documentation and discover how our innovative solution can transform your development workflow.</p>
       <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center">
         <input
           type="email"
@@ -100,44 +95,25 @@ export default function CtaPage() {
           onChange={handleEmailChange}
           onBlur={handleBlur}
           placeholder="Enter your email address"
-          className={`w-full p-4 mb-4 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-            !formErrors.email.isValid ? 'border-red-500' : ''
-          }`}
+          className="px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
         />
         {formErrors.email.message && (
-          <div className="text-red-500 mb-4">
-            {formErrors.email.message}
-            {formErrors.email.suggestions.length > 0 && (
-              <ul className="list-none mt-2">
-                {formErrors.email.suggestions.map((suggestion, index) => (
-                  <li key={index} className="text-gray-500">
-                    {suggestion}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+          <p className="text-red-500 mb-4">{formErrors.email.message}</p>
         )}
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`w-full p-4 bg-blue-500 text-white rounded-lg hover:bg-blue-700 ${
-            isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg disabled:opacity-50"
         >
-          {isSubmitting ? 'Submitting...' : 'Get Started'}
+          {isSubmitting ? 'Submitting...' : 'Get Started Today'}
         </button>
-        {isSuccess && (
-          <div className="text-green-500 mt-4">
-            {successMessage}
-          </div>
-        )}
-        {formErrors.general.message && (
-          <div className="text-red-500 mt-4">
-            {formErrors.general.message}
-          </div>
-        )}
       </form>
+      {isSuccess && (
+        <p className="text-green-500 mt-4">{successMessage}</p>
+      )}
+      {formErrors.general.message && (
+        <p className="text-red-500 mt-4">{formErrors.general.message}</p>
+      )}
     </div>
   );
 }

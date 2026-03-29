@@ -98,87 +98,139 @@ export default function ApiDocsPage() {
     }
   };
 
+  const handleClearFilters = () => {
+    setFilterTags([]);
+    setFilterCategories([]);
+    setSearchTerm('');
+  };
+
+  const handleToggleSortOrder = () => {
+    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+  };
+
   return (
     <Layout>
-      <SEO title="API Documentation" />
-      <div className="container mx-auto p-4">
-        <h1 className="text-3xl font-bold mb-4">API Documentation</h1>
-        <div className="flex flex-wrap mb-4">
+      <SEO title="API Docs" />
+      <div className="flex flex-col items-center py-12">
+        <h1 className="text-3xl font-bold mb-4">API Docs</h1>
+        <div className="flex flex-col md:flex-row justify-center mb-4">
           <input
             type="search"
             value={searchTerm}
             onChange={handleSearch}
-            placeholder="Search API documentation"
-            className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-2 pl-10 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600"
+            placeholder="Search API Docs"
+            className="w-full md:w-1/2 py-2 pl-10 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600"
           />
+          <button
+            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg ml-2"
+            onClick={handleClearFilters}
+          >
+            Clear Filters
+          </button>
+        </div>
+        <div className="flex flex-col md:flex-row justify-center mb-4">
           <select
             value={sortBy}
             onChange={handleSort}
-            data-order="asc"
-            className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-2 pl-10 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600"
+            data-order={sortOrder}
+            className="w-full md:w-1/2 py-2 pl-10 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600"
           >
-            <option value="title">Sort by title (asc)</option>
-            <option value="description" data-order="asc">Sort by description (asc)</option>
-            <option value="title" data-order="desc">Sort by title (desc)</option>
-            <option value="description" data-order="desc">Sort by description (desc)</option>
+            <option value="title" data-order="asc">
+              Sort by Title (A-Z)
+            </option>
+            <option value="title" data-order="desc">
+              Sort by Title (Z-A)
+            </option>
+            <option value="description" data-order="asc">
+              Sort by Description (A-Z)
+            </option>
+            <option value="description" data-order="desc">
+              Sort by Description (Z-A)
+            </option>
           </select>
+          <button
+            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded-lg ml-2"
+            onClick={handleToggleSortOrder}
+          >
+            {sortOrder === 'asc' ? 'Sort Desc' : 'Sort Asc'}
+          </button>
         </div>
-        <div className="flex flex-wrap mb-4">
-          <h2 className="text-lg font-bold mb-2">Filter by tags:</h2>
-          {apiDocs.map((doc) => (
-            <div key={doc.tags.join(',')} className="mr-4">
-              {doc.tags.map((tag) => (
-                <label key={tag} className="block">
-                  <input
-                    type="checkbox"
-                    value={tag}
-                    checked={filterTags.includes(tag)}
-                    onChange={handleFilterTags}
-                    className="mr-2"
-                  />
-                  {tag}
-                </label>
+        <div className="flex flex-col md:flex-row justify-center mb-4">
+          <div className="w-full md:w-1/2 mb-4 md:mb-0">
+            <h2 className="text-lg font-bold mb-2">Filter by Tags</h2>
+            <ul>
+              {apiDocs.map((doc) => (
+                <li key={doc.tags.join(',')} className="mb-2">
+                  {doc.tags.map((tag) => (
+                    <label key={tag} className="mr-2">
+                      <input
+                        type="checkbox"
+                        value={tag}
+                        checked={filterTags.includes(tag)}
+                        onChange={handleFilterTags}
+                      />
+                      <span className="ml-2">{tag}</span>
+                    </label>
+                  ))}
+                </li>
               ))}
-            </div>
-          ))}
-        </div>
-        <div className="flex flex-wrap mb-4">
-          <h2 className="text-lg font-bold mb-2">Filter by categories:</h2>
-          {apiDocs.map((doc) => (
-            <div key={doc.categories.join(',')} className="mr-4">
-              {doc.categories.map((category) => (
-                <label key={category} className="block">
-                  <input
-                    type="checkbox"
-                    value={category}
-                    checked={filterCategories.includes(category)}
-                    onChange={handleFilterCategories}
-                    className="mr-2"
-                  />
-                  {category}
-                </label>
+            </ul>
+          </div>
+          <div className="w-full md:w-1/2 mb-4 md:mb-0">
+            <h2 className="text-lg font-bold mb-2">Filter by Categories</h2>
+            <ul>
+              {apiDocs.map((doc) => (
+                <li key={doc.categories.join(',')} className="mb-2">
+                  {doc.categories.map((category) => (
+                    <label key={category} className="mr-2">
+                      <input
+                        type="checkbox"
+                        value={category}
+                        checked={filterCategories.includes(category)}
+                        onChange={handleFilterCategories}
+                      />
+                      <span className="ml-2">{category}</span>
+                    </label>
+                  ))}
+                </li>
               ))}
-            </div>
-          ))}
+            </ul>
+          </div>
         </div>
-        <ul>
-          {filteredApiDocs.map((doc) => (
-            <li key={doc.title} className="mb-4">
-              <h3 className="text-lg font-bold">{doc.title}</h3>
-              <p>{doc.description}</p>
-              <ul>
-                {doc.tags.map((tag) => (
-                  <li key={tag} className="text-gray-600">{tag}</li>
-                ))}
-              </ul>
-              <ul>
-                {doc.categories.map((category) => (
-                  <li key={category} className="text-gray-600">{category}</li>
-                ))}
-              </ul>
-            </li>
-          ))}
-        </ul>
+        <div className="flex flex-col justify-center mb-4">
+          {loading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p>Error: {error}</p>
+          ) : (
+            <ul>
+              {filteredApiDocs.map((doc) => (
+                <li key={doc.title} className="mb-4">
+                  <h3 className="text-lg font-bold mb-2">{doc.title}</h3>
+                  <p className="text-gray-600">{doc.description}</p>
+                  <ul>
+                    {doc.tags.map((tag) => (
+                      <li key={tag} className="mr-2">
+                        <span className="bg-gray-200 py-1 px-2 rounded-lg text-gray-600">
+                          {tag}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                  <ul>
+                    {doc.categories.map((category) => (
+                      <li key={category} className="mr-2">
+                        <span className="bg-gray-200 py-1 px-2 rounded-lg text-gray-600">
+                          {category}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       </div>
     </Layout>
   );

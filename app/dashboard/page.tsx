@@ -29,7 +29,12 @@ export default function DashboardPage() {
       if (!apiDocs.length) {
         setLoading(true);
         try {
-          const response = await client.get('/api-documentation');
+          const response = await client.get('/api-documentation', {
+            params: {
+              limit: itemsPerPage,
+              offset: (pageNumber - 1) * itemsPerPage,
+            },
+          });
           setApiDocs(response.data);
         } catch (error) {
           console.error(error);
@@ -39,7 +44,7 @@ export default function DashboardPage() {
       }
     };
     fetchApiDocs();
-  }, [apiDocs]);
+  }, [apiDocs, pageNumber, itemsPerPage]);
 
   useEffect(() => {
     const debouncedFilter = setTimeout(() => {
@@ -65,6 +70,7 @@ export default function DashboardPage() {
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value.toLowerCase());
+    setPageNumber(1);
   };
 
   const handlePageChange = (pageNumber: number) => {
@@ -87,8 +93,8 @@ export default function DashboardPage() {
           type="search"
           value={searchQuery}
           onChange={handleSearch}
-          placeholder="Search API documentation"
-          className="p-2 pl-10 text-sm text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600 w-full"
+          placeholder="Search"
+          className="w-full p-2 pl-10 text-sm text-gray-700 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-600"
         />
       </div>
       {loading ? (
@@ -96,12 +102,12 @@ export default function DashboardPage() {
       ) : (
         <div>
           {paginatedApiDocs.map((doc) => (
-            <div key={doc.title}>
-              <h2>{doc.title}</h2>
-              <p>{doc.description}</p>
+            <div key={doc.id}>
+              <h2 className="text-lg font-bold">{doc.title}</h2>
+              <p className="text-gray-600">{doc.description}</p>
             </div>
           ))}
-          <div className="flex justify-center">
+          <div className="flex justify-between items-center mt-4">
             <button
               className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
               onClick={() => handlePageChange(pageNumber - 1)}
@@ -109,11 +115,13 @@ export default function DashboardPage() {
             >
               Previous
             </button>
-            <span className="p-2">{pageNumber}</span>
+            <span className="text-gray-600">
+              Page {pageNumber} of {Math.ceil(filteredApiDocs.length / itemsPerPage)}
+            </span>
             <button
               className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
               onClick={() => handlePageChange(pageNumber + 1)}
-              disabled={pageNumber * itemsPerPage >= filteredApiDocs.length}
+              disabled={pageNumber === Math.ceil(filteredApiDocs.length / itemsPerPage)}
             >
               Next
             </button>
