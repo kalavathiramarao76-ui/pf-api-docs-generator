@@ -14,8 +14,10 @@ export default function DashboardPage() {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [filteredApiDocs, setFilteredApiDocs] = useState([]);
   const [paginatedApiDocs, setPaginatedApiDocs] = useState([]);
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+
+  const router = useRouter();
 
   useEffect(() => {
     const storedDarkMode = localStorage.getItem('darkMode');
@@ -31,10 +33,12 @@ export default function DashboardPage() {
         try {
           const response = await client.get('/api-documentation', {
             params: {
-              limit: 1000, // fetch all api docs at once
+              limit: itemsPerPage, // fetch only the first page of api docs
+              offset: 0,
             },
           });
           setApiDocs(response.data);
+          setHasMore(response.data.length === itemsPerPage);
         } catch (error) {
           console.error(error);
         } finally {
@@ -70,10 +74,32 @@ export default function DashboardPage() {
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value.toLowerCase());
     setPageNumber(1);
+    setApiDocs([]);
   };
 
   const handlePageChange = (pageNumber: number) => {
     setPageNumber(pageNumber);
+    if (pageNumber > Math.ceil(apiDocs.length / itemsPerPage)) {
+      fetchMoreApiDocs();
+    }
+  };
+
+  const fetchMoreApiDocs = async () => {
+    setLoading(true);
+    try {
+      const response = await client.get('/api-documentation', {
+        params: {
+          limit: itemsPerPage,
+          offset: apiDocs.length,
+        },
+      });
+      setApiDocs([...apiDocs, ...response.data]);
+      setHasMore(response.data.length === itemsPerPage);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -90,46 +116,30 @@ export default function DashboardPage() {
       <div className="flex justify-between items-center mb-4">
         <input
           type="search"
-          className="w-full p-2 pl-10 text-sm text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600"
-          placeholder="Search API Documentation"
           value={searchQuery}
           onChange={handleSearch}
+          placeholder="Search API Docs"
+          className="w-full p-2 pl-10 text-sm text-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600"
         />
-        <Link href="/api-documentation/create">
-          <button className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
-            <AiOutlinePlus size={24} />
-          </button>
-        </Link>
       </div>
       {loading ? (
         <div>Loading...</div>
       ) : (
         <div>
           {paginatedApiDocs.map((doc) => (
-            <div key={doc.id}>
+            <div key={doc.id} className="mb-4">
               <h2 className="text-lg font-bold">{doc.title}</h2>
               <p>{doc.description}</p>
             </div>
           ))}
-          <div className="flex justify-between items-center mt-4">
-            <button
-              className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
-              onClick={() => handlePageChange(pageNumber - 1)}
-              disabled={pageNumber === 1}
-            >
-              Previous
-            </button>
-            <span className="text-sm text-gray-700">
-              Page {pageNumber} of {Math.ceil(filteredApiDocs.length / itemsPerPage)}
-            </span>
+          {hasMore && (
             <button
               className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
               onClick={() => handlePageChange(pageNumber + 1)}
-              disabled={pageNumber === Math.ceil(filteredApiDocs.length / itemsPerPage)}
             >
-              Next
+              Load More
             </button>
-          </div>
+          )}
         </div>
       )}
     </DashboardLayout>

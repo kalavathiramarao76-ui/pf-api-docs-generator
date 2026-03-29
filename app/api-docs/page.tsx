@@ -20,6 +20,10 @@ export default function ApiDocsPage() {
   const [sortBy, setSortBy] = useState('title');
   const [filterTags, setFilterTags] = useState([]);
   const [filterCategories, setFilterCategories] = useState([]);
+  const [favorites, setFavorites] = useState(() => {
+    const storedFavorites = localStorage.getItem('favorites');
+    return storedFavorites ? JSON.parse(storedFavorites) : [];
+  });
 
   useEffect(() => {
     const fetchApiDocs = async () => {
@@ -71,6 +75,10 @@ export default function ApiDocsPage() {
     setFilteredApiDocs(sortedDocs);
   }, [apiDocs, searchTerm, sortOrder, sortBy, filterTags, filterCategories]);
 
+  useEffect(() => {
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+  }, [favorites]);
+
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
   };
@@ -98,95 +106,85 @@ export default function ApiDocsPage() {
     }
   };
 
+  const handleFavorite = (doc) => {
+    if (favorites.includes(doc.id)) {
+      setFavorites(favorites.filter((id) => id !== doc.id));
+    } else {
+      setFavorites([...favorites, doc.id]);
+    }
+  };
+
   return (
     <Layout>
-      <SEO title="API Documentation" />
+      <SEO title="API Docs" />
       <div className="container mx-auto p-4">
-        <h1 className="text-3xl font-bold mb-4">API Documentation</h1>
-        <div className="flex flex-wrap justify-between mb-4">
-          <input
-            type="search"
-            value={searchTerm}
-            onChange={handleSearch}
-            placeholder="Search API documentation"
-            className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-2 pl-10 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600"
-          />
-          <select
-            value={sortBy}
-            onChange={handleSort}
-            className="w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-2 pl-10 text-sm text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-600"
-          >
-            <option value="title" data-order="asc">
-              Sort by title (A-Z)
-            </option>
-            <option value="title" data-order="desc">
-              Sort by title (Z-A)
-            </option>
-            <option value="description" data-order="asc">
-              Sort by description (A-Z)
-            </option>
-            <option value="description" data-order="desc">
-              Sort by description (Z-A)
-            </option>
+        <h1 className="text-3xl font-bold mb-4">API Docs</h1>
+        <input
+          type="search"
+          value={searchTerm}
+          onChange={handleSearch}
+          placeholder="Search API Docs"
+          className="w-full p-2 mb-4 border border-gray-400 rounded"
+        />
+        <div className="flex justify-between mb-4">
+          <select value={sortBy} onChange={handleSort} className="p-2 border border-gray-400 rounded">
+            <option value="title">Title</option>
+            <option value="description">Description</option>
           </select>
+          <button
+            data-order={sortOrder === 'asc' ? 'desc' : 'asc'}
+            onClick={handleSort}
+            className="p-2 border border-gray-400 rounded"
+          >
+            {sortOrder === 'asc' ? 'Descending' : 'Ascending'}
+          </button>
         </div>
-        <div className="flex flex-wrap justify-between mb-4">
-          <h2 className="text-xl font-bold mb-2">Filter by tags:</h2>
-          {apiDocs.map((doc) => (
-            <div key={doc.tags.join(',')} className="mr-4">
-              {doc.tags.map((tag) => (
-                <label key={tag} className="block">
-                  <input
-                    type="checkbox"
-                    value={tag}
-                    checked={filterTags.includes(tag)}
-                    onChange={handleFilterTags}
-                    className="mr-2"
-                  />
-                  {tag}
-                </label>
-              ))}
-            </div>
-          ))}
+        <div className="mb-4">
+          <h2 className="text-2xl font-bold mb-2">Tags</h2>
+          <ul>
+            {apiDocs.map((doc) => (
+              <li key={doc.id}>
+                <input
+                  type="checkbox"
+                  value={doc.tags[0]}
+                  checked={filterTags.includes(doc.tags[0])}
+                  onChange={handleFilterTags}
+                  className="mr-2"
+                />
+                <span>{doc.tags[0]}</span>
+              </li>
+            ))}
+          </ul>
         </div>
-        <div className="flex flex-wrap justify-between mb-4">
-          <h2 className="text-xl font-bold mb-2">Filter by categories:</h2>
-          {apiDocs.map((doc) => (
-            <div key={doc.categories.join(',')} className="mr-4">
-              {doc.categories.map((category) => (
-                <label key={category} className="block">
-                  <input
-                    type="checkbox"
-                    value={category}
-                    checked={filterCategories.includes(category)}
-                    onChange={handleFilterCategories}
-                    className="mr-2"
-                  />
-                  {category}
-                </label>
-              ))}
-            </div>
-          ))}
+        <div className="mb-4">
+          <h2 className="text-2xl font-bold mb-2">Categories</h2>
+          <ul>
+            {apiDocs.map((doc) => (
+              <li key={doc.id}>
+                <input
+                  type="checkbox"
+                  value={doc.categories[0]}
+                  checked={filterCategories.includes(doc.categories[0])}
+                  onChange={handleFilterCategories}
+                  className="mr-2"
+                />
+                <span>{doc.categories[0]}</span>
+              </li>
+            ))}
+          </ul>
         </div>
+        <h2 className="text-2xl font-bold mb-4">API Docs</h2>
         <ul>
           {filteredApiDocs.map((doc) => (
-            <li key={doc.title} className="mb-4">
-              <h3 className="text-xl font-bold">{doc.title}</h3>
+            <li key={doc.id} className="mb-4">
+              <h3 className="text-xl font-bold mb-2">{doc.title}</h3>
               <p>{doc.description}</p>
-              <ul>
-                {doc.tags.map((tag) => (
-                  <li key={tag} className="mr-2">
-                    <span className="bg-gray-200 p-1 rounded">{tag}</span>
-                  </li>
-                ))}
-              </ul>
-              <ul>
-                {doc.categories.map((category) => (
-                  <li key={category} className="mr-2">
-                    <span className="bg-gray-200 p-1 rounded">{category}</span>
-                  </li>
-                ))}
-              </ul>
+              <button
+                onClick={() => handleFavorite(doc)}
+                className={`p-2 border border-gray-400 rounded ${favorites.includes(doc.id) ? 'bg-green-500 text-white' : ''}`}
+              >
+                {favorites.includes(doc.id) ? 'Unfavorite' : 'Favorite'}
+              </button>
             </li>
           ))}
         </ul>

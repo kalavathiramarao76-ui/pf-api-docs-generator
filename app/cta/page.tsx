@@ -18,6 +18,7 @@ export default function CtaPage() {
   });
   const [successMessage, setSuccessMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -58,6 +59,16 @@ export default function CtaPage() {
       return;
     }
     setIsSubmitting(true);
+    setProgress(0);
+    const intervalId = setInterval(() => {
+      setProgress((prevProgress) => {
+        if (prevProgress >= 100) {
+          clearInterval(intervalId);
+          return 100;
+        }
+        return Math.min(prevProgress + 10, 100);
+      });
+    }, 100);
     try {
       localStorage.setItem('email', email);
       setSuccessMessage('Thank you for your interest! We will be in touch soon.');
@@ -70,6 +81,7 @@ export default function CtaPage() {
       }
     } finally {
       setIsSubmitting(false);
+      clearInterval(intervalId);
     }
   };
 
@@ -88,47 +100,49 @@ export default function CtaPage() {
     <div className="flex flex-col items-center justify-center h-screen">
       <h1 className="text-3xl font-bold mb-4">Unlock the Power of AutoGen Docs</h1>
       <p className="text-lg text-gray-500 mb-8">Take the first step towards effortless API documentation and discover</p>
-      <form onSubmit={handleSubmit} className="flex flex-col items-center">
+      <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center">
         <input
           type="email"
           value={email}
           onChange={handleEmailChange}
           onBlur={handleBlur}
-          placeholder="Enter your email address"
-          className={`w-full p-4 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-            formErrors.email.isValid ? '' : 'border-red-500'
-          }`}
+          placeholder="Enter your email"
+          className="px-4 py-2 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
         {formErrors.email.message && (
-          <div className="text-red-500 mb-4">
-            <p>{formErrors.email.message}</p>
-            <ul>
-              {formErrors.email.suggestions.map((suggestion, index) => (
-                <li key={index} className="text-sm">
-                  {suggestion}
-                </li>
-              ))}
-            </ul>
-          </div>
+          <p className="text-red-500 mb-4">{formErrors.email.message}</p>
+        )}
+        {formErrors.email.suggestions.length > 0 && (
+          <ul className="list-disc text-gray-500 mb-4">
+            {formErrors.email.suggestions.map((suggestion, index) => (
+              <li key={index}>{suggestion}</li>
+            ))}
+          </ul>
         )}
         <button
           type="submit"
           disabled={isSubmitting}
-          className={`w-full p-4 bg-blue-500 text-white rounded-lg hover:bg-blue-700 ${
-            isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-          }`}
+          className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
         >
-          {isSubmitting ? 'Submitting...' : 'Get Started'}
+          {isSubmitting ? (
+            <div className="flex items-center justify-center">
+              <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
+                <div className="bg-blue-500 h-2 rounded-full" style={{ width: `${progress}%` }} />
+              </div>
+              Submitting...
+            </div>
+          ) : (
+            <div className="flex items-center justify-center">
+              Submit
+              <AiOutlineArrowRight className="ml-2" />
+            </div>
+          )}
         </button>
         {formErrors.general.message && (
-          <div className="text-red-500 mt-4">
-            <p>{formErrors.general.message}</p>
-          </div>
+          <p className="text-red-500 mb-4">{formErrors.general.message}</p>
         )}
-        {isSuccess && (
-          <div className="text-green-500 mt-4">
-            <p>{successMessage}</p>
-          </div>
+        {successMessage && (
+          <p className="text-green-500 mb-4">{successMessage}</p>
         )}
       </form>
     </div>
