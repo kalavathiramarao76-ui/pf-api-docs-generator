@@ -105,7 +105,33 @@ export default function DashboardPage() {
 
   return (
     <DashboardLayout>
-      {/* Your dashboard layout content here */}
+      <div className="dark-mode-toggle">
+        <button onClick={handleDarkModeToggle}>
+          {darkMode ? <IoSunny /> : <IoMoon />}
+        </button>
+      </div>
+      <div className="search-bar">
+        <input
+          type="search"
+          value={searchQuery}
+          onChange={handleSearch}
+          placeholder="Search API documentation"
+        />
+      </div>
+      <div className="api-docs-list">
+        {paginatedApiDocs.map((doc) => (
+          <div key={doc.id}>
+            <h2>{doc.title}</h2>
+            <p>{doc.description}</p>
+          </div>
+        ))}
+      </div>
+      <div className="pagination">
+        <button onClick={() => handlePageChange(pageNumber - 1)}>Previous</button>
+        <span>Page {pageNumber}</span>
+        <button onClick={() => handlePageChange(pageNumber + 1)}>Next</button>
+      </div>
+      {loading && <div>Loading...</div>}
     </DashboardLayout>
   );
 }

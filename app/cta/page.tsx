@@ -31,7 +31,7 @@ export default function CtaPage() {
     }
     if (!emailRegex.test(email)) {
       return {
-        message: 'Please enter a valid email address (e.g. example@example.com)',
+        message: 'Invalid email address',
         isValid: false,
         suggestions: [
           'Make sure to include the "@" symbol',
@@ -96,64 +96,47 @@ export default function CtaPage() {
     setFormErrors((prevErrors) => ({ ...prevErrors, email: emailValidationError }));
   };
 
-  const handleError = (error: any) => {
-    if (error instanceof Error) {
-      setFormErrors((prevErrors) => ({ ...prevErrors, general: { message: error.message, isValid: false } }));
-    } else {
-      setFormErrors((prevErrors) => ({ ...prevErrors, general: { message: 'An unknown error occurred', isValid: false } }));
-    }
-  };
-
-  const handleFormValidation = () => {
-    const emailValidationError = validateEmail(email);
-    if (!emailValidationError.isValid) {
-      setFormErrors((prevErrors) => ({ ...prevErrors, email: emailValidationError }));
-      return false;
-    }
-    return true;
-  };
-
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          value={email}
-          onChange={handleEmailChange}
-          onBlur={handleBlur}
-          placeholder="Enter your email"
-          aria-label="Email"
-          aria-invalid={!formErrors.email.isValid}
-          aria-describedby="email-error"
-        />
-        {formErrors.email.message && (
-          <div id="email-error" role="alert" aria-live="assertive">
-            {formErrors.email.message}
-            <ul>
-              {formErrors.email.suggestions.map((suggestion, index) => (
-                <li key={index}>{suggestion}</li>
-              ))}
-            </ul>
-          </div>
-        )}
+        <label>
+          Email:
+          <input
+            type="email"
+            value={email}
+            onChange={handleEmailChange}
+            onBlur={handleBlur}
+            placeholder="example@example.com"
+          />
+          {formErrors.email.message && (
+            <div style={{ color: 'red' }}>
+              {formErrors.email.message}
+              {formErrors.email.suggestions.length > 0 && (
+                <ul>
+                  {formErrors.email.suggestions.map((suggestion, index) => (
+                    <li key={index}>{suggestion}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
+        </label>
         <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Submitting...' : 'Submit'}
+          {isSubmitting ? (
+            <div>
+              Submitting...{' '}
+              <progress value={progress} max="100" style={{ width: '100%' }} />
+            </div>
+          ) : (
+            <div>
+              Submit <AiOutlineArrowRight />
+            </div>
+          )}
         </button>
         {formErrors.general.message && (
-          <div role="alert" aria-live="assertive">
-            {formErrors.general.message}
-          </div>
+          <div style={{ color: 'red' }}>{formErrors.general.message}</div>
         )}
-        {successMessage && (
-          <div role="alert" aria-live="assertive">
-            {successMessage}
-          </div>
-        )}
-        {isSuccess && (
-          <div>
-            <progress value={progress} max="100" />
-          </div>
-        )}
+        {isSuccess && <div style={{ color: 'green' }}>{successMessage}</div>}
       </form>
     </div>
   );
