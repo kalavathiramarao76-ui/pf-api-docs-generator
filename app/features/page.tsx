@@ -118,56 +118,101 @@ const authenticateUser = async (username: string) => {
   }
 };
 
-const Page = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredFeatures, setFilteredFeatures] = useState(features);
-  const [filteredGuidedOnboardingSteps, setFilteredGuidedOnboardingSteps] = useState(guidedOnboardingSteps);
+const Dashboard = () => {
+  const [userProgress, setUserProgress] = useState(null);
+  const [recommendedSteps, setRecommendedSteps] = useState(null);
+  const [userId, setUserId] = useState('');
 
   useEffect(() => {
-    const filteredFeatures = features.filter((feature) => {
-      return feature.title.toLowerCase().includes(searchTerm.toLowerCase()) || feature.description.toLowerCase().includes(searchTerm.toLowerCase());
-    });
-    setFilteredFeatures(filteredFeatures);
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      setUserId(userId);
+      getUserProgress(userId).then((progress) => {
+        setUserProgress(progress);
+        getRecommendedSteps(userId, progress).then((steps) => {
+          setRecommendedSteps(steps);
+        });
+      });
+    }
+  }, []);
 
-    const filteredGuidedOnboardingSteps = guidedOnboardingSteps.filter((step) => {
-      return step.title.toLowerCase().includes(searchTerm.toLowerCase()) || step.description.toLowerCase().includes(searchTerm.toLowerCase());
-    });
-    setFilteredGuidedOnboardingSteps(filteredGuidedOnboardingSteps);
-  }, [searchTerm]);
-
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+  const handleSaveProgress = async (progress: any) => {
+    await saveUserProgress(userId, progress);
+    setUserProgress(progress);
   };
 
   return (
     <div>
-      <input type="search" value={searchTerm} onChange={handleSearch} placeholder="Search features and tutorials" />
-      <h1>Features</h1>
-      <ul>
-        {filteredFeatures.map((feature) => (
-          <li key={feature.id}>
-            <Link href={`/features/${feature.id}`}>
-              <a>
-                {feature.title}
-              </a>
-            </Link>
-            <p>{feature.description}</p>
-          </li>
-        ))}
-      </ul>
-      <h1>Guided Onboarding Steps</h1>
-      <ul>
-        {filteredGuidedOnboardingSteps.map((step) => (
-          <li key={step.id}>
-            <Link href={step.tutorial}>
-              <a>
-                {step.title}
-              </a>
-            </Link>
-            <p>{step.description}</p>
-          </li>
-        ))}
-      </ul>
+      <h1>Dashboard</h1>
+      {userProgress && (
+        <div>
+          <h2>Progress</h2>
+          <ul>
+            {onboardingSteps.map((step) => (
+              <li key={step.id}>
+                <input
+                  type="checkbox"
+                  checked={userProgress.includes(step.id)}
+                  onChange={() => {
+                    const newProgress = [...userProgress];
+                    if (newProgress.includes(step.id)) {
+                      newProgress.splice(newProgress.indexOf(step.id), 1);
+                    } else {
+                      newProgress.push(step.id);
+                    }
+                    handleSaveProgress(newProgress);
+                  }}
+                />
+                <span>{step.title}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+      {recommendedSteps && (
+        <div>
+          <h2>Recommended Steps</h2>
+          <ul>
+            {recommendedSteps.map((step) => (
+              <li key={step.id}>
+                <span>{step.title}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const Page = () => {
+  return (
+    <div>
+      <Link href="/">
+        <a>
+          <AiOutlineCode size={24} />
+          API Documentation
+        </a>
+      </Link>
+      <Link href="/code-generation">
+        <a>
+          <MdOutlineSettings size={24} />
+          Code Generation
+        </a>
+      </Link>
+      <Link href="/settings">
+        <a>
+          <RiDashboardLine size={24} />
+          Settings
+        </a>
+      </Link>
+      <Link href="/api">
+        <a>
+          <TbApi size={24} />
+          API
+        </a>
+      </Link>
+      <Dashboard />
     </div>
   );
 };
