@@ -1,186 +1,80 @@
-import client from '../client';
-import { useState, useEffect } from 'react';
+use client;
+
+import { useState } from 'react';
 import Link from 'next/link';
 import { AiOutlineCode } from 'react-icons/ai';
-import { MdOutlineSettings } from 'react-icons/md';
-import { RiDashboardLine } from 'react-icons/ri';
-import { TbApi } from 'react-icons/tb';
+import { RiFileList2Line } from 'react-icons/ri';
+import { MdSettings } from 'react-icons/md';
+import { FaUsers } from 'react-icons/fa';
+import { IoPricetags } from 'react-icons/io5';
 
-const generateUUID = () => {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-}
+export default function Page() {
+  const [darkMode, setDarkMode] = useState(false);
 
-const saveUserProgress = async (userId: string, userProgress: any) => {
-  try {
-    const response = await client.post('/save-progress', {
-      userId,
-      userProgress,
-    });
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const getUserProgress = async (userId: string) => {
-  try {
-    const response = await client.get(`/get-progress/${userId}`);
-    return response.data;
-  } catch (error) {
-    console.error(error);
-    return null; // Return null if user progress is not found
-  }
-};
-
-const getRecommendedSteps = async (userId: string, completedSteps: any) => {
-  try {
-    const response = await client.post('/get-recommended-steps', {
-      userId,
-      completedSteps,
-    });
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const onboardingSteps = [
-  {
-    id: 1,
-    title: 'Welcome to AutoGenerate API Documentation',
-    description: 'Get started with our interactive tutorials and step-by-step guides',
-    action: 'Start Tutorial',
-  },
-  {
-    id: 2,
-    title: 'Create Your First API Documentation',
-    description: 'Learn how to create and manage your API documentation',
-    action: 'Create API Documentation',
-  },
-  {
-    id: 3,
-    title: 'Explore Advanced Features',
-    description: 'Discover how to use advanced features to customize your API documentation',
-    action: 'Explore Advanced Features',
-  },
-];
-
-const features = [
-  {
-    id: 1,
-    title: 'API Documentation',
-    description: 'Create and manage your API documentation',
-  },
-  {
-    id: 2,
-    title: 'Code Generation',
-    description: 'Generate code snippets for your API',
-  },
-  {
-    id: 3,
-    title: 'Settings',
-    description: 'Configure your API documentation settings',
-  },
-];
-
-const guidedOnboardingSteps = [
-  {
-    id: 1,
-    title: 'Step 1: Introduction to AutoGenerate API Documentation',
-    description: 'Learn about the benefits of using AutoGenerate API Documentation',
-    tutorial: 'https://example.com/tutorial-1',
-  },
-  {
-    id: 2,
-    title: 'Step 2: Creating Your First API Documentation',
-    description: 'Follow a step-by-step guide to create your first API documentation',
-    tutorial: 'https://example.com/tutorial-2',
-  },
-  {
-    id: 3,
-    title: 'Step 3: Customizing Your API Documentation',
-    description: 'Discover how to customize your API documentation with advanced features',
-    tutorial: 'https://example.com/tutorial-3',
-  },
-];
-
-const authenticateUser = async (username: string, password: string) => {
-  try {
-    const response = await client.post('/authenticate', {
-      username,
-      password,
-    });
-    return response.data;
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const Page = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filteredFeatures, setFilteredFeatures] = useState(features);
-  const [filteredOnboardingSteps, setFilteredOnboardingSteps] = useState(onboardingSteps);
-  const [filteredGuidedOnboardingSteps, setFilteredGuidedOnboardingSteps] = useState(guidedOnboardingSteps);
-
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const term = event.target.value.toLowerCase();
-    setSearchTerm(term);
-    const filteredFeatures = features.filter((feature) => feature.title.toLowerCase().includes(term) || feature.description.toLowerCase().includes(term));
-    const filteredOnboardingSteps = onboardingSteps.filter((step) => step.title.toLowerCase().includes(term) || step.description.toLowerCase().includes(term));
-    const filteredGuidedOnboardingSteps = guidedOnboardingSteps.filter((step) => step.title.toLowerCase().includes(term) || step.description.toLowerCase().includes(term));
-    setFilteredFeatures(filteredFeatures);
-    setFilteredOnboardingSteps(filteredOnboardingSteps);
-    setFilteredGuidedOnboardingSteps(filteredGuidedOnboardingSteps);
-  };
+  const features = [
+    {
+      id: 1,
+      title: 'Automatic API Documentation Generation',
+      description: 'AutoGen Docs generates high-quality API documentation automatically, saving developers time and effort.',
+      icon: <AiOutlineCode size={24} />,
+    },
+    {
+      id: 2,
+      title: 'Support for Multiple Programming Languages',
+      description: 'AutoGen Docs supports multiple programming languages and frameworks, making it a versatile tool for developers.',
+      icon: <RiFileList2Line size={24} />,
+    },
+    {
+      id: 3,
+      title: 'Customization and Collaboration Tools',
+      description: 'AutoGen Docs allows for customization and collaboration, making it easy for teams to work together on API documentation.',
+      icon: <MdSettings size={24} />,
+    },
+    {
+      id: 4,
+      title: 'Integration with Popular API Frameworks',
+      description: 'AutoGen Docs integrates with popular API frameworks, making it easy to generate documentation for your API.',
+      icon: <FaUsers size={24} />,
+    },
+    {
+      id: 5,
+      title: 'Real-time Documentation Updates',
+      description: 'AutoGen Docs provides real-time documentation updates, ensuring that your API documentation is always up-to-date.',
+      icon: <IoPricetags size={24} />,
+    },
+    {
+      id: 6,
+      title: 'Version Control and History',
+      description: 'AutoGen Docs provides version control and history, making it easy to track changes to your API documentation.',
+      icon: <AiOutlineCode size={24} />,
+    },
+  ];
 
   return (
-    <div>
-      <h1>AutoGenerate API Documentation</h1>
-      <input type="search" value={searchTerm} onChange={handleSearch} placeholder="Search features and tutorials" />
-      <h2>Features</h2>
-      <ul>
-        {filteredFeatures.map((feature) => (
-          <li key={feature.id}>
-            <Link href={`/features/${feature.id}`}>
-              <a>
-                {feature.title}
-              </a>
-            </Link>
-            <p>{feature.description}</p>
-          </li>
+    <div className="max-w-7xl mx-auto p-4 md:p-6 lg:p-8">
+      <h1 className="text-3xl font-bold mb-4">Features</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {features.map((feature) => (
+          <div
+            key={feature.id}
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4"
+          >
+            <div className="flex items-center mb-2">
+              {feature.icon}
+              <h2 className="text-lg font-bold ml-2">{feature.title}</h2>
+            </div>
+            <p className="text-gray-600 dark:text-gray-400">{feature.description}</p>
+          </div>
         ))}
-      </ul>
-      <h2>Onboarding Steps</h2>
-      <ul>
-        {filteredOnboardingSteps.map((step) => (
-          <li key={step.id}>
-            <Link href={`/onboarding/${step.id}`}>
-              <a>
-                {step.title}
-              </a>
-            </Link>
-            <p>{step.description}</p>
-          </li>
-        ))}
-      </ul>
-      <h2>Guided Onboarding Steps</h2>
-      <ul>
-        {filteredGuidedOnboardingSteps.map((step) => (
-          <li key={step.id}>
-            <Link href={step.tutorial}>
-              <a>
-                {step.title}
-              </a>
-            </Link>
-            <p>{step.description}</p>
-          </li>
-        ))}
-      </ul>
+      </div>
+      <div className="mt-8">
+        <Link
+          href="/pricing"
+          className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg"
+        >
+          View Pricing
+        </Link>
+      </div>
     </div>
   );
-};
-
-export default Page;
+}

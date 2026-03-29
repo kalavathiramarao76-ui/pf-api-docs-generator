@@ -13,11 +13,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "react-jsx",
-    "incremental": true,
-    "tsBuildInfoFile": "build/.tsbuildinfo",
-    "nextJs": {
-      "experimental": {
-        "appDir": true
+    "tsconfigNode": {
+      "compilerOptions": {
+        "types": ["node"]
       }
     }
   },

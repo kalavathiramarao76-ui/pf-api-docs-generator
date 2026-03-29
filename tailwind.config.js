@@ -7,26 +7,21 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "#3A3D41",
-        secondary: "#8B9467",
-        accent: "#34C759",
-        background: "#1A1D23",
-        backgroundLight: "#2F343A",
-        text: "#FFFFFF",
-        textSecondary: "#B1B5B8",
-        textMuted: "#6C6F73",
-        success: "#34C759",
-        warning: "#F7DC6F",
-        error: "#FF6F6F",
+        primary: "#3b3f54",
+        secondary: "#6c7293",
+        accent: "#8b9467",
+        success: "#34c759",
+        warning: "#ffc107",
+        error: "#ff5c5c",
       },
       typography: {
         DEFAULT: {
           css: {
-            color: "#FFFFFF",
+            color: "#333",
             a: {
-              color: "#34C759",
+              color: "#337ab7",
               "&:hover": {
-                color: "#2F343A",
+                color: "#23527c",
               },
             },
           },
