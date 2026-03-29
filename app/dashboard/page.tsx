@@ -127,12 +127,19 @@ export default function DashboardPage() {
         ))}
       </div>
       <div className="pagination">
-        {pageNumber > 1 && (
-          <button onClick={() => handlePageChange(pageNumber - 1)}>Previous</button>
-        )}
-        <button onClick={() => handlePageChange(pageNumber + 1)}>Next</button>
+        {Array(Math.ceil(filteredApiDocs.length / itemsPerPage))
+          .fill(0)
+          .map((_, index) => (
+            <button
+              key={index + 1}
+              onClick={() => handlePageChange(index + 1)}
+              className={pageNumber === index + 1 ? 'active' : ''}
+            >
+              {index + 1}
+            </button>
+          ))}
       </div>
-      {loading && <div>Loading...</div>}
+      {loading && <p>Loading...</p>}
     </DashboardLayout>
   );
 }
